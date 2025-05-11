@@ -1,0 +1,59 @@
+# ==========================
+# Maven Build
+# ==========================
+/target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+build/
+nbbuild/
+dist/
+nbdist/
+
+# ==========================
+# IDE Specific
+# ==========================
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# NetBeans
+.nb-gradle/
+nbproject/private/
+
+# VS Code
+.vscode/
+
+# ==========================
+# OS Generated
+# ==========================
+.DS_Store
+Thumbs.db
+
+# ==========================
+# Dependencies & Libraries
+# ==========================
+lib/
+
+# ==========================
+# Environment Variables
+# ==========================
+src/main/resources/*.env
+
+# ==========================
+# Logs and temp files
+# ==========================
+*.log
+*.tmp
+*.swp
+*.swo
