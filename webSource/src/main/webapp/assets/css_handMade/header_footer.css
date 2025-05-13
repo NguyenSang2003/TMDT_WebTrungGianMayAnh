@@ -1,0 +1,93 @@
+/* -------------------------------------------
+   Dropdown Menu & Dropdown Item
+-------------------------------------------- */
+.dropdown-menu {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #a9d3ff !important;
+    transition: background-color 0.2s ease;
+}
+
+/* -------------------------------------------
+   Button dành cho nút xanh lá (btn-secondary) và nút submit của form
+-------------------------------------------- */
+.btn.btn-secondary,
+.request-form input[type="submit"].btn {
+    width: 100%;
+    background: #0bea12 !important; /* màu ban đầu (xanh lá) */
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn.btn-secondary:hover,
+.request-form input[type="submit"].btn:hover {
+    background: #1bb43f !important; /* màu khi hover (đậm hơn) */
+}
+
+/* -------------------------------------------
+   Button dành cho nút xanh dương (btn-primary)
+-------------------------------------------- */
+.btn.btn-primary {
+    /* Không đặt width: 100% để giữ lại kích thước mặc định của link button */
+    background: #007bff !important; /* màu ban đầu (xanh dương) */
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn.btn-primary:hover {
+    background: #0056b3 !important; /* màu khi hover (xanh dương đậm hơn) */
+}
+
+/* -------------------------------------------
+   Custom Styles cho Form Đặt Thuê máy ảnh
+-------------------------------------------- */
+.request-form {
+    padding: 30px;
+    border-radius: 10px;
+    /* Giữ nguyên màu nền của bg-primary, hoặc nếu muốn định nghĩa lại: */
+    background-color: #007bff;
+}
+
+.request-form h2 {
+    color: #fff;
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.request-form .form-group {
+    margin-bottom: 15px;
+}
+
+.request-form .form-group label {
+    color: #fff;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.request-form .form-control {
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: #fff;
+}
+
+/* Đặt màu placeholder sao cho phù hợp */
+.request-form .form-control::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}

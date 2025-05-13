@@ -1,0 +1,492 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>EagleCam Selection 365</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/animate.css">
+    <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+    <link rel="stylesheet" href="assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/aos.css">
+    <link rel="stylesheet" href="assets/css/ionicons.min.css">
+    <link rel="stylesheet" href="assets/css/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="assets/css/jquery.timepicker.css">
+    <link rel="stylesheet" href="assets/css/flaticon.css">
+    <link rel="stylesheet" href="assets/css/icomoon.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <%-- css_handMade --%>
+    <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
+</head>
+<body>
+
+<!-- Header/Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <div class="container">
+
+        <%-- Logo và tên góc trái trên cùng --%>
+        <a class="navbar-brand d-flex align-items-center" href="index.jsp">
+            <img src="assets/images/logo.PNG" alt="Logo"
+                 style="height: 40px; margin-right: 10px; border-radius: 4px">
+            <div style="line-height: 1;">
+                <strong style="font-size: 14px;">EagleCam</strong><br>
+                <span style="font-size: 13px;">Selection 365</span>
+            </div>
+        </a>
+
+        <%-- Nút menu cho dang mobile --%>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
+                aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+        </button>
+
+        <%-- nút menu --%>
+        <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
+                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+
+                <!-- Dropdown mới cho "Về Chúng Tôi" và "Blog" -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
+                    <div class="dropdown-menu rounded-0 m-0 dropdown-menu">
+                        <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
+                        <a href="blog.jsp" class="dropdown-item">Blog</a>
+                    </div>
+                </li>
+
+                <li class="nav-item"><a href="contact.jsp" class="nav-link">Liên Hệ</a></li>
+                <li class="nav-item"><a href="login.jsp" class="nav-link">Đăng Nhập</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- END nav -->
+
+<!-- start Ảnh back ground của index -->
+<div class="hero-wrap ftco-degree-bg" style="background-image: url('assets/images/bg_1.jpg');"
+     data-stellar-background-ratio="0.5">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text justify-content-center align-items-center">
+            <div class="col-lg-8 ftco-animate">
+                <div class="text w-100 text-center mb-md-5 pb-md-5">
+                    <h1 class="mb-4">Cách Nhanh & Dễ Dàng Để Thuê Máy Ảnh</h1>
+                    <p style="font-size: 18px;">Hệ thống trung gian của chúng tôi giúp bạn dễ dàng tiếp cận các máy ảnh
+                        chuyên nghiệp với quy trình đặt thuê nhanh chóng, an toàn và tiện lợi. Dù bạn là nhiếp ảnh gia
+                        chuyên nghiệp hay yêu thích chụp ảnh, luôn có giải pháp phù hợp cho bạn.</p>
+                    <a href="https://vimeo.com/45830194"
+                       class="icon-wrap popup-vimeo d-flex align-items-center mt-4 justify-content-center">
+                        <div class="icon d-flex align-items-center justify-content-center">
+                            <span class="ion-ios-play"></span>
+                        </div>
+                        <div class="heading-title ml-5">
+                            <span>Các bước đơn giản để thuê máy ảnh</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end Ảnh back ground của index -->
+
+<%-- start form --%>
+<section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+        <div class="row no-gutters">
+            <div class="col-md-12 featured-top">
+                <div class="row no-gutters">
+                    <div class="col-md-4 d-flex align-items-center">
+                        <form action="#" class="request-form ftco-animate bg-primary">
+                            <h2>ĐẶT THUÊ MÁY ẢNH</h2>
+                            <div class="form-group">
+                                <label for="pickup-location" class="label">Nơi nhận máy ảnh</label>
+                                <input type="text" class="form-control" id="pickup-location"
+                                       placeholder="Thành phố, sân bay, trung tâm,...">
+                            </div>
+                            <div class="form-group">
+                                <label for="dropoff-location" class="label">Nơi trả máy ảnh</label>
+                                <input type="text" class="form-control" id="dropoff-location"
+                                       placeholder="Thành phố, sân bay, trung tâm,...">
+                            </div>
+                            <div class="d-flex">
+                                <div class="form-group mr-2">
+                                    <label for="book-pick-date" class="label">Ngày nhận máy ảnh</label>
+                                    <input type="date" class="form-control" id="book-pick-date">
+                                </div>
+                                <div class="form-group ml-2">
+                                    <label for="book-off-date" class="label">Ngày trả máy ảnh</label>
+                                    <input type="date" class="form-control" id="book-off-date">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="time-pick" class="label">Thời gian nhận máy ảnh</label>
+                                <input type="time" class="form-control" id="time-pick">
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Thuê Máy Ảnh Ngay" class="btn btn-secondary py-3 px-4">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-md-8 d-flex align-items-center">
+                        <div class="services-wrap rounded-right w-100">
+                            <h3 class="heading-section mb-4">Cách Dễ Dàng Để Thuê Máy Ảnh Hoàn Hảo</h3>
+                            <div class="row d-flex mb-4">
+                                <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                                    <div class="services w-100 text-center">
+                                        <div class="icon d-flex align-items-center justify-content-center">
+                                            <span class="flaticon-shop"></span>
+                                        </div>
+                                        <div class="text w-100">
+                                            <h3 class="heading mb-2">Chọn cửa hàng nhận máy</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                                    <div class="services w-100 text-center">
+                                        <div class="icon d-flex align-items-center justify-content-center">
+                                            <span class="flaticon-camera"></span>
+                                        </div>
+                                        <div class="text w-100">
+                                            <h3 class="heading mb-2">Chọn máy ảnh phù hợp nhất</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 d-flex align-self-stretch ftco-animate">
+                                    <div class="services w-100 text-center">
+                                        <div class="icon d-flex align-items-center justify-content-center">
+                                            <span class="flaticon-calendar"></span>
+                                        </div>
+                                        <div class="text w-100">
+                                            <h3 class="heading mb-2">Đặt trước máy ảnh</h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>
+                                <a href="#" class="btn btn-primary py-3 px-4">Đặt trước máy ảnh hoàn hảo của bạn</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<%-- end form --%>
+
+<%-- Phần các sản phẩm --%>
+<section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 heading-section text-center ftco-animate mb-5">
+                <span class="subheading">Dịch vụ của chúng tôi</span>
+                <h2 class="mb-2">Máy Ảnh Nổi Bật</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="carousel-car owl-carousel">
+                    <div class="item">
+                        <div class="car-wrap rounded ftco-animate">
+                            <div class="img rounded d-flex align-items-end"
+                                 style="background-image: url(assets/images/bg_1.jpg);"></div>
+                            <div class="text">
+                                <h2 class="mb-0"><a href="#">Canon EOS Rebel T7</a></h2>
+                                <div class="d-flex mb-3">
+                                    <span class="cat">Canon</span>
+                                    <p class="price ml-auto">$50 <span>/ngày</span></p>
+                                </div>
+                                <p class="d-flex mb-0 d-block">
+                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
+                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="car-wrap rounded ftco-animate">
+                            <div class="img rounded d-flex align-items-end"
+                                 style="background-image: url(assets/images/bg_2.jpg);"></div>
+                            <div class="text">
+                                <h2 class="mb-0"><a href="#">Nikon D5600</a></h2>
+                                <div class="d-flex mb-3">
+                                    <span class="cat">Nikon</span>
+                                    <p class="price ml-auto">$55 <span>/ngày</span></p>
+                                </div>
+                                <p class="d-flex mb-0 d-block">
+                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
+                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="car-wrap rounded ftco-animate">
+                            <div class="img rounded d-flex align-items-end"
+                                 style="background-image: url(assets/images/bg_3.jpg);"></div>
+                            <div class="text">
+                                <h2 class="mb-0"><a href="#">Sony A6400</a></h2>
+                                <div class="d-flex mb-3">
+                                    <span class="cat">Sony</span>
+                                    <p class="price ml-auto">$60 <span>/ngày</span></p>
+                                </div>
+                                <p class="d-flex mb-0 d-block">
+                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
+                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="car-wrap rounded ftco-animate">
+                            <div class="img rounded d-flex align-items-end"
+                                 style="background-image: url(assets/images/bg_1.jpg);"></div>
+                            <div class="text">
+                                <h2 class="mb-0"><a href="#">Fujifilm X-T30</a></h2>
+                                <div class="d-flex mb-3">
+                                    <span class="cat">Fujifilm</span>
+                                    <p class="price ml-auto">$65 <span>/ngày</span></p>
+                                </div>
+                                <p class="d-flex mb-0 d-block">
+                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
+                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<%-- End phần các sản phẩm --%>
+
+<%-- banner --%>
+<%--<section class="ftco-section ftco-intro" style="background-image: url(assets/images/bg_3.jpg);">--%>
+<%--    <div class="overlay"></div>--%>
+<%--    <div class="container">--%>
+<%--        <div class="row justify-content-end">--%>
+<%--            <div class="col-md-6 heading-section heading-section-white ftco-animate">--%>
+<%--                <h2 class="mb-3">Do You Want To Earn With Us? So Don't Be Late.</h2>--%>
+<%--                <a href="#" class="btn btn-primary btn-lg">Become A Driver</a>--%>
+<%--            </div>--%>
+<%--        </div>--%>
+<%--    </div>--%>
+<%--</section>--%>
+
+<%-- Phản hồi khách hàng --%>
+<section class="ftco-section testimony-section bg-light" style="padding-top: 0px;">
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-7 text-center heading-section ftco-animate">
+                <span class="subheading">Phản Hồi</span>
+                <h2 class="mb-3">Khách Hàng Hài Lòng</h2>
+            </div>
+        </div>
+        <div class="row ftco-animate">
+            <div class="col-md-12">
+                <!-- Dùng lại lớp carousel-car để tận dụng cấu hình slide có sẵn -->
+                <div class="carousel-car owl-carousel">
+                    <div class="item">
+                        <div class="testimony-wrap rounded text-center py-4 pb-5">
+                            <div class="user-img mb-2" style="background-image: url(assets/images/person_1.jpg);"></div>
+                            <div class="text pt-4">
+                                <p class="mb-4">
+                                    Dịch vụ thuê máy ảnh ở đây thực sự chuyên nghiệp. Tôi cảm thấy an tâm và hài lòng
+                                    với chất lượng sản phẩm cũng như sự hỗ trợ tận tình của đội ngũ.
+                                </p>
+                                <p class="name">Nguyễn Văn Huy</p>
+                                <span class="position">Quản lý Marketing</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimony-wrap rounded text-center py-4 pb-5">
+                            <div class="user-img mb-2" style="background-image: url(assets/images/person_2.jpg);"></div>
+                            <div class="text pt-4">
+                                <p class="mb-4">
+                                    Tôi đã thuê máy ảnh cho buổi chụp sự kiện và kết quả vượt ngoài mong đợi. Máy ảnh
+                                    luôn đảm bảo chất lượng cao và giao dịch nhanh chóng.
+                                </p>
+                                <p class="name">Trần Thị Trang</p>
+                                <span class="position">Nhà thiết kế giao diện</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimony-wrap rounded text-center py-4 pb-5">
+                            <div class="user-img mb-2" style="background-image: url(assets/images/person_3.jpg);"></div>
+                            <div class="text pt-4">
+                                <p class="mb-4">
+                                    Trải nghiệm sử dụng dịch vụ này thật sự đáng giá. Giá cả hợp lý, máy ảnh hiện đại
+                                    cùng dịch vụ chăm sóc khách hàng chu đáo đã làm tôi hoàn toàn yên tâm.
+                                </p>
+                                <p class="name">Lê Thanh Sơn</p>
+                                <span class="position">Nhà thiết kế UI</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimony-wrap rounded text-center py-4 pb-5">
+                            <div class="user-img mb-2" style="background-image: url(assets/images/person_1.jpg);"></div>
+                            <div class="text pt-4">
+                                <p class="mb-4">
+                                    Đã sử dụng dịch vụ thuê máy ảnh nhiều lần, tôi luôn ấn tượng với sự chuyên nghiệp và
+                                    nhanh nhẹn của đội ngũ hỗ trợ. Mỗi trải nghiệm đều tuyệt vời.
+                                </p>
+                                <p class="name">Phạm Văn Đức</p>
+                                <span class="position">Lập trình viên Website</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="testimony-wrap rounded text-center py-4 pb-5">
+                            <div class="user-img mb-2" style="background-image: url(assets/images/person_1.jpg);"></div>
+                            <div class="text pt-4">
+                                <p class="mb-4">
+                                    Dịch vụ cho thuê máy ảnh này thật sự làm tôi ấn tượng. Từng chi tiết nhỏ nhất đều
+                                    được chăm sóc sát sao, giúp tôi có những bức ảnh hoàn hảo cho dự án của mình.
+                                </p>
+                                <p class="name">Hoàng Minh Tú</p>
+                                <span class="position">Chuyên viên Phân tích Hệ thống</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>  <!-- End carousel-car -->
+            </div>
+        </div>
+    </div>
+</section>
+<%-- End phản hồi của khách --%>
+
+<%-- start phần Footer --%>
+<footer class="ftco-footer ftco-bg-dark ftco-section">
+    <div class="container">
+        <div class="row mb-5">
+            <!-- Cột Logo & Giới thiệu -->
+            <div class="col-md">
+                <div class="ftco-footer-widget mb-4">
+                    <h2 class="ftco-heading-2">
+                        <a class="logo d-flex align-items-center" href="index.jsp">
+                            <img src="assets/images/logo.PNG" alt="Logo"
+                                 style="height: 40px; margin-right: 10px; border-radius: 4px">
+                            <div style="line-height: 1;">
+                                <strong style="font-size: 14px;">EagleCam</strong><br>
+                                <span style="font-size: 13px;">Selection 365</span>
+                            </div>
+                        </a>
+                    </h2>
+                    <p>EagleCam Selection 365 cung cấp dịch vụ cho thuê máy ảnh và phụ kiện chất lượng cao, đáp ứng mọi
+                        nhu cầu của bạn với giá cả hợp lý và dịch vụ chuyên nghiệp.</p>
+                    <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                        <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                        <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                        <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Cột Thông tin -->
+            <div class="col-md">
+                <div class="ftco-footer-widget mb-4 ml-md-5">
+                    <h2 class="ftco-heading-2">Đường tắt khác</h2>
+                    <ul class="list-unstyled">
+                        <li><a href="index.jsp" class="py-2 d-block">Trang Chủ</a></li>
+                        <li><a href="shop.jsp" class="py-2 d-block">Cửa Hàng</a></li>
+                        <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
+                        <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>
+                        <li><a href="#" class="py-2 d-block">Chính sách bảo mật & Cookie</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Cột Hỗ trợ khách hàng -->
+            <div class="col-md">
+                <div class="ftco-footer-widget mb-4">
+                    <h2 class="ftco-heading-2">Hỗ trợ khách hàng</h2>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="py-2 d-block">Câu hỏi thường gặp</a></li>
+                        <li><a href="#" class="py-2 d-block">Phương thức thanh toán</a></li>
+                        <li><a href="#" class="py-2 d-block">Mẹo đặt thuê</a></li>
+                        <li><a href="#" class="py-2 d-block">Cách thức hoạt động</a></li>
+                        <li><a href="#" class="py-2 d-block">Liên hệ</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- Cột Liên hệ -->
+            <div class="col-md">
+                <div class="ftco-footer-widget mb-4">
+                    <h2 class="ftco-heading-2">Có thắc mắc?</h2>
+                    <div class="block-23 mb-3">
+                        <ul>
+                            <li>
+                                <span class="icon icon-map-marker"></span>
+                                <span class="text">CN2 - Đại học Nông Lâm Hồ Chí Minh, Thành phố Thủ Đức</span>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon icon-phone"></span><span class="text">+84 345295324</span></a>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon icon-envelope"></span><span class="text">EagleCam365@gmail.com</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Dòng Copyright -->
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;
+                    <script>document.write(new Date().getFullYear());</script>
+                    All rights reserved | This template is made with <i class="icon-heart color-danger"
+                                                                        aria-hidden="true"></i> by
+                    <a href="https://colorlib.com" target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+            </div>
+        </div>
+    </div>
+</footer>
+<%-- end phần Footer --%>
+
+<!-- loader -->
+<div id="ftco-loader" class="show fullscreen">
+    <svg class="circular" width="48px" height="48px">
+        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+                stroke="#F96D00"/>
+    </svg>
+</div>
+
+<!-- JS scripts -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/js/jquery-migrate-3.0.1.min.js"></script>
+<script src="assets/js/popper.min.js"></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="assets/js/jquery.easing.1.3.js"></script>
+<script src="assets/js/jquery.waypoints.min.js"></script>
+<script src="assets/js/jquery.stellar.min.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<script src="assets/js/aos.js"></script>
+<script src="assets/js/jquery.animateNumber.min.js"></script>
+<script src="assets/js/bootstrap-datepicker.js"></script>
+<script src="assets/js/jquery.timepicker.min.js"></script>
+<script src="assets/js/scrollax.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+<script src="assets/js/google-map.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+</html>

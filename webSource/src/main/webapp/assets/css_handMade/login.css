@@ -1,0 +1,169 @@
+/* -------------------------------------------
+   Reset và Font
+-------------------------------------------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-attachment: fixed;
+}
+
+/* -------------------------------------------
+   Tiêu đề Đăng Nhập
+-------------------------------------------- */
+.page-title {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    margin-top: 100px;
+    margin-bottom: 10px;
+}
+
+.page-title::after {
+    content: "";
+    display: block;
+    width: 80px;
+    height: 3px;
+    background-color: black;
+    margin: 10px auto 30px;
+    border-radius: 2px;
+}
+
+/* -------------------------------------------
+   Bố Cục: Ba Cột (Camera Trái - Form - Camera Phải)
+-------------------------------------------- */
+.form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    gap: 50px; /* Khoảng cách giữa các cột */
+    position: relative;
+    margin-bottom: 45px;
+}
+
+/* -------------------------------------------
+   Ảnh Camera
+-------------------------------------------- */
+.camera-left,
+.camera-right {
+    width: 26%;
+    height: auto;
+}
+
+.camera-left {
+    transform: rotate(-10deg);
+}
+
+.camera-right {
+    transform: rotate(10deg);
+}
+
+/* -------------------------------------------
+   Form Đăng Nhập
+-------------------------------------------- */
+.form-box {
+    border: 1px solid #A7A7A7;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 8px;
+    padding: 60px 40px 30px;
+    width: 450px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.form-box h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 28px;
+}
+
+/* -------------------------------------------
+   Input Box (Label & Input)
+-------------------------------------------- */
+.input-box {
+    position: relative;
+    margin-bottom: 25px;
+}
+
+.input-box label {
+    position: absolute;
+    top: -20px; /* Đẩy label lên trên */
+    left: -15px;
+    font-weight: 600;
+    color: black;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+.input-box input {
+    border-radius: 10px;
+    border: 1px solid black;
+    width: 100%;
+    padding: 12px;
+    background: #F2F2F2;
+    font-size: 17px;
+    color: #8b8a8a;
+    transition: border-bottom 0.3s;
+    margin-top: 15px; /* Tạo khoảng cách giữa input và label */
+}
+
+.input-box .icon {
+    position: absolute;
+    top: 26px;
+    right: 10px;
+    color: #777;
+    font-size: 21px;
+}
+
+/* -------------------------------------------
+   Remember & Forgot Link
+-------------------------------------------- */
+.remenber-forgot {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.remenber-forgot a {
+    color: #FF1A1A;
+    font-size: 14px;
+}
+
+/* -------------------------------------------
+   Button Chung (btn mặc định)
+-------------------------------------------- */
+.btn {
+    width: 100%;
+    background: #0BEA12;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.btn:hover {
+    background: #1bb43f;
+}
+
+/* -------------------------------------------
+   Login & Register Link
+-------------------------------------------- */
+.login-register {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.login-register a {
+    margin-left: 10px;
+    color: #FF1A1A;
+    font-size: 14px;
+}
