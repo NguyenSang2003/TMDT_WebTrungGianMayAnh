@@ -46,9 +46,13 @@
             color: #01d28e !important;
         }
     </style>
+
+    <%-- css_handMade --%>
+    <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
 </head>
 
 <body>
+
 <!-- Header/Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
@@ -56,9 +60,9 @@
         <%-- Logo và tên góc trái trên cùng --%>
         <a class="navbar-brand d-flex align-items-center" href="index.jsp">
             <img src="assets/images/logo.PNG" alt="Logo"
-                 style="height: 40px; margin-right: 10px; border-radius: 4px">
+                 style="height: 40px; margin-right: 10px; border-radius: 4px; border: 1px solid black;">
             <div style="line-height: 1;">
-                <strong style="font-size: 14px;color: black">EagleCam</strong><br>
+                <strong style="font-size: 14px; color: black;">EagleCam</strong><br>
                 <span style="font-size: 13px;">Selection 365</span>
             </div>
         </a>
@@ -72,14 +76,22 @@
         <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item "><a href="index.jsp" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="about.jsp" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="shop.jsp" class="nav-link">Shop</a></li>
-                <li class="nav-item"><a href="cart.jsp" class="nav-link">Cart</a></li>
-                <li class="nav-item"><a href="checkout.jsp" class="nav-link">CheckOut</a></li>
-                <li class="nav-item"><a href="blog.jsp" class="nav-link">Blog</a></li>
-                <li class="nav-item"><a href="contact.jsp" class="nav-link">Contact</a></li>
-                <li class="nav-item active"><a href="login.jsp" class="nav-link">Login</a></li>
+                <li class="nav-item"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
+                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+
+                <!-- Dropdown mới cho "Về Chúng Tôi" và "Blog" -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
+                    <div class="dropdown-menu rounded-0 m-0 dropdown-menu">
+                        <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
+                        <a href="blog.jsp" class="dropdown-item">Blog</a>
+                    </div>
+                </li>
+
+                <li class="nav-item"><a href="contact.jsp" class="nav-link">Liên Hệ</a></li>
+                <li class="nav-item active"><a href="login.jsp" class="nav-link">Đăng Nhập</a></li>
             </ul>
         </div>
     </div>
@@ -128,15 +140,25 @@
     }
 </script>
 
-<!-- Footer -->
+<%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section">
     <div class="container">
         <div class="row mb-5">
+            <!-- Cột Logo & Giới thiệu -->
             <div class="col-md">
                 <div class="ftco-footer-widget mb-4">
-                    <h2 class="ftco-heading-2"><a href="#" class="logo">Car<span>book</span></a></h2>
-                    <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there
-                        live the blind texts.</p>
+                    <h2 class="ftco-heading-2">
+                        <a class="logo d-flex align-items-center" href="index.jsp">
+                            <img src="assets/images/logo.PNG" alt="Logo"
+                                 style="height: 40px; margin-right: 10px; border-radius: 4px">
+                            <div style="line-height: 1;">
+                                <strong style="font-size: 14px;">EagleCam</strong><br>
+                                <span style="font-size: 13px;">Selection 365</span>
+                            </div>
+                        </a>
+                    </h2>
+                    <p>EagleCam Selection 365 cung cấp dịch vụ cho thuê máy ảnh và phụ kiện chất lượng cao, đáp ứng mọi
+                        nhu cầu của bạn với giá cả hợp lý và dịch vụ chuyên nghiệp.</p>
                     <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                         <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
                         <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
@@ -144,63 +166,68 @@
                     </ul>
                 </div>
             </div>
+            <!-- Cột Thông tin -->
             <div class="col-md">
                 <div class="ftco-footer-widget mb-4 ml-md-5">
-                    <h2 class="ftco-heading-2">Information</h2>
+                    <h2 class="ftco-heading-2">Đường tắt khác</h2>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="py-2 d-block">About</a></li>
-                        <li><a href="#" class="py-2 d-block">Services</a></li>
-                        <li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
-                        <li><a href="#" class="py-2 d-block">Best Price Guarantee</a></li>
-                        <li><a href="#" class="py-2 d-block">Privacy &amp; Cookies Policy</a></li>
+                        <li><a href="index.jsp" class="py-2 d-block">Trang Chủ</a></li>
+                        <li><a href="shop.jsp" class="py-2 d-block">Cửa Hàng</a></li>
+                        <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
+                        <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>
+                        <li><a href="#" class="py-2 d-block">Chính sách bảo mật & Cookie</a></li>
                     </ul>
                 </div>
             </div>
+            <!-- Cột Hỗ trợ khách hàng -->
             <div class="col-md">
                 <div class="ftco-footer-widget mb-4">
-                    <h2 class="ftco-heading-2">Customer Support</h2>
+                    <h2 class="ftco-heading-2">Hỗ trợ khách hàng</h2>
                     <ul class="list-unstyled">
-                        <li><a href="#" class="py-2 d-block">FAQ</a></li>
-                        <li><a href="#" class="py-2 d-block">Payment Option</a></li>
-                        <li><a href="#" class="py-2 d-block">Booking Tips</a></li>
-                        <li><a href="#" class="py-2 d-block">How it works</a></li>
-                        <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+                        <li><a href="#" class="py-2 d-block">Câu hỏi thường gặp</a></li>
+                        <li><a href="#" class="py-2 d-block">Phương thức thanh toán</a></li>
+                        <li><a href="#" class="py-2 d-block">Mẹo đặt thuê</a></li>
+                        <li><a href="#" class="py-2 d-block">Cách thức hoạt động</a></li>
+                        <li><a href="#" class="py-2 d-block">Liên hệ</a></li>
                     </ul>
                 </div>
             </div>
+            <!-- Cột Liên hệ -->
             <div class="col-md">
                 <div class="ftco-footer-widget mb-4">
-                    <h2 class="ftco-heading-2">Have a Questions?</h2>
+                    <h2 class="ftco-heading-2">Có thắc mắc?</h2>
                     <div class="block-23 mb-3">
                         <ul>
                             <li>
                                 <span class="icon icon-map-marker"></span>
-                                <span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span>
+                                <span class="text">CN2 - Đại học Nông Lâm Hồ Chí Minh, Thành phố Thủ Đức</span>
                             </li>
-                            <li><a href="#"><span class="icon icon-phone"></span><span
-                                    class="text">+2 392 3929 210</span></a></li>
-                            <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a>
+                            <li>
+                                <a href="#"><span class="icon icon-phone"></span><span class="text">+84 345295324</span></a>
+                            </li>
+                            <li>
+                                <a href="#"><span class="icon icon-envelope"></span><span class="text">EagleCam365@gmail.com</span></a>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
         </div>
-
+        <!-- Dòng Copyright -->
         <div class="row">
             <div class="col-md-12 text-center">
-                <p>
+                <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
                     Copyright &copy;
                     <script>document.write(new Date().getFullYear());</script>
                     All rights reserved | This template is made with <i class="icon-heart color-danger"
                                                                         aria-hidden="true"></i> by
                     <a href="https://colorlib.com" target="_blank">Colorlib</a>
-                </p>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
             </div>
         </div>
     </div>
 </footer>
-<!-- END Footer -->
+<%-- end phần Footer --%>
 
 <!-- Loader & Additional Scripts -->
 <div id="ftco-loader" class="show fullscreen">

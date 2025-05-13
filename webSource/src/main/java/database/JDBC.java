@@ -32,17 +32,17 @@ public class JDBC {
         }
     }
 
-    public static void main(String[] args) {
-        Connection conn = null;
-        try {
-            conn = JDBC.getConnection();
-            if (conn != null) {
-                System.out.println("Kết nối thành công đến cơ sở dữ liệu!");
-            } else {
-                System.out.println("Không thể kết nối đến cơ sở dữ liệu.");
-            }
-        } finally {
-            JDBC.closeConnection(conn);
-        }
-    }
+//    public static void main(String[] args) {
+//        Connection conn = null;
+//        try {
+//            conn = JDBC.getConnection();
+//            if (conn != null) {
+//                System.out.println("Kết nối thành công đến cơ sở dữ liệu!");
+//            } else {
+//                System.out.println("Không thể kết nối đến cơ sở dữ liệu.");
+//            }
+//        } finally {
+//            JDBC.closeConnection(conn);
+//        }
+//    }
 }
