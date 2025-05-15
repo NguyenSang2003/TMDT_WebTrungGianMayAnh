@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +35,29 @@ public class UserDAO {
         return emailExists;
     }
 
+    public boolean checkUsernameExist(String username) {
+        Connection connection = null;
+        boolean exists = false;
+
+        try {
+            connection = JDBC.getConnection();
+            String query = "SELECT 1 FROM users WHERE username = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                exists = true;
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi kiểm tra username: " + e.getMessage(), e);
+        } finally {
+            JDBC.closeConnection(connection);
+        }
+
+        return exists;
+    }
+
 
     public boolean registerWithEmail(String email, String username, String password) {
         if (checkEmailExist(email)) {
@@ -61,8 +83,8 @@ public class UserDAO {
             stmt.setTimestamp(6, now); // updated_at
 
             int rowsAffected = stmt.executeUpdate();
-
             return rowsAffected > 0;
+
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi đăng ký tài khoản: " + e.getMessage(), e);
         } finally {
@@ -70,14 +92,14 @@ public class UserDAO {
         }
     }
 
-    public boolean isLogin(String email, String password) {
+    public User login(String email, String password) {
         Connection connection = null;
-        boolean loginSuccess = false;
+        User user = null;
 
         try {
             connection = JDBC.getConnection();
 
-            String query = "SELECT * FROM users WHERE email = ? AND password = ?";
+            String query = "SELECT id, username, email, role, isVerifyEmail, is_active, created_at, updated_at FROM users WHERE email = ? AND password = ?";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setString(1, email);
             stmt.setString(2, password);
@@ -85,7 +107,15 @@ public class UserDAO {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                loginSuccess = true; // Có user khớp email & password
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                user.setVerifyEmail(rs.getBoolean("isVerifyEmail"));
+                user.setActive(rs.getBoolean("is_active"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                user.setUpdatedAt(rs.getTimestamp("updated_at"));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi đăng nhập: " + e.getMessage(), e);
@@ -93,7 +123,7 @@ public class UserDAO {
             JDBC.closeConnection(connection);
         }
 
-        return loginSuccess;
+        return user;
     }
 
     public User getUserByEmail(String email) {
@@ -123,10 +153,9 @@ public class UserDAO {
         } finally {
             JDBC.closeConnection(connection);
         }
-
         return user;
     }
-    
+
     public boolean isEmailVerified(String email) {
         Connection connection = null;
         boolean isVerified = false;
@@ -182,7 +211,6 @@ public class UserDAO {
 
         return users;
     }
-
 
     public User getUserById(int id) {
         Connection connection = null;

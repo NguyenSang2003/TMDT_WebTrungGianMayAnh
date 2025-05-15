@@ -1,5 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%@ page import="model.User" %>
+<%
+    User user = (User) session.getAttribute("user");
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -49,24 +54,76 @@
         </button>
 
         <%-- nút menu --%>
+        <%--        <div class="collapse navbar-collapse" id="ftco-nav">--%>
+        <%--            <ul class="navbar-nav ml-auto">--%>
+        <%--                <li class="nav-item active"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>--%>
+        <%--                <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>--%>
+        <%--                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>--%>
+        <%--                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>--%>
+
+        <%--                <!-- Dropdown mới cho "Về Chúng Tôi" và "Blog" -->--%>
+        <%--                <li class="nav-item dropdown">--%>
+        <%--                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>--%>
+        <%--                    <div class="dropdown-menu rounded-0 m-0 dropdown-menu">--%>
+        <%--                        <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>--%>
+        <%--                        <a href="blog.jsp" class="dropdown-item">Blog</a>--%>
+        <%--                    </div>--%>
+        <%--                </li>--%>
+
+        <%--                <li class="nav-item"><a href="contact.jsp" class="nav-link">Liên Hệ</a></li>--%>
+        <%--                <li class="nav-item"><a href="login.jsp" class="nav-link">Đăng Nhập</a></li>--%>
+        <%--            </ul>--%>
+        <%--        </div>--%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
 
-                <!-- Dropdown mới cho "Về Chúng Tôi" và "Blog" -->
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
-                    <div class="dropdown-menu rounded-0 m-0 dropdown-menu">
+                    <div class="dropdown-menu rounded-0 m-0">
                         <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
                         <a href="blog.jsp" class="dropdown-item">Blog</a>
                     </div>
                 </li>
 
                 <li class="nav-item"><a href="contact.jsp" class="nav-link">Liên Hệ</a></li>
+
+                <%-- Nếu chưa đăng nhập --%>
+                <%
+                    if (user == null) {
+                %>
                 <li class="nav-item"><a href="login.jsp" class="nav-link">Đăng Nhập</a></li>
+                <li class="nav-item"><a href="register.jsp" class="nav-link">Đăng Ký</a></li>
+                <%
+                } else {
+                %>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        Hi, <%= user.getUsername() %>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right m-0">
+                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+
+                        <% if ("admin".equals(user.getRole())) { %>
+                        <a href="admin/userManagement.jsp" class="dropdown-item">Quản lý người dùng</a>
+                        <a href="admin/productManagement.jsp" class="dropdown-item">Quản lý sản phẩm</a>
+                        <a href="admin/orderManagement.jsp" class="dropdown-item">Quản lý đơn hàng</a>
+                        <a href="admin/withdrawal.jsp" class="dropdown-item">Quản lý rút tiền</a>
+                        <% } else if ("nguoi_cho_thue".equals(user.getRole())) { %>
+                        <a href="owner/products.jsp" class="dropdown-item">Sản phẩm đã đăng</a>
+                        <a href="owner/income.jsp" class="dropdown-item">Doanh thu</a>
+                        <% } else if ("khach_thue".equals(user.getRole())) { %>
+                        <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
+                        <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <% } %>
+
+                        <a href="logout" class="dropdown-item">Đăng xuất</a>
+                    </div>
+                </li>
+                <% } %>
             </ul>
         </div>
     </div>
