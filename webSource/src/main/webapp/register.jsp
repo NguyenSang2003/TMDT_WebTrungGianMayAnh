@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,6 +32,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Nơi chèn CSS nội bộ -->
     <style type="text/css">
@@ -147,7 +149,21 @@
     </div>
 </div>
 
-<script src="assets/js/register.js"></script>
+<script type="text/javascript">
+    var status = document.getElementById("status").value;
+
+    if (status === "email_exists") {
+        swal("Đăng ký thất bại", "Email đã được sử dụng!", "error");
+    } else if (status === "username_exists") {
+        swal("Đăng ký thất bại", "Tên người dùng đã tồn tại!", "error");
+    } else if (status === "password_error") {
+        swal("Lỗi mật khẩu", "Mật khẩu không khớp hoặc ít hơn 6 ký tự!", "error");
+    } else if (status === "register_failed") {
+        swal("Lỗi hệ thống", "Đăng ký thất bại, vui lòng thử lại!", "error");
+    }
+</script>
+
+<script src="assets/js_handMade/register.js"></script>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section">

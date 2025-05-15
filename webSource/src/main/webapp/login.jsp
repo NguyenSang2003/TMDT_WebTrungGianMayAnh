@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -52,7 +53,6 @@
 </head>
 
 <body>
-
 <!-- Header/Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
@@ -106,7 +106,7 @@
     <div class="form">
         <img src="assets/images/camera_left.png" alt="Camera Left" class="camera-left">
         <div class="form-box login">
-            <form action="login" method="get">
+            <form action="login" method="post">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail-open"></ion-icon></span>
                     <input type="email" name="email" placeholder="abc@gmail.com" required>
