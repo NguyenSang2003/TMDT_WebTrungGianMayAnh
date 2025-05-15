@@ -133,10 +133,13 @@
     </div>
 </div>
 
+<!-- JavaScript để hiển thị thông báo lỗi -->
 <script type="text/javascript">
     var status = document.getElementById("status").value;
     if (status === "failed") {
         swal("Xin lỗi", "Email hoặc Mật khẩu không chính xác", "error");
+    } else if (status === "not_verified") {
+        swal("Xin lỗi", "Tài khoản của bạn chưa được xác minh. Vui lòng kiểm tra email để xác minh.", "warning");
     }
 </script>
 

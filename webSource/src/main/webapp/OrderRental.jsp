@@ -26,7 +26,7 @@
 						<i class="bi bi-person-fill fs-3"></i><span>Quản lý khách hàng</span>
 					</p>
 				</a> 
-				<a href="#" class="bg-transparent border-0 text-white d-block px-4 py-2 fw-bold text-decoration-none"">
+				<a href="#" class="bg-transparent border-0 text-white d-block px-4 py-2 fw-bold text-decoration-none">
 					<p class="d-flex align-items-center gap-3 m-0">
 						<i class="bi bi-person-fill fs-3"></i><span>Quản lý người cho thuê</span>
 					</p>
