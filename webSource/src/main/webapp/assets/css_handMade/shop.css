@@ -63,3 +63,9 @@
 .product-info .rating {
     color: gold;
 }
+.rating-detai{
+    display: flex;
+}
+.rating{
+    margin-right: 30px;
+}

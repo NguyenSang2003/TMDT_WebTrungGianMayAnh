@@ -80,10 +80,10 @@
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
             <div class="col-md-9 ftco-animate pb-5">
-                <p class="breadcrumbs"><span class="mr-2"><a href="index.jsp">Home <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Cars <i
+                <p class="breadcrumbs"><span class="mr-2"><a href="index.jsp">Trang chủ <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Cửa hàng <i
                         class="ion-ios-arrow-forward"></i></span></p>
-                <h1 class="mb-3 bread">Choose Your Car</h1>
+
             </div>
         </div>
     </div>
@@ -91,116 +91,323 @@
 
 
 <div class="container">
-    <div class="title" style="text-align: center;font-size: 30px;color: black" >Cửa hàng</div>
-    <input type="text" class="search-box" placeholder="Nhập từ khóa sản phẩm...">
+    <input type="text" style="margin-top: 10px " class="search-box" placeholder="Nhập từ khóa sản phẩm...">
 
     <div class="product-grid">
 
         <!-- Sản phẩm 1 -->
         <div class="product-card">
-            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
-            <img src="assets/images/image_1.jpg" alt="FX3">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_1.jpg" alt="FX3">
             <div class="product-info">
                 <h3>Sony FX3 Full-Frame Cinema Camera</h3>
                 <div class="price">1,000,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
-                <div class="rating">★★★★★</div>
+                <div class="rating-detai">
+                   <div class="rating">★ ★ ★ ★ ★</div>
+                   <a class="detail">Xem chi tiết</a>
+                </div>
             </div>
         </div>
 
         <!-- Sản phẩm 2 -->
         <div class="product-card">
-            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
-            <img src="assets/images/image_2.jpg" alt="A7 IV">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_2.jpg" alt="A7 IV">
             <div class="product-info">
                 <h3>Sony Alpha A7 IV</h3>
                 <div class="price">900,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
-                <div class="rating">★★★★★</div>
+                <div class="rating-detai">
+                   <div class="rating">★ ★ ★ ★ ★</div>
+                   <a class="detail">Xem chi tiết</a>
+                </div>
             </div>
         </div>
 
         <!-- Sản phẩm 3 -->
         <div class="product-card">
-            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
-            <img src="assets/images/image_3.jpg" alt="A7 III">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_3.jpg" alt="A7 III">
             <div class="product-info">
                 <h3>Sony Alpha A7 III</h3>
                 <div class="price">850,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
-                <div class="rating">★★★★★</div>
+                <div class="rating-detai">
+                   <div class="rating">★ ★ ★ ★ ★</div>
+                   <a class="detail">Xem chi tiết</a>
+                </div>
             </div>
         </div>
 
         <!-- Sản phẩm 4 -->
         <div class="product-card">
-            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
-            <img src="assets/images/image_4.jpg" alt="AX100">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayquay_1.jpg" alt="AX100">
             <div class="product-info">
                 <h3>Sony FDR-AX100 4K Camcorder</h3>
                 <div class="price">550,000 đ/ngày</div>
                 <div class="category">Máy quay</div>
-                <div class="rating">★★★★☆</div>
+                <div class="rating-detai">
+                   <div class="rating">★ ★ ★ ★ ☆</div>
+                   <a class="detail">Xem chi tiết</a>
+                </div>
             </div>
         </div>
 
         <!-- Sản phẩm 5 -->
         <div class="product-card">
-            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
-            <img src="assets/images/image_5.jpg" alt="C200">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayquay_2.jpg" alt="C200">
             <div class="product-info">
                 <h3>Canon EOS C200</h3>
                 <div class="price">750,000 đ/ngày</div>
                 <div class="category">Máy quay</div>
-                <div class="rating">★★★★☆</div>
+                <div class="rating-detai">
+                   <div class="rating">★ ★ ★ ★ ☆</div>
+                   <a class="detail">Xem chi tiết</a>
+                </div>
             </div>
         </div>
 
         <!-- Sản phẩm 6 -->
         <div class="product-card">
-            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
-            <img src="assets/images/image_6.jpg" alt="5D IV">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_4.jpg" alt="5D IV">
             <div class="product-info">
                 <h3>Canon EOS 5D IV</h3>
                 <div class="price">650,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
-                <div class="rating">★★★★★</div>
+                <div class="rating-detai">
+                   <div class="rating">★ ★ ★ ★ ★</div>
+                   <a class="detail">Xem chi tiết</a>
+                </div>
             </div>
         </div>
 
         <!-- Sản phẩm 7 -->
         <div class="product-card">
-            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
-            <img src="assets/images/image_7.jpg" alt="6D Mark II">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_5.jpg" alt="6D Mark II">
             <div class="product-info">
                 <h3>Canon 6D Mark II</h3>
                 <div class="price">400,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
-                <div class="rating">★★★★☆</div>
+                <div class="rating-detai">
+                   <div class="rating">★ ★ ★ ★ ☆</div>
+                   <a class="detail">Xem chi tiết</a>
+                </div>
             </div>
         </div>
 
         <!-- Sản phẩm 8 -->
         <div class="product-card">
-            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
-            <img src="assets/images/image_8.jpg" alt="6D">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_6.jpg" alt="6D">
             <div class="product-info">
                 <h3>Canon EOS 6D</h3>
                 <div class="price">380,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
-                <div class="rating">★★★★☆</div>
+                <div class="rating-detai">
+                   <div class="rating">★ ★ ★ ★ ☆</div>
+                   <a class="detail">Xem chi tiết</a>
+                </div>
             </div>
         </div>
 
         <!-- Sản phẩm 9 -->
         <div class="product-card">
-            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
-            <img src="assets/images/image_9.jpg" alt="80D">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_7.jpg" alt="80D">
             <div class="product-info">
                 <h3>Canon EOS 80D</h3>
                 <div class="price">380,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
-                <div class="rating">★★★★☆</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 10 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_8.png" alt="80D">
+            <div class="product-info">
+                <h3>Fujifilm X-S20</h3>
+                <div class="price">350,000 đ/ngày</div>
+                <div class="category">Máy ảnh</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 11 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_9.png" alt="80D">
+            <div class="product-info">
+                <h3>Canon EOS R6</h3>
+                <div class="price">400,000 đ/ngày</div>
+                <div class="category">Máy ảnh</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 12 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_10.png" alt="80D">
+            <div class="product-info">
+                <h3>Sony Alpha a7 III</h3>
+                <div class="price">380,000 đ/ngày</div>
+                <div class="category">Máy ảnh</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 13 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_11.png" alt="80D">
+            <div class="product-info">
+                <h3>Nikon Z6 II</h3>
+                <div class="price">370,000 đ/ngày</div>
+                <div class="category">Máy ảnh</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 14 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayanh_12.png" alt="80D">
+            <div class="product-info">
+                <h3>Olympus OM-D E-M1 Mark III</h3>
+                <div class="price">300,000 đ/ngày</div>
+                <div class="category">Máy ảnh</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 15 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayquay_3.png" alt="80D">
+            <div class="product-info">
+                <h3>Sony FX3</h3>
+                <div class="price">600,000 đ/ngày</div>
+                <div class="category">Máy quay</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 16 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayquay_4.png" alt="80D">
+            <div class="product-info">
+                <h3>Blackmagic Pocket Cinema Camera 6K</h3>
+                <div class="price">550,000 đ/ngày</div>
+                <div class="category">Máy quay</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 17 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayquay_4.png" alt="80D">
+            <div class="product-info">
+                <h3>Blackmagic Pocket Cinema Camera 6K</h3>
+                <div class="price">550,000 đ/ngày</div>
+                <div class="category">Máy quay</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 18 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayquay_5.png" alt="80D">
+            <div class="product-info">
+                <h3>Canon XA40</h3>
+                <div class="price">450,000 đ/ngày</div>
+                <div class="category">Máy quay</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 19 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayquay_6.png" alt="80D">
+            <div class="product-info">
+                <h3>Panasonic HC-X1</h3>
+                <div class="price">500,000 đ/ngày</div>
+                <div class="category">Máy quay</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 20 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/mayquay_7.png" alt="80D">
+            <div class="product-info">
+                <h3>DJI Osmo Pocket 3</h3>
+                <div class="price">280,000 đ/ngày</div>
+                <div class="category">Máy quay</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 21 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/phukien_1.png" alt="80D">
+            <div class="product-info">
+                <h3>Bộ pin Canon LP-E8 - chính hãng RAVPower</h3>
+                <div class="price">50,000 đ/ngày</div>
+                <div class="category">Phụ kiện</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
+            </div>
+        </div>
+
+        <!-- Sản phẩm 22 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/phukien_2.png" alt="80D">
+            <div class="product-info">
+                <h3>Pin Sony NP-F970 RAVPower RP-OBCF002</h3>
+                <div class="price">60,000 đ/ngày</div>
+                <div class="category">Phụ kiện</div>
+                <div class="rating">★ ★ ★ ★ ☆</div>
+
+                <a class="detail">Xem chi tiết</a>
             </div>
         </div>
 
