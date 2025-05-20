@@ -13,7 +13,7 @@ nbdist/
 # IDE Specific
 # ==========================
 # IntelliJ IDEA
-.idea/
+**/.idea/
 *.iws
 *.iml
 *.ipr
