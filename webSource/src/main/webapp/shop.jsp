@@ -80,15 +80,14 @@
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
             <div class="col-md-9 ftco-animate pb-5">
-                <p class="breadcrumbs"><span class="mr-2"><a href="index.jsp">Trang chủ <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Cửa hàng <i
+                <p class="breadcrumbs"><span class="mr-2"><a href="index.jsp">Trang Chủ <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Cửa Hàng <i
                         class="ion-ios-arrow-forward"></i></span></p>
-
+                <h1 class="mb-3 bread">Cửa Hàng</h1>
             </div>
         </div>
     </div>
 </section>
-
 
 <div class="container">
     <input type="text" style="margin-top: 10px " class="search-box" placeholder="Nhập từ khóa sản phẩm...">
@@ -104,8 +103,8 @@
                 <div class="price">1,000,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
                 <div class="rating-detai">
-                   <div class="rating">★ ★ ★ ★ ★</div>
-                   <a class="detail">Xem chi tiết</a>
+                    <div class="rating">★ ★ ★ ★ ★</div>
+                    <a class="detail">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -119,8 +118,8 @@
                 <div class="price">900,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
                 <div class="rating-detai">
-                   <div class="rating">★ ★ ★ ★ ★</div>
-                   <a class="detail">Xem chi tiết</a>
+                    <div class="rating">★ ★ ★ ★ ★</div>
+                    <a class="detail">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -134,8 +133,8 @@
                 <div class="price">850,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
                 <div class="rating-detai">
-                   <div class="rating">★ ★ ★ ★ ★</div>
-                   <a class="detail">Xem chi tiết</a>
+                    <div class="rating">★ ★ ★ ★ ★</div>
+                    <a class="detail">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -149,8 +148,8 @@
                 <div class="price">550,000 đ/ngày</div>
                 <div class="category">Máy quay</div>
                 <div class="rating-detai">
-                   <div class="rating">★ ★ ★ ★ ☆</div>
-                   <a class="detail">Xem chi tiết</a>
+                    <div class="rating">★ ★ ★ ★ ☆</div>
+                    <a class="detail">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -164,8 +163,8 @@
                 <div class="price">750,000 đ/ngày</div>
                 <div class="category">Máy quay</div>
                 <div class="rating-detai">
-                   <div class="rating">★ ★ ★ ★ ☆</div>
-                   <a class="detail">Xem chi tiết</a>
+                    <div class="rating">★ ★ ★ ★ ☆</div>
+                    <a class="detail">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -179,8 +178,8 @@
                 <div class="price">650,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
                 <div class="rating-detai">
-                   <div class="rating">★ ★ ★ ★ ★</div>
-                   <a class="detail">Xem chi tiết</a>
+                    <div class="rating">★ ★ ★ ★ ★</div>
+                    <a class="detail">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -194,8 +193,8 @@
                 <div class="price">400,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
                 <div class="rating-detai">
-                   <div class="rating">★ ★ ★ ★ ☆</div>
-                   <a class="detail">Xem chi tiết</a>
+                    <div class="rating">★ ★ ★ ★ ☆</div>
+                    <a class="detail">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -209,8 +208,8 @@
                 <div class="price">380,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
                 <div class="rating-detai">
-                   <div class="rating">★ ★ ★ ★ ☆</div>
-                   <a class="detail">Xem chi tiết</a>
+                    <div class="rating">★ ★ ★ ★ ☆</div>
+                    <a class="detail">Xem chi tiết</a>
                 </div>
             </div>
         </div>
@@ -416,7 +415,7 @@
 
 
 <%-- start phần Footer --%>
-<footer class="ftco-footer ftco-bg-dark ftco-section">
+<footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
     <div class="container">
         <div class="row mb-5">
             <!-- Cột Logo & Giới thiệu -->

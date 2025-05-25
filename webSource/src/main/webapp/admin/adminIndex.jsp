@@ -10,7 +10,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" href="#" type="image/x-icon">
     <!-- Custom styles -->
-    <link rel="stylesheet" href="adminAssets/css/style.min.css">
+    <link rel="stylesheet" href="../adminAssets/css/style.min.css">
 </head>
 
 <body>
@@ -89,7 +89,7 @@
         <div class="sidebar-footer">
             <a href="#" class="sidebar-user">
             <span class="sidebar-user-img">
-                <picture><source srcset="adminAssets/img/avatar/avatar-illustrated-01.webp" type="image/webp"><img src="adminAssets/img/avatar/avatar-illustrated-01.png" alt="User name"></picture>
+                <picture><source srcset="../adminAssets/img/avatar/avatar-illustrated-01.webp" type="image/webp"><img src="../adminAssets/img/avatar/avatar-illustrated-01.png" alt="User name"></picture>
             </span>
                 <div class="sidebar-user-info">
                     <span class="sidebar-user__title">Mrs.Cute</span>
@@ -180,7 +180,7 @@
                         <button href="##" class="nav-user-btn dropdown-btn" title="My profile" type="button">
                             <span class="sr-only">My profile</span>
                             <span class="nav-user-img">
-            <picture><source srcset="adminAssets/img/avatar/avatar-illustrated-02.webp" type="image/webp"><img src="adminAssets/img/avatar/avatar-illustrated-02.png" alt="User name"></picture>
+            <picture><source srcset="../adminAssets/img/avatar/avatar-illustrated-02.webp" type="image/webp"><img src="../adminAssets/img/avatar/avatar-illustrated-02.png" alt="User name"></picture>
           </span>
                         </button>
                         <ul class="users-item-dropdown nav-user-dropdown dropdown">
@@ -324,11 +324,11 @@
     </div>
 </div>
 <!-- Chart library -->
-<script src="./adminAssets/plugins/chart.min.js"></script>
+<script src="../adminAssets/plugins/chart.min.js"></script>
 <!-- Icons library -->
-<script src="adminAssets/plugins/feather.min.js"></script>
+<script src="../adminAssets/plugins/feather.min.js"></script>
 <!-- Custom scripts -->
-<script src="adminAssets/js/script.js"></script>
+<script src="../adminAssets/js/script.js"></script>
 </body>
 
 </html>

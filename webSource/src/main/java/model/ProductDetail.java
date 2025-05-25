@@ -92,6 +92,5 @@ public class ProductDetail {
         this.color = color;
     }
 
-    // Getters and Setters
 }
 

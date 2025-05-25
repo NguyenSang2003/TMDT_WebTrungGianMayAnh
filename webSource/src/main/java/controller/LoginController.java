@@ -47,7 +47,7 @@ public class LoginController extends HttpServlet {
         System.out.println("Login success");
 
         if ("admin".equalsIgnoreCase(user.getRole())) {
-            resp.sendRedirect("admin/orderManagement.jsp");
+            resp.sendRedirect("admin/ordersManagement.jsp");
         } else {
             resp.sendRedirect("index.jsp");
         }
