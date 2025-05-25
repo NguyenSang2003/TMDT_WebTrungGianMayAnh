@@ -1,9 +1,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+<%@ page import="model.User" %>
+
+<%
+    User user = (User) session.getAttribute("user");
+%>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Carbook - Free Bootstrap 4 Template by Colorlib</title>
+    <title>Blog-EagleCam Selection 365</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -31,23 +37,80 @@
 </head>
 <body>
 
+<!-- Header/Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
-        <a class="navbar-brand" href="index.html">Car<span>Book</span></a>
+
+        <%-- Logo và tên góc trái trên cùng --%>
+        <a class="navbar-brand d-flex align-items-center" href="index">
+            <img src="assets/images/logo.PNG" alt="Logo"
+                 style="height: 40px; margin-right: 10px; border-radius: 4px">
+            <div style="line-height: 1;">
+                <strong style="font-size: 14px;">EagleCam</strong><br>
+                <span style="font-size: 13px;">Selection 365</span>
+            </div>
+        </a>
+
+        <%-- Nút menu cho dang mobile --%>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav"
                 aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="oi oi-menu"></span> Menu
         </button>
 
+        <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="about.html" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="services.html" class="nav-link">Services</a></li>
-                <li class="nav-item"><a href="pricing.html" class="nav-link">Pricing</a></li>
-                <li class="nav-item"><a href="car.html" class="nav-link">Cars</a></li>
-                <li class="nav-item active"><a href="blog.html" class="nav-link">Blog</a></li>
-                <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                <li class="nav-item active"><a href="index" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
+                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
+                    <div class="dropdown-menu rounded-0 m-0">
+                        <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
+                        <a href="blog.jsp" class="dropdown-item">Blog</a>
+                    </div>
+                </li>
+
+                <li class="nav-item"><a href="contact.jsp" class="nav-link">Liên Hệ</a></li>
+
+                <%-- Nếu chưa đăng nhập --%>
+                <%
+                    if (user == null) {
+                %>
+                <li class="nav-item"><a href="login.jsp" class="nav-link">Đăng Nhập</a></li>
+                <li class="nav-item"><a href="register.jsp" class="nav-link">Đăng Ký</a></li>
+                <%
+                } else {
+                %>
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                        Hi, <%= user.getUsername() %>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right m-0">
+                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+
+                        <% if ("admin".equals(user.getRole())) { %>
+                        <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
+                        <a href="admin/userManagement.jsp" class="dropdown-item">Quản lý người dùng</a>
+                        <a href="admin/aProductsManagement.jsp" class="dropdown-item">Quản lý sản phẩm</a>
+                        <a href="admin/ordersManagement.jsp" class="dropdown-item">Quản lý đơn hàng</a>
+                        <% } else if ("nguoi_cho_thue".equals(user.getRole())) { %>
+                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="owner/oProductsManagement.jsp" class="dropdown-item">Sản phẩm đã đăng</a>
+                        <a href="owner/oRevenueReport.jsp" class="dropdown-item">Doanh thu</a>
+                        <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
+                        <% } else if ("khach_thue".equals(user.getRole())) { %>
+                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
+                        <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <% } %>
+
+                        <a href="logout" class="dropdown-item">Đăng xuất</a>
+                    </div>
+                </li>
+                <% } %>
             </ul>
         </div>
     </div>

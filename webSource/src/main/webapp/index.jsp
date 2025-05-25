@@ -1,8 +1,16 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%@ page import="model.User" %>
+<%@ page import="java.util.List" %>
+<%@ page import="model.ProductView" %>
+
 <%
+    // Lấy thông tin user từ session .
     User user = (User) session.getAttribute("user");
+    // Lấy danh sách sản phẩm từ request attribute (HomeController).
+    List<ProductView> latestProducts = (List<ProductView>) request.getAttribute("latestProducts");
+    List<ProductView> bestSellingProducts = (List<ProductView>) request.getAttribute("bestSellingProducts");
+    List<ProductView> mostViewedProducts = (List<ProductView>) request.getAttribute("mostViewedProducts");
 %>
 
 <!DOCTYPE html>
@@ -28,6 +36,13 @@
     <link rel="stylesheet" href="assets/css/icomoon.css">
     <link rel="stylesheet" href="assets/css/style.css">
 
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+
+
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
 </head>
@@ -38,7 +53,7 @@
     <div class="container">
 
         <%-- Logo và tên góc trái trên cùng --%>
-        <a class="navbar-brand d-flex align-items-center" href="index.jsp">
+        <a class="navbar-brand d-flex align-items-center" href="index">
             <img src="assets/images/logo.PNG" alt="Logo"
                  style="height: 40px; margin-right: 10px; border-radius: 4px">
             <div style="line-height: 1;">
@@ -54,29 +69,9 @@
         </button>
 
         <%-- nút menu --%>
-        <%--        <div class="collapse navbar-collapse" id="ftco-nav">--%>
-        <%--            <ul class="navbar-nav ml-auto">--%>
-        <%--                <li class="nav-item active"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>--%>
-        <%--                <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>--%>
-        <%--                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>--%>
-        <%--                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>--%>
-
-        <%--                <!-- Dropdown mới cho "Về Chúng Tôi" và "Blog" -->--%>
-        <%--                <li class="nav-item dropdown">--%>
-        <%--                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>--%>
-        <%--                    <div class="dropdown-menu rounded-0 m-0 dropdown-menu">--%>
-        <%--                        <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>--%>
-        <%--                        <a href="blog.jsp" class="dropdown-item">Blog</a>--%>
-        <%--                    </div>--%>
-        <%--                </li>--%>
-
-        <%--                <li class="nav-item"><a href="contact.jsp" class="nav-link">Liên Hệ</a></li>--%>
-        <%--                <li class="nav-item"><a href="login.jsp" class="nav-link">Đăng Nhập</a></li>--%>
-        <%--            </ul>--%>
-        <%--        </div>--%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item active"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
@@ -108,13 +103,14 @@
                         <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
+                        <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
                         <a href="admin/userManagement.jsp" class="dropdown-item">Quản lý người dùng</a>
-                        <a href="admin/productManagement.jsp" class="dropdown-item">Quản lý sản phẩm</a>
-                        <a href="admin/orderManagement.jsp" class="dropdown-item">Quản lý đơn hàng</a>
-                        <a href="admin/withdrawal.jsp" class="dropdown-item">Quản lý rút tiền</a>
+                        <a href="admin/aProductsManagement.jsp" class="dropdown-item">Quản lý sản phẩm</a>
+                        <a href="admin/ordersManagement.jsp" class="dropdown-item">Quản lý đơn hàng</a>
                         <% } else if ("nguoi_cho_thue".equals(user.getRole())) { %>
-                        <a href="owner/products.jsp" class="dropdown-item">Sản phẩm đã đăng</a>
-                        <a href="owner/income.jsp" class="dropdown-item">Doanh thu</a>
+                        <a href="owner/oProductsManagement.jsp" class="dropdown-item">Sản phẩm đã đăng</a>
+                        <a href="owner/oRevenueReport.jsp" class="dropdown-item">Doanh thu</a>
+                        <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
                         <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
                         <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
@@ -203,7 +199,7 @@
                                 <div class="col-md-4 d-flex align-self-stretch ftco-animate">
                                     <div class="services w-100 text-center">
                                         <div class="icon d-flex align-items-center justify-content-center">
-                                            <span class="flaticon-shop"></span>
+                                            <span class="material-symbols-outlined">local_see</span>
                                         </div>
                                         <div class="text w-100">
                                             <h3 class="heading mb-2">Chọn cửa hàng nhận máy</h3>
@@ -213,7 +209,7 @@
                                 <div class="col-md-4 d-flex align-self-stretch ftco-animate">
                                     <div class="services w-100 text-center">
                                         <div class="icon d-flex align-items-center justify-content-center">
-                                            <span class="flaticon-camera"></span>
+                                            <span class="material-symbols-outlined">add_a_photo</span>
                                         </div>
                                         <div class="text w-100">
                                             <h3 class="heading mb-2">Chọn máy ảnh phù hợp nhất</h3>
@@ -223,7 +219,7 @@
                                 <div class="col-md-4 d-flex align-self-stretch ftco-animate">
                                     <div class="services w-100 text-center">
                                         <div class="icon d-flex align-items-center justify-content-center">
-                                            <span class="flaticon-calendar"></span>
+                                            <span class="material-symbols-outlined">photo_camera</span>
                                         </div>
                                         <div class="text w-100">
                                             <h3 class="heading mb-2">Đặt trước máy ảnh</h3>
@@ -243,92 +239,134 @@
 </section>
 <%-- end form --%>
 
-<%-- Phần các sản phẩm --%>
+<!-- Section Sản phẩm bán chạy -->
 <section class="ftco-section ftco-no-pt bg-light">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12 heading-section text-center ftco-animate mb-5">
                 <span class="subheading">Dịch vụ của chúng tôi</span>
-                <h2 class="mb-2">Máy Ảnh Nổi Bật</h2>
+                <h2 class="mb-2">Máy Ảnh Bán Chạy</h2>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="carousel-car owl-carousel">
+                    <% if (bestSellingProducts != null) {
+                        for (ProductView product : bestSellingProducts) { %>
                     <div class="item">
                         <div class="car-wrap rounded ftco-animate">
                             <div class="img rounded d-flex align-items-end"
-                                 style="background-image: url(assets/images/bg_1.jpg);"></div>
+                                 style="background-image: url('<%= product.getImageUrl() %>');">
+                            </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="#">Canon EOS Rebel T7</a></h2>
+                                <h2 class="mb-0"><a href="#"><%= product.getName() %>
+                                </a></h2>
                                 <div class="d-flex mb-3">
-                                    <span class="cat">Canon</span>
-                                    <p class="price ml-auto">$50 <span>/ngày</span></p>
+                                    <span class="cat">Sản phẩm bán chạy</span>
+                                    <p class="price ml-auto">$<%= product.getPricePerDay() %> <span>/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
                                     <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
+                                    <a href="product-detail?id=<%= product.getId() %>" class=" btn btn-secondary py-2
+                                       ml-1">Chi tiết
+                                    </a>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <div class="item">
-                        <div class="car-wrap rounded ftco-animate">
-                            <div class="img rounded d-flex align-items-end"
-                                 style="background-image: url(assets/images/bg_2.jpg);"></div>
-                            <div class="text">
-                                <h2 class="mb-0"><a href="#">Nikon D5600</a></h2>
-                                <div class="d-flex mb-3">
-                                    <span class="cat">Nikon</span>
-                                    <p class="price ml-auto">$55 <span>/ngày</span></p>
-                                </div>
-                                <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="car-wrap rounded ftco-animate">
-                            <div class="img rounded d-flex align-items-end"
-                                 style="background-image: url(assets/images/bg_3.jpg);"></div>
-                            <div class="text">
-                                <h2 class="mb-0"><a href="#">Sony A6400</a></h2>
-                                <div class="d-flex mb-3">
-                                    <span class="cat">Sony</span>
-                                    <p class="price ml-auto">$60 <span>/ngày</span></p>
-                                </div>
-                                <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="car-wrap rounded ftco-animate">
-                            <div class="img rounded d-flex align-items-end"
-                                 style="background-image: url(assets/images/bg_1.jpg);"></div>
-                            <div class="text">
-                                <h2 class="mb-0"><a href="#">Fujifilm X-T30</a></h2>
-                                <div class="d-flex mb-3">
-                                    <span class="cat">Fujifilm</span>
-                                    <p class="price ml-auto">$65 <span>/ngày</span></p>
-                                </div>
-                                <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
+                    <% }
+                    } %>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<%-- End phần các sản phẩm --%>
+
+<!-- Section Sản phẩm mới nhất -->
+<section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 heading-section text-center ftco-animate mb-5">
+                <span class="subheading">Khám phá sản phẩm mới</span>
+                <h2 class="mb-2">Máy Ảnh Mới Nhất</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="carousel-car owl-carousel">
+                    <% if (latestProducts != null) {
+                        for (ProductView product : latestProducts) { %>
+                    <div class="item">
+                        <div class="car-wrap rounded ftco-animate">
+                            <div class="img rounded d-flex align-items-end"
+                                 style="background-image: url('<%= product.getImageUrl() %>');">
+                            </div>
+                            <div class="text">
+                                <h2 class="mb-0"><a href="#"><%= product.getName() %>
+                                </a></h2>
+                                <div class="d-flex mb-3">
+                                    <span class="cat">Sản phẩm mới</span>
+                                    <p class="price ml-auto">$<%= product.getPricePerDay() %> <span>/ngày</span></p>
+                                </div>
+                                <p class="d-flex mb-0 d-block">
+                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
+                                    <a href="product-detail?id=<%= product.getId() %>" class=" btn btn-secondary py-2
+                                       ml-1">Chi tiết
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% }
+                    } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section Sản phẩm được xem nhiều nhất -->
+<section class="ftco-section ftco-no-pt bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12 heading-section text-center ftco-animate mb-5">
+                <span class="subheading">Xem nhiều nhất</span>
+                <h2 class="mb-2">Sản Phẩm Được Xem Nhiều Nhất</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="carousel-car owl-carousel">
+                    <% if (mostViewedProducts != null) {
+                        for (ProductView product : mostViewedProducts) { %>
+                    <div class="item">
+                        <div class="car-wrap rounded ftco-animate">
+                            <div class="img rounded d-flex align-items-end"
+                                 style="background-image: url('<%= product.getImageUrl() %>');">
+                            </div>
+                            <div class="text">
+                                <h2 class="mb-0"><a href="#"><%= product.getName() %>
+                                </a></h2>
+                                <div class="d-flex mb-3">
+                                    <span class="cat">Hot</span>
+                                    <p class="price ml-auto">$<%= product.getPricePerDay() %> <span>/ngày</span></p>
+                                </div>
+                                <p class="d-flex mb-0 d-block">
+                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
+                                    <a href="product-detail?id=<%= product.getId() %>" class=" btn btn-secondary py-2
+                                       ml-1">Chi tiết
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% }
+                    } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <%-- banner --%>
 <%--<section class="ftco-section ftco-intro" style="background-image: url(assets/images/bg_3.jpg);">--%>
@@ -436,7 +474,7 @@
             <div class="col-md">
                 <div class="ftco-footer-widget mb-4">
                     <h2 class="ftco-heading-2">
-                        <a class="logo d-flex align-items-center" href="index.jsp">
+                        <a class="logo d-flex align-items-center" href="index">
                             <img src="assets/images/logo.PNG" alt="Logo"
                                  style="height: 40px; margin-right: 10px; border-radius: 4px">
                             <div style="line-height: 1;">
@@ -459,7 +497,7 @@
                 <div class="ftco-footer-widget mb-4 ml-md-5">
                     <h2 class="ftco-heading-2">Đường tắt khác</h2>
                     <ul class="list-unstyled">
-                        <li><a href="index.jsp" class="py-2 d-block">Trang Chủ</a></li>
+                        <li><a href="index" class="py-2 d-block">Trang Chủ</a></li>
                         <li><a href="shop.jsp" class="py-2 d-block">Cửa Hàng</a></li>
                         <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
                         <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>

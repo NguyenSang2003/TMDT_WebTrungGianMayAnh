@@ -131,7 +131,7 @@
   </thead>
   <tbody>
   <tr>
-    <td class="product-name"><img src="adminAssets/img/products/canon70d.jpg" alt=""> Canon 70D</td>
+    <td class="product-name"><img src="../adminAssets/img/products/canon70d.jpg" alt=""> Canon 70D</td>
     <td>x1</td>
     <td>Feb 5, 2020</td>
     <td>$253.82</td>
@@ -144,7 +144,7 @@
     </td>
   </tr>
   <tr>
-    <td class="product-name"><img src="adminAssets/img/products/sonya6400.jpg" alt=""> Sony A6400</td>
+    <td class="product-name"><img src="../adminAssets/img/products/sonya6400.jpg" alt=""> Sony A6400</td>
     <td>x3</td>
     <td>Sep 8, 2020</td>
     <td>$556.24</td>
@@ -157,7 +157,7 @@
     </td>
   </tr>
   <tr>
-    <td class="product-name"><img src="adminAssets/img/products/Canon24.jpg" alt=""> Canon 24-70F4L IS USM</td>
+    <td class="product-name"><img src="../adminAssets/img/products/Canon24.jpg" alt=""> Canon 24-70F4L IS USM</td>
     <td>x3</td>
     <td>Dec 21, 2020</td>
     <td>$115.26</td>
@@ -170,7 +170,7 @@
     </td>
   </tr>
   <tr>
-    <td class="product-name"><img src="adminAssets/img/products/canon70200.jpg" alt=""> Canon 70-200F2.8L</td>
+    <td class="product-name"><img src="../adminAssets/img/products/canon70200.jpg" alt=""> Canon 70-200F2.8L</td>
     <td>x2</td>
     <td>Aug 13, 2020</td>
     <td>$675.51</td>

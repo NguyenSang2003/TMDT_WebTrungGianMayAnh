@@ -100,28 +100,28 @@
         <tbody>
         <tr>
             <td class="product-cell">
-                <img src="adminAssets/img/products/canon70d.jpg" class="product-img" alt="">
+                <img src="../adminAssets/img/products/canon70d.jpg" class="product-img" alt="">
                 <span class="product-name">700D</span>
             </td>
             <td>$1822</td>
         </tr>
         <tr>
             <td class="product-cell">
-                <img src="adminAssets/img/products/sonya6400.jpg" class="product-img" alt="">
+                <img src="../adminAssets/img/products/sonya6400.jpg" class="product-img" alt="">
                 <span class="product-name">A6400</span>
             </td>
             <td>$8545</td>
         </tr>
         <tr>
             <td class="product-cell">
-                <img src="adminAssets/img/products/Canon24.jpg" class="product-img" alt="">
+                <img src="../adminAssets/img/products/Canon24.jpg" class="product-img" alt="">
                 <span class="product-name">D610</span>
             </td>
             <td>$7287</td>
         </tr>
         <tr>
             <td class="product-cell">
-                <img src="adminAssets/img/products/canon70200.jpg" class="product-img" alt="">
+                <img src="../adminAssets/img/products/canon70200.jpg" class="product-img" alt="">
                 <span class="product-name">A7C</span>
             </td>
             <td>$9325</td>

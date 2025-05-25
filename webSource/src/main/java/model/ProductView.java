@@ -3,18 +3,20 @@ package model;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
-public class Product {
+public class ProductView {
     private int id;
     private int userId;
     private String name;
     private BigDecimal pricePerDay;
     private int quantity;
-    private int viewCount;    // Số lượt xem
-    private int soldCount;    // Số lượng bán ra
-    private String status;    // "con_hang", "het_hang", "dang_cho_thue"
-    private java.sql.Timestamp createdAt;
-    private java.sql.Timestamp updatedAt;
+    private String status;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
+    private int viewCount;
+    private int soldCount;
+    private String imageUrl; // từ product_details.image_url
 
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -45,22 +47,6 @@ public class Product {
 
     public void setPricePerDay(BigDecimal pricePerDay) {
         this.pricePerDay = pricePerDay;
-    }
-
-    public int getViewCount() {
-        return viewCount;
-    }
-
-    public void setViewCount(int viewCount) {
-        this.viewCount = viewCount;
-    }
-
-    public int getSoldCount() {
-        return soldCount;
-    }
-
-    public void setSoldCount(int soldCount) {
-        this.soldCount = soldCount;
     }
 
     public int getQuantity() {
@@ -95,5 +81,27 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
-}
+    public int getViewCount() {
+        return viewCount;
+    }
 
+    public void setViewCount(int viewCount) {
+        this.viewCount = viewCount;
+    }
+
+    public int getSoldCount() {
+        return soldCount;
+    }
+
+    public void setSoldCount(int soldCount) {
+        this.soldCount = soldCount;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+}

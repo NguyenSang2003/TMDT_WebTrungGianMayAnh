@@ -24,6 +24,6 @@ public class LogoutController extends HttpServlet {
 
         System.out.println("Logout success");
         
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("index");
     }
 }
