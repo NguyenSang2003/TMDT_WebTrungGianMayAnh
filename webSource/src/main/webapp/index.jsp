@@ -108,12 +108,10 @@
                         <a href="admin/aProductsManagement.jsp" class="dropdown-item">Quản lý sản phẩm</a>
                         <a href="admin/ordersManagement.jsp" class="dropdown-item">Quản lý đơn hàng</a>
                         <% } else if ("nguoi_cho_thue".equals(user.getRole())) { %>
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
                         <a href="owner/oProductsManagement.jsp" class="dropdown-item">Sản phẩm đã đăng</a>
                         <a href="owner/oRevenueReport.jsp" class="dropdown-item">Doanh thu</a>
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
                         <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
                         <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
                         <% } %>
@@ -261,20 +259,22 @@
                                  style="background-image: url('<%= product.getImageUrl() %>');">
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="#"><%= product.getName() %></a></h2>
+                                <h2 class="mb-0"><a href="#"><%= product.getName() %>
+                                </a></h2>
                                 <div class="d-flex mb-3">
                                     <span class="cat">Sản phẩm bán chạy</span>
                                     <p class="price ml-auto">$<%= product.getPricePerDay() %> <span>/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
                                     <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-<%--                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>--%>
-                                    <a href="product-detail?id=<%= product.getId() %>"><%= product.getName() %></a>
+                                    <a href="product-detail?id=<%= product.getId() %>" class=" btn btn-secondary py-2
+                                       ml-1">Chi tiết
+                                    </a>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <%     }
+                    <% }
                     } %>
                 </div>
             </div>
@@ -302,19 +302,22 @@
                                  style="background-image: url('<%= product.getImageUrl() %>');">
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="#"><%= product.getName() %></a></h2>
+                                <h2 class="mb-0"><a href="#"><%= product.getName() %>
+                                </a></h2>
                                 <div class="d-flex mb-3">
                                     <span class="cat">Sản phẩm mới</span>
                                     <p class="price ml-auto">$<%= product.getPricePerDay() %> <span>/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
                                     <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
+                                    <a href="product-detail?id=<%= product.getId() %>" class=" btn btn-secondary py-2
+                                       ml-1">Chi tiết
+                                    </a>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <%     }
+                    <% }
                     } %>
                 </div>
             </div>
@@ -342,19 +345,22 @@
                                  style="background-image: url('<%= product.getImageUrl() %>');">
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="#"><%= product.getName() %></a></h2>
+                                <h2 class="mb-0"><a href="#"><%= product.getName() %>
+                                </a></h2>
                                 <div class="d-flex mb-3">
                                     <span class="cat">Hot</span>
                                     <p class="price ml-auto">$<%= product.getPricePerDay() %> <span>/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
                                     <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-                                    <a href="#" class="btn btn-secondary py-2 ml-1">Chi tiết</a>
+                                    <a href="product-detail?id=<%= product.getId() %>" class=" btn btn-secondary py-2
+                                       ml-1">Chi tiết
+                                    </a>
                                 </p>
                             </div>
                         </div>
                     </div>
-                    <%     }
+                    <% }
                     } %>
                 </div>
             </div>

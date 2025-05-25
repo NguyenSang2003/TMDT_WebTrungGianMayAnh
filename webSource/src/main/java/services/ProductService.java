@@ -21,7 +21,7 @@ public class ProductService {
             String query = "SELECT p.*, pd.image_url " +
                     "FROM products p " +
                     "JOIN product_details pd ON p.id = pd.product_id " +
-                    "ORDER BY p.created_at DESC LIMIT 6";
+                    "ORDER BY p.created_at DESC LIMIT 5";
             PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -56,7 +56,7 @@ public class ProductService {
             String query = "SELECT p.*, pd.image_url " +
                     "FROM products p " +
                     "JOIN product_details pd ON p.id = pd.product_id " +
-                    "ORDER BY p.sold_count DESC LIMIT 6";
+                    "ORDER BY p.sold_count DESC LIMIT 5";
             PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
