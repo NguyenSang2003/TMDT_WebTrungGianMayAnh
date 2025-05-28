@@ -42,9 +42,18 @@
     <!-- Material Symbols Outlined -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
-
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+
 </head>
 <body>
 
@@ -86,7 +95,7 @@
 
                 <li class="nav-item"><a href="contact.jsp" class="nav-link">Liên Hệ</a></li>
 
-                <%-- Nếu chưa đăng nhập --%>
+                <%-- Kiểm tra trạng thái đăng nhập --%>
                 <%
                     if (user == null) {
                 %>
@@ -100,6 +109,13 @@
                         Hi, <%= user.getUsername() %>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right m-0">
+
+                        <%-- Nếu chưa xác thực Gmail --%>
+                        <% if (!user.isVerifyEmail()) { %>
+                        <a href="GmailVerify.jsp" class="dropdown-item text-danger font-weight-bold">
+                            <i class="fa fa-envelope"></i> Xác thực Gmail
+                        </a>
+                        <% } else { %>
                         <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
@@ -107,13 +123,16 @@
                         <a href="admin/userManagement.jsp" class="dropdown-item">Quản lý người dùng</a>
                         <a href="admin/aProductsManagement.jsp" class="dropdown-item">Quản lý sản phẩm</a>
                         <a href="admin/ordersManagement.jsp" class="dropdown-item">Quản lý đơn hàng</a>
+
                         <% } else if ("nguoi_cho_thue".equals(user.getRole())) { %>
                         <a href="owner/oProductsManagement.jsp" class="dropdown-item">Sản phẩm đã đăng</a>
                         <a href="owner/oRevenueReport.jsp" class="dropdown-item">Doanh thu</a>
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
+
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
                         <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
                         <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <% } %>
                         <% } %>
 
                         <a href="logout" class="dropdown-item">Đăng xuất</a>
@@ -259,16 +278,24 @@
                                  style="background-image: url('<%= product.getImageUrl() %>');">
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="#"><%= product.getName() %>
+                                <h2 class="mb-0"><a
+                                        href="product-detail?id=<%= product.getId() %>"><%= product.getName() %>
                                 </a></h2>
                                 <div class="d-flex mb-3">
-                                    <span class="cat">Sản phẩm bán chạy</span>
-                                    <p class="price ml-auto">$<%= product.getPricePerDay() %> <span>/ngày</span></p>
+                                    <span class="cat small-text-color">Sản phẩm bán chạy</span>
+                                    <p class="price ml-auto"><%= product.getFormattedPricePerDay() %>
+                                        vnđ
+                                        <span class="small-text-color">/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-                                    <a href="product-detail?id=<%= product.getId() %>" class=" btn btn-secondary py-2
-                                       ml-1">Chi tiết
+                                    <a href="#" class="btn btn-primary py-2 mr-1" data-bs-toggle="tooltip"
+                                       data-bs-placement="top" title="Thêm vào giỏ hàng">
+                                        <span class="material-symbols-outlined">shopping_cart</span>
+                                    </a>
+                                    <a href="product-detail?id=<%= product.getId() %>"
+                                       class="btn btn-secondary py-2 ml-1" data-bs-toggle="tooltip"
+                                       data-bs-placement="top" title="Xem chi tiết">
+                                        <span class="material-symbols-outlined">info</span>
                                     </a>
                                 </p>
                             </div>
@@ -302,16 +329,24 @@
                                  style="background-image: url('<%= product.getImageUrl() %>');">
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="#"><%= product.getName() %>
+                                <h2 class="mb-0"><a
+                                        href="product-detail?id=<%= product.getId() %>"><%= product.getName() %>
                                 </a></h2>
                                 <div class="d-flex mb-3">
-                                    <span class="cat">Sản phẩm mới</span>
-                                    <p class="price ml-auto">$<%= product.getPricePerDay() %> <span>/ngày</span></p>
+                                    <span class="cat small-text-color">Sản phẩm mới</span>
+                                    <p class="price ml-auto"><%= product.getFormattedPricePerDay() %>
+                                        vnđ
+                                        <span class="small-text-color">/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-                                    <a href="product-detail?id=<%= product.getId() %>" class=" btn btn-secondary py-2
-                                       ml-1">Chi tiết
+                                    <a href="#" class="btn btn-primary py-2 mr-1" data-bs-toggle="tooltip"
+                                       data-bs-placement="top" title="Thêm vào giỏ hàng">
+                                        <span class="material-symbols-outlined">shopping_cart</span>
+                                    </a>
+                                    <a href="product-detail?id=<%= product.getId() %>"
+                                       class="btn btn-secondary py-2 ml-1" data-bs-toggle="tooltip"
+                                       data-bs-placement="top" title="Xem chi tiết">
+                                        <span class="material-symbols-outlined">info</span>
                                     </a>
                                 </p>
                             </div>
@@ -345,16 +380,24 @@
                                  style="background-image: url('<%= product.getImageUrl() %>');">
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a href="#"><%= product.getName() %>
+                                <h2 class="mb-0"><a
+                                        href="product-detail?id=<%= product.getId() %>"><%= product.getName() %>
                                 </a></h2>
                                 <div class="d-flex mb-3">
-                                    <span class="cat">Hot</span>
-                                    <p class="price ml-auto">$<%= product.getPricePerDay() %> <span>/ngày</span></p>
+                                    <span class="cat small-text-color">Hot</span>
+                                    <p class="price ml-auto"><%= product.getFormattedPricePerDay() %>
+                                        vnđ
+                                        <span class="small-text-color">/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="btn btn-primary py-2 mr-1">Đặt ngay</a>
-                                    <a href="product-detail?id=<%= product.getId() %>" class=" btn btn-secondary py-2
-                                       ml-1">Chi tiết
+                                    <a href="#" class="btn btn-primary py-2 mr-1" data-bs-toggle="tooltip"
+                                       data-bs-placement="top" title="Thêm vào giỏ hàng">
+                                        <span class="material-symbols-outlined">shopping_cart</span>
+                                    </a>
+                                    <a href="product-detail?id=<%= product.getId() %>"
+                                       class="btn btn-secondary py-2 ml-1" data-bs-toggle="tooltip"
+                                       data-bs-placement="top" title="Xem chi tiết">
+                                        <span class="material-symbols-outlined">info</span>
                                     </a>
                                 </p>
                             </div>

@@ -9,7 +9,9 @@ import services.ProductService;
 import model.ProductView;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 @WebServlet("/index")
 public class HomeController extends HttpServlet {
@@ -27,6 +29,21 @@ public class HomeController extends HttpServlet {
 //        System.out.println("Latest Products: " + latestProducts.size());
 //        System.out.println("Best Selling Products: " + bestSellingProducts.size());
 //        System.out.println("Most Viewed Products: " + mostViewedProducts.size());
+
+        // Định dạng giá tiền thành "1.000.000"
+        NumberFormat currencyFormatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+
+        for (ProductView p : latestProducts) {
+            p.setFormattedPricePerDay(currencyFormatter.format(p.getPricePerDay()));
+        }
+
+        for (ProductView p : bestSellingProducts) {
+            p.setFormattedPricePerDay(currencyFormatter.format(p.getPricePerDay()));
+        }
+
+        for (ProductView p : mostViewedProducts) {
+            p.setFormattedPricePerDay(currencyFormatter.format(p.getPricePerDay()));
+        }
 
         // Đưa vào request attribute để chuyển sang trang JSP
         req.setAttribute("latestProducts", latestProducts);

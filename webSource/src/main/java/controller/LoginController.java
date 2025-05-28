@@ -33,12 +33,6 @@ public class LoginController extends HttpServlet {
             return;
         }
 
-        if (!user.isVerifyEmail()) {
-            req.setAttribute("email", email);
-            req.getRequestDispatcher("GmailVerify.jsp").forward(req, resp);
-            return;
-        }
-
         HttpSession session = req.getSession();
         session.setAttribute("user", user);
         session.setAttribute("userName", user.getUsername());
