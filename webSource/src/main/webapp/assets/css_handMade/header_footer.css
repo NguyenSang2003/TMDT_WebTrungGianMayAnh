@@ -12,6 +12,12 @@
     transition: background-color 0.2s ease;
 }
 
+/*cho chữ thành tiền ở index*/
+.small-text-color {
+    font-size: 13px;
+    color: #4b4b48 !important;
+}
+
 /* -------------------------------------------
    Button dành cho nút xanh lá (btn-secondary) và nút submit của form
 -------------------------------------------- */

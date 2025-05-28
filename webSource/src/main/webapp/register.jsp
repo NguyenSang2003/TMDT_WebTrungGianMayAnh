@@ -47,6 +47,19 @@
         .navbar.navbar-dark .navbar-nav .nav-link.active {
             color: #01d28e !important;
         }
+
+        .pThongBao {
+            margin-bottom: 0px;
+        }
+
+        .notification2 {
+            margin: 0 auto 10px auto;
+            width: 50%;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 
     <%-- css_handMade --%>
@@ -102,12 +115,42 @@
 
 <%-- Regiter --%>
 <div class="container">
-    <input type="hidden" id="status" value="<%= request.getAttribute("status") %>">
     <h2 class="page-title">Đăng ký</h2>
+
+    <%
+        String status = (String) request.getAttribute("status");
+        if (status != null && !status.trim().isEmpty()) {
+            String bgColor = "";
+            String textColor = "#ffffff";
+            if ("success".equals(status)) {
+                bgColor = "green";
+            } else {
+                bgColor = "red";
+            }
+    %>
+    <div class="notification2" style="background-color: <%= bgColor %>; color: <%= textColor %>;">
+        <% if ("email_exists".equals(status)) { %>
+        <p class="pThongBao">Email đã tồn tại. Vui lòng nhập email khác.</p>
+        <% } else if ("username_exists".equals(status)) { %>
+        <p class="pThongBao">Tên người dùng đã tồn tại. Vui lòng chọn tên khác.</p>
+        <% } else if ("password_error".equals(status)) { %>
+        <p class="pThongBao">Mật khẩu nhập lại không khớp hoặc độ dài mật khẩu phải từ 6 ký tự.</p>
+        <% } else if ("register_failed".equals(status)) { %>
+        <p class="pThongBao">Đăng ký không thành công. Vui lòng thử lại!</p>
+        <% } else if ("success".equals(status)) { %>
+        <p class="pThongBao">Đăng ký thành công!</p>
+        <% } %>
+    </div>
+    <%
+            request.removeAttribute("status");
+        }
+    %>
+
+
     <div class="form">
         <img src="assets/images/camera_left.png" alt="Camera Left" class="camera-left">
         <div class="form-box register">
-            <form id="form" action="register" method="get">
+            <form id="form" action="register" method="post">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="person"></ion-icon></span>
                     <input type="text" id="userName" name="userName" placeholder="Nhập tên người dùng" required>
@@ -122,14 +165,12 @@
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
                     <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
                     <label>Mật khẩu:</label>
-                    <small>Error message</small>
                 </div>
                 <div class="input-box">
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
                     <input type="password" id="retypePassword" name="retypePassword" placeholder="Nhập lại mật khẩu"
                            required>
                     <label>Nhập lại mật khẩu:</label>
-                    <small>Error message</small>
                 </div>
                 <div class="remenber-forgot">
                     <label>
@@ -149,21 +190,7 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    var status = document.getElementById("status").value;
-
-    if (status === "email_exists") {
-        swal("Đăng ký thất bại", "Email đã được sử dụng!", "error");
-    } else if (status === "username_exists") {
-        swal("Đăng ký thất bại", "Tên người dùng đã tồn tại!", "error");
-    } else if (status === "password_error") {
-        swal("Lỗi mật khẩu", "Mật khẩu không khớp hoặc ít hơn 6 ký tự!", "error");
-    } else if (status === "register_failed") {
-        swal("Lỗi hệ thống", "Đăng ký thất bại, vui lòng thử lại!", "error");
-    }
-</script>
-
-<script src="assets/js_handMade/register.js"></script>
+<%--<script src="assets/js_handMade/register.js"></script>--%>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section">

@@ -3,6 +3,7 @@ package model;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+// lop join 2 bảng product và product_detail lại để lấy url ra xài
 public class ProductView {
     private int id;
     private int userId;
@@ -15,6 +16,7 @@ public class ProductView {
     private int viewCount;
     private int soldCount;
     private String imageUrl; // từ product_details.image_url
+    private String formattedPricePerDay;
 
     // Getters and Setters
     public int getId() {
@@ -103,5 +105,13 @@ public class ProductView {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getFormattedPricePerDay() {
+        return formattedPricePerDay;
+    }
+
+    public void setFormattedPricePerDay(String formattedPricePerDay) {
+        this.formattedPricePerDay = formattedPricePerDay;
     }
 }

@@ -126,6 +126,18 @@ public class UserDAO {
         return user;
     }
 
+    //    xác thực gmail
+    public void markEmailVerified(String email) {
+        try (Connection conn = JDBC.getConnection()) {
+            String sql = "UPDATE users SET isVerifyEmail = true WHERE email = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, email);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi xác minh email: " + e.getMessage(), e);
+        }
+    }
+
     public User getUserByEmail(String email) {
         Connection connection = null;
         User user = null;

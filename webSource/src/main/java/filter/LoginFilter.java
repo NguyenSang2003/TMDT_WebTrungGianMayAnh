@@ -13,7 +13,6 @@ import java.io.IOException;
 public class LoginFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        // Khởi tạo nếu cần
     }
 
     @Override
@@ -27,7 +26,7 @@ public class LoginFilter implements Filter {
 
         // Nếu session có user (người dùng đã đăng nhập), chuyển hướng về trang chủ
         if (session != null && session.getAttribute("user") != null) {
-            httpResponse.sendRedirect("index.jsp");
+            httpResponse.sendRedirect("index");
             return;
         }
 
@@ -37,6 +36,5 @@ public class LoginFilter implements Filter {
 
     @Override
     public void destroy() {
-        // Dọn dẹp nếu cần
     }
 }
