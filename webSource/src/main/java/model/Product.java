@@ -11,6 +11,7 @@ public class Product {
     private int quantity;
     private int viewCount;    // Số lượt xem
     private int soldCount;    // Số lượng bán ra
+    private double rating;    // Số lượng bán ra
     private String status;    // "con_hang", "het_hang", "dang_cho_thue"
     private java.sql.Timestamp createdAt;
     private java.sql.Timestamp updatedAt;
@@ -62,6 +63,12 @@ public class Product {
     public void setSoldCount(int soldCount) {
         this.soldCount = soldCount;
     }
+
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) { this.rating = rating; }
 
     public int getQuantity() {
         return quantity;

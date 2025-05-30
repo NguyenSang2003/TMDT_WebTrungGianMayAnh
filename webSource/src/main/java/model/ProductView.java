@@ -15,7 +15,9 @@ public class ProductView {
     private Timestamp updatedAt;
     private int viewCount;
     private int soldCount;
+    private double rating;
     private String imageUrl; // từ product_details.image_url
+    private String category; // từ product_details.category
     private String formattedPricePerDay;
 
     // Getters and Setters
@@ -99,12 +101,28 @@ public class ProductView {
         this.soldCount = soldCount;
     }
 
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getFormattedPricePerDay() {

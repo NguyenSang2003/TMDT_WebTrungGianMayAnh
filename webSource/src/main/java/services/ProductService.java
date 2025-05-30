@@ -116,4 +116,38 @@ public class ProductService {
         }
         return list;
     }
+
+    public List<ProductView> getAllProducts() {
+        List<ProductView> list = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = JDBC.getConnection();
+            String query = "SELECT p.*, pd.image_url, pd.category " +
+                    "FROM products p JOIN product_details pd ON p.id = pd.product_id";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ProductView pv = new ProductView();
+                pv.setId(rs.getInt("id"));
+                pv.setUserId(rs.getInt("user_id"));
+                pv.setName(rs.getString("name"));
+                pv.setPricePerDay(rs.getBigDecimal("price_per_day"));
+                pv.setQuantity(rs.getInt("quantity"));
+                pv.setStatus(rs.getString("status"));
+                pv.setCreatedAt(rs.getTimestamp("created_at"));
+                pv.setUpdatedAt(rs.getTimestamp("updated_at"));
+                pv.setViewCount(rs.getInt("view_count"));
+                pv.setSoldCount(rs.getInt("sold_count"));
+                pv.setRating(rs.getDouble("rating"));
+                pv.setImageUrl(rs.getString("image_url"));
+                pv.setCategory(rs.getString("category"));
+                list.add(pv);
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error getting most viewed products: " + ex.getMessage(), ex);
+        } finally {
+            JDBC.closeConnection(connection);
+        }
+        return list;
+    }
 }
