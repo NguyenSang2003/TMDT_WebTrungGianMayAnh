@@ -1,23 +1,29 @@
 package utils;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
-// đọc file properties.env
 public class ConfigReader {
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
     static {
-        try {
-            // Dùng class loader để đọc file từ resources(src/main/resources/properties.env)
-            java.io.InputStream inputStream = ConfigReader.class.getClassLoader().getResourceAsStream("properties.env");
+        loadProperties("properties.env");
+        loadProperties("dp.properties"); // ưu tiên ghi đè nếu trùng key
+    }
+
+    private static void loadProperties(String fileName) {
+        try (InputStream inputStream = ConfigReader.class.getClassLoader().getResourceAsStream(fileName)) {
             if (inputStream != null) {
-                properties.load(inputStream);
+                Properties temp = new Properties();
+                temp.load(inputStream);
+                properties.putAll(temp);
+                System.out.println("Đã tải file: " + fileName);
             } else {
-                System.err.println("Không tìm thấy file properties.env trong resources.");
+                System.err.println("Không tìm thấy file: " + fileName);
             }
         } catch (IOException e) {
+            System.err.println("Lỗi khi đọc file: " + fileName);
             e.printStackTrace();
         }
     }

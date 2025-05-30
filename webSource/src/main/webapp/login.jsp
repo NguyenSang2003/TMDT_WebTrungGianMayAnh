@@ -120,6 +120,16 @@
                 <div class="remenber-forgot">
                     <a href="forgotPass.jsp">Quên mật khẩu?</a>
                 </div>
+                <a id="gg" href="https://accounts.google.com/o/oauth2/v2/auth?scope=email%20profile
+&access_type=online
+&include_granted_scopes=true
+&response_type=code
+&state=state_parameter_passthrough_value
+&redirect_uri=http://localhost:8081/webSource_war/google-login
+&client_id=134467488708-o84o20ueqj6e42snbdb3ksjtppr885a6.apps.googleusercontent.com"
+                   target="_self">
+                    <img src="assets/images/gg.jpg"> Google
+                </a>
                 <button type="submit" class="btn btn-success">Đăng nhập</button>
                 <div class="login-register">
                     <p>
