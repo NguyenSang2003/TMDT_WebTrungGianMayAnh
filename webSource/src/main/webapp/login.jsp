@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +27,6 @@
     <link rel="stylesheet" href="assets/css/style.css">
 
     <!-- CSS và Scripts cho trang Đăng nhập riêng -->
-    <link rel="stylesheet" href="assets/css_handMade/login.css">
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -49,10 +49,10 @@
 
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
+    <link rel="stylesheet" href="assets/css_handMade/login.css">
 </head>
 
 <body>
-
 <!-- Header/Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
     <div class="container">
@@ -76,7 +76,7 @@
         <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
@@ -106,7 +106,7 @@
     <div class="form">
         <img src="assets/images/camera_left.png" alt="Camera Left" class="camera-left">
         <div class="form-box login">
-            <form action="login" method="get">
+            <form action="login" method="post">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail-open"></ion-icon></span>
                     <input type="email" name="email" placeholder="abc@gmail.com" required>
@@ -133,10 +133,13 @@
     </div>
 </div>
 
+<!-- JavaScript để hiển thị thông báo lỗi -->
 <script type="text/javascript">
     var status = document.getElementById("status").value;
     if (status === "failed") {
         swal("Xin lỗi", "Email hoặc Mật khẩu không chính xác", "error");
+    } else if (status === "not_verified") {
+        swal("Xin lỗi", "Tài khoản của bạn chưa được xác minh. Vui lòng kiểm tra email để xác minh.", "warning");
     }
 </script>
 

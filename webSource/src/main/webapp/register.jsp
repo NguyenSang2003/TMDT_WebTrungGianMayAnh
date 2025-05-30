@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -31,6 +32,7 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Nơi chèn CSS nội bộ -->
     <style type="text/css">
@@ -44,6 +46,19 @@
         .navbar.navbar-dark .navbar-nav .nav-item.active .nav-link,
         .navbar.navbar-dark .navbar-nav .nav-link.active {
             color: #01d28e !important;
+        }
+
+        .pThongBao {
+            margin-bottom: 0px;
+        }
+
+        .notification2 {
+            margin: 0 auto 10px auto;
+            width: 50%;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
 
@@ -76,7 +91,7 @@
         <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
@@ -100,12 +115,42 @@
 
 <%-- Regiter --%>
 <div class="container">
-    <input type="hidden" id="status" value="<%= request.getAttribute("status") %>">
     <h2 class="page-title">Đăng ký</h2>
+
+    <%
+        String status = (String) request.getAttribute("status");
+        if (status != null && !status.trim().isEmpty()) {
+            String bgColor = "";
+            String textColor = "#ffffff";
+            if ("success".equals(status)) {
+                bgColor = "green";
+            } else {
+                bgColor = "red";
+            }
+    %>
+    <div class="notification2" style="background-color: <%= bgColor %>; color: <%= textColor %>;">
+        <% if ("email_exists".equals(status)) { %>
+        <p class="pThongBao">Email đã tồn tại. Vui lòng nhập email khác.</p>
+        <% } else if ("username_exists".equals(status)) { %>
+        <p class="pThongBao">Tên người dùng đã tồn tại. Vui lòng chọn tên khác.</p>
+        <% } else if ("password_error".equals(status)) { %>
+        <p class="pThongBao">Mật khẩu nhập lại không khớp hoặc độ dài mật khẩu phải từ 6 ký tự.</p>
+        <% } else if ("register_failed".equals(status)) { %>
+        <p class="pThongBao">Đăng ký không thành công. Vui lòng thử lại!</p>
+        <% } else if ("success".equals(status)) { %>
+        <p class="pThongBao">Đăng ký thành công!</p>
+        <% } %>
+    </div>
+    <%
+            request.removeAttribute("status");
+        }
+    %>
+
+
     <div class="form">
         <img src="assets/images/camera_left.png" alt="Camera Left" class="camera-left">
         <div class="form-box register">
-            <form id="form" action="register" method="get">
+            <form id="form" action="register" method="post">
                 <div class="input-box">
                     <span class="icon"><ion-icon name="person"></ion-icon></span>
                     <input type="text" id="userName" name="userName" placeholder="Nhập tên người dùng" required>
@@ -120,14 +165,12 @@
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
                     <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
                     <label>Mật khẩu:</label>
-                    <small>Error message</small>
                 </div>
                 <div class="input-box">
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
                     <input type="password" id="retypePassword" name="retypePassword" placeholder="Nhập lại mật khẩu"
                            required>
                     <label>Nhập lại mật khẩu:</label>
-                    <small>Error message</small>
                 </div>
                 <div class="remenber-forgot">
                     <label>
@@ -147,7 +190,7 @@
     </div>
 </div>
 
-<script src="assets/js/register.js"></script>
+<%--<script src="assets/js_handMade/register.js"></script>--%>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section">
