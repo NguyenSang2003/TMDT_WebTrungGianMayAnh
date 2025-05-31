@@ -2,7 +2,6 @@
 <%@ page import="java.util.List, java.math.BigDecimal" %>
 
 <%@ page import="java.util.List, java.util.ArrayList, java.math.BigDecimal, model.User" %>
-<%@ page import="java.time.LocalDate" %>
 <%@ page import="model.*" %>
 
 <%
@@ -83,7 +82,7 @@
                 <li class="nav-item "><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item active"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
-                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+                <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
@@ -161,116 +160,116 @@
 </section>
 
 <div class="container py-4">
-    <h2 class="mb-4 text-center">🛒 Giỏ hàng của bạn</h2>
-    <div class="table-responsive">
-        <%
-            if (cart.isEmpty()) {
-        %>
-        <div style="display: flex; justify-content: center; align-items: center; flex-direction: column; min-height: 300px;">
-            <img loading="lazy" src="assets/images/empty_cart.jpeg" alt="Giỏ hàng trống" style="max-width: 600px;">
-            <p style="margin-top: 10px; font-size: 16px; color: #666;">Giỏ hàng của bạn đang trống</p>
-        </div>
+    <h2 class="mb-2 fw-bold text-center" style="font-size: 28px;">Giỏ hàng của bạn</h2>
+    <p class="text-center mb-4" style="font-size: 18px; color: #555;">Có <%= cart.size() %> sản phẩm trong giỏ hàng</p>
 
-        <%
-        } else {
-        %>
-        <table class="table table-bordered table-hover align-middle">
-            <thead class="table-light text-center">
-            <tr>
-                <th>Ảnh</th>
-                <th>Tên sản phẩm</th>
-                <th>Giá thuê/ngày</th>
-                <th>Chọn ngày thuê</th>
-                <th>Số lượng</th>
-                <th>Xóa</th>
-            </tr>
-            </thead>
-            <tbody>
+    <% if (cart.isEmpty()) { %>
+    <div class="text-center" style="min-height: 300px;">
+        <img loading="lazy" src="assets/images/empty_cart.jpeg" alt="Giỏ hàng trống" style="max-width: 500px;">
+        <p class="mt-3 text-muted">Giỏ hàng của bạn đang trống</p>
+    </div>
+    <% } else { %>
+    <div class="row">
+        <!-- Sản phẩm trong giỏ -->
+        <div class="col-md-8">
+            <% BigDecimal total = BigDecimal.ZERO; %>
+            <% for (ProductView p : cart) { %>
+            <% total = total.add(p.getPricePerDay().multiply(BigDecimal.valueOf(p.getQuantity()))); %>
+            <div class="d-flex border p-3 mb-3 align-items-start position-relative">
+                <img src="<%= p.getImageUrl() %>" alt="<%= p.getName() %>" style="width: 100px; height: auto; margin: 0 1rem" class="me-3">
+                <div class="flex-grow-1" >
+                    <div class="d-flex justify-content-between align-items-start">
+                        <strong><%= p.getName() %></strong>
+                        <form action="cart" method="post">
+                            <input type="hidden" name="action" value="remove" />
+                            <input type="hidden" name="productId" value="<%= p.getId() %>" />
+                            <button type="submit" class="btn btn-link text-danger p-0"
+                                    style="position: absolute; top: 20px; right: 20px;">X</button>
+                        </form>
+                    </div>
+                    <p><%= String.format("%,d", p.getPricePerDay().longValue()) %> vnd</p>
 
-            <%
-                //Tính tổng cộng giá tiền với số lượng
-                BigDecimal total = BigDecimal.ZERO;
-                for (ProductView p : cart) {
-                    total = total.add(p.getPricePerDay().multiply(BigDecimal.valueOf(p.getQuantity())));
-            %>
-            <tr>
-                <td class="text-center">
-                    <img src="<%= p.getImageUrl() %>" alt="<%= p.getName() %>" style="width:80px; height:auto;">
-                </td>
-                <td><%= p.getName() %></td>
-                <td class="text-end"><%= String.format("%,d", p.getPricePerDay().longValue()) %> đ/ngày</td>
-                <td>
-                    <label>Chọn thời gian thuê:</label>
-                    <input type="text" id="rentalDate_<%= p.getId() %>" name="rentalDate_<%= p.getId() %>"
-                           class="form-control rental-date" placeholder="Chọn khoảng ngày" autocomplete="off" />
-
-                    <p class="text-muted mt-2">
-                        Ngày đã đặt:
-                    <ul class="mb-0 ps-3">
-                        <%
-                            List<model.BookingSchedule> schedules = p.getBookingSchedules();
-                            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-                        %>
-                        <%
-                            if (schedules == null || schedules.isEmpty()) {
-                        %>
-                        <li>Còn trống</li>
-                        <%
-                        } else {
-                            for (BookingSchedule schedule : schedules) {
-                        %>
-                        <li><%= sdf.format(schedule.getRentStart()) %> - <%= sdf.format(schedule.getRentEnd()) %></li>
-                        <%
-                                }
-                            }
-                        %>
-                    </ul>
-                    </p>
-                </td>
-                <td class="text-center">
-                    <form action="cart" method="post" class="d-inline-flex align-items-center justify-content-center">
+                    <form action="cart" method="post" class="d-flex align-items-center">
                         <input type="hidden" name="action" value="updateQuantity"/>
                         <input type="hidden" name="productId" value="<%= p.getId() %>"/>
-
                         <button type="submit" name="operation" value="decrease" class="btn btn-sm btn-outline-secondary">-</button>
-
-                        <input type="text" name="quantity" value="<%= p.getQuantity() %>"
-                               readonly class="form-control text-center mx-1" style="width: 40px; padding: 0.25rem 0.5rem;"/>
-
+                        <input type="text" name="quantity" value="<%= p.getQuantity() %>" readonly class="form-control text-center mx-2" style="width: 50px;"/>
                         <button type="submit" name="operation" value="increase" class="btn btn-sm btn-outline-secondary">+</button>
                     </form>
-                </td>
+                </div>
+                <div class="text-end ms-3" style="min-width: 120px; font-weight: bold; margin-top: auto">
+                    <%= String.format("%,d", p.getPricePerDay().multiply(BigDecimal.valueOf(p.getQuantity())).longValue()) %> vnd
+                </div>
+            </div>
+            <!-- Chọn ngày thuê cho sản phẩm -->
+            <div class="mt-2">
+                <label class="form-label">Chọn khoảng thời gian thuê</label>
+                <input type="text"
+                       name="rentalDate_<%= p.getId() %>" id="rentalDate_<%= p.getId() %>"
+                       class="form-control rental-date"
+                       placeholder="Chọn khoảng ngày"
+                       autocomplete="off" />
 
-                <td class="text-center">
-                    <form action="cart" method="post" style="display:inline;">
-                        <input type="hidden" name="action" value="remove"/>
-                        <input type="hidden" name="productId" value="<%= p.getId() %>"/>
-                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                    </form>
-                </td>
-            </tr>
-            <%
-                }
-            %>
-            <tr class="table-secondary">
-                <td colspan="2" class="fw-bold text-center">Tổng cộng</td>
-                <td colspan="3" class="fw-bold text-center"><%= String.format("%,d", total.longValue()) %> đ/ngày</td>
-                <td></td>
-            </tr>
-            </tbody>
-        </table>
+                <small class="text-muted">Không thể chọn những ngày đã được đặt trước.</small>
 
-        <!-- Nút Thanh Toán -->
-        <div class="text-center mt-4">
-            <a href="checkout.jsp" class="btn btn-success btn-lg px-5">
-                Thanh Toán 🛒
-            </a>
+                <!-- Hiển thị các ngày đã đặt -->
+                <p class="text-muted mt-2 mb-0">Ngày đã đặt:</p>
+                <ul class="text-muted ps-3 mb-2">
+                    <%
+                        List<BookingSchedule> schedules = p.getBookingSchedules();
+                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                        if (schedules == null || schedules.isEmpty()) {
+                    %>
+                    <li>Còn trống</li>
+                    <% } else {
+                        for (BookingSchedule schedule : schedules) { %>
+                    <li><%= sdf.format(schedule.getRentStart()) %> - <%= sdf.format(schedule.getRentEnd()) %></li>
+                    <% } } %>
+                </ul>
+            </div>
+
+            <% } %>
+
+            <!-- Ghi chú đơn hàng + Chính sách -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Ghi chú đơn hàng</label>
+                    <textarea class="form-control" placeholder="Ghi chú" rows="4"></textarea>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label fw-bold">Chính sách mua hàng</label>
+                    <ul class="text-muted small ps-3">
+                        <li>Sản phẩm được đổi 1 lần duy nhất, không hỗ trả trả.</li>
+                        <li>Sản phẩm còn đủ tem mác, chưa qua sử dụng.</li>
+                        <li>Sản phẩm nguyên giá được đổi trong 30 ngày trên toàn hệ thống.</li>
+                        <li>Sản phẩm sale chỉ hỗ trợ đổi size (nếu còn hàng) trong 7 ngày trên toàn hệ thống.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
-        <%
-            }
-        %>
+
+        <!-- Thông tin thanh toán -->
+        <div class="col-md-4">
+            <div class="border rounded p-3 shadow-sm">
+                <h5 class="fw-bold mb-3">Thông tin đơn hàng</h5>
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Tổng tiền:</span>
+                    <span class="fw-bold text-danger"><%= String.format("%,d", total.longValue()) %> vnd</span>
+                </div>
+                <p class="text-muted small">Phí vận chuyển sẽ được tính ở trang thanh toán. Bạn cũng có thể nhập mã giảm giá ở trang thanh toán.</p>
+                <form action="checkout" method="post">
+                    <button type="submit" class="btn btn-danger btn-lg w-100">Thanh toán</button>
+                </form>
+
+                <div class="text-center mt-3">
+                    <a href="shop" class="text-decoration-none small">&larr; Tiếp tục mua hàng</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <% } %>
 </div>
+
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
@@ -395,32 +394,82 @@
 
 <script>
     <%
-    java.text.SimpleDateFormat jsFormat = new java.text.SimpleDateFormat("yyyy-MM-dd"); // cho flatpickr
-    java.text.SimpleDateFormat displayFormat = new java.text.SimpleDateFormat("dd/MM/yyyy"); // hiển thị đẹp cho người dùng
-    for (ProductView p : cart) {
-        List<BookingSchedule> schedules = p.getBookingSchedules();
-%>
+        // Định dạng ngày cho Flatpickr khi hiển thị trên giao diện (ví dụ: 31/05/2025)
+        java.text.SimpleDateFormat displayFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
+        // Định dạng ngày mà Flatpickr sẽ gửi đi và DB lưu trữ (ví dụ: 2025-05-31)
+        java.text.SimpleDateFormat serverFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
+    %>
+    <% for (ProductView p : cart) { %>
+    <% List<BookingSchedule> schedules = p.getBookingSchedules(); %>
     flatpickr("#rentalDate_<%= p.getId() %>", {
         mode: "range",
         minDate: "today",
-        dateFormat: "d/m/Y",
+        dateFormat: "Y-m-d", // <-- Đây là định dạng sẽ được gửi lên server
+        altInput: true,
+        altFormat: "d-m-Y", // <-- Đây là định dạng hiển thị cho người dùng
         disable: [
             <% if (schedules != null) {
                 for (BookingSchedule s : schedules) {
-                    String from = displayFormat.format(s.getRentStart());
-                    String to = displayFormat.format(s.getRentEnd());
+                    String from = serverFormat.format(s.getRentStart());
+                    String to = serverFormat.format(s.getRentEnd());
             %>
             { from: "<%= from %>", to: "<%= to %>" },
             <% } } %>
         ],
         onDayCreate: function(dObj, dStr, fp, dayElem) {
-            // làm mờ ngày đã disable bằng cách thêm class
             if(dayElem.classList.contains('flatpickr-disabled')) {
                 dayElem.classList.add('booked-day');
             }
         }
     });
     <% } %>
+
+    document.querySelector('form[action="checkout"]').addEventListener('submit', function (e) {
+        const form = e.target;
+        const cartDateInputs = [...document.querySelectorAll('.rental-date')];
+        let allDatesAreValid = true;
+
+        // Xóa input ẩn cũ để tránh trùng lặp
+        form.querySelectorAll('input[name^="rentStart_"], input[name^="rentEnd_"]').forEach(i => i.remove());
+
+        cartDateInputs.forEach(input => {
+            const parts = input.value.split(' to ');
+            let start = parts[0]?.trim();
+            let end = parts[1]?.trim();
+
+            const productId = input.id.split('_')[1];
+
+            if (!start) {
+                console.warn(`Chưa chọn ngày cho sản phẩm ${productId}`);
+                allDatesAreValid = false;
+                return;
+            }
+
+            // Nếu chỉ chọn 1 ngày, gán end = start (tức là thuê 1 ngày)
+            if (!end) end = start;
+
+            // Tạo input ẩn cho rentStart
+            const startInput = document.createElement('input');
+            startInput.type = 'hidden';
+            startInput.name = `rentStart_${productId}`;
+            startInput.value = start;
+            form.appendChild(startInput);
+
+            // Tạo input ẩn cho rentEnd
+            const endInput = document.createElement('input');
+            endInput.type = 'hidden';
+            endInput.name = `rentEnd_${productId}`;
+            endInput.value = end;
+            form.appendChild(endInput);
+        });
+
+        if (!allDatesAreValid) {
+            e.preventDefault();
+            alert("Vui lòng chọn đầy đủ thời gian thuê cho tất cả sản phẩm.");
+            return false;
+        }
+    });
+
 </script>
 
 </body>

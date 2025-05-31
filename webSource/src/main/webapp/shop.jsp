@@ -106,7 +106,7 @@
                 <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item active"><a href="shop" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
-                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+                <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
@@ -193,12 +193,15 @@
                 <h3><%= product.getName() %></h3>
                 <div class="price"><%= String.format("%,.0f₫/ngày", product.getPricePerDay().doubleValue()) %></div>
                 <div class="category"><%= product.getCategory() %></div>
-                <div class="rating-detai">
+                <div class="rating-detail" style="display: flex; align-items: center;">
                     <div class="rating">
-                        <% for (int i = 0; i < product.getRating(); i++) { %>★ <% } %>
+                        <% for (int i = 0; i < product.getRating(); i++) { %>
+                        ★
+                        <% } %>
                     </div>
-                    <a class="detail" href="productDetail?id=<%= product.getId() %>">Xem chi tiết</a>
+                    <a class="detail" href="productDetail?id=<%= product.getId() %>" style="margin-left: auto;">Xem chi tiết</a>
                 </div>
+
             </div>
         </div>
         <%  }

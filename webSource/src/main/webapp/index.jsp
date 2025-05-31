@@ -83,7 +83,7 @@
                 <li class="nav-item active"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
-                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+                <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>

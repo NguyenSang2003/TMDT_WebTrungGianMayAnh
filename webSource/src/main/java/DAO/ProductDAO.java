@@ -1,5 +1,6 @@
 package DAO;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.JDBC;
+import model.BookingSchedule;
 import model.Product;
+import model.ProductView;
 
 public class ProductDAO {
 
@@ -176,7 +179,7 @@ public class ProductDAO {
         return bookings;
     }
 
-    public ProductView getProductById(int id) {
+    public ProductView getProductViewById(int id) {
         String sql = "SELECT p.*, pd.image_url, pd.category, pr.rating " +
                 "FROM products p " +
                 "JOIN product_details pd ON p.id = pd.product_id " +
@@ -210,5 +213,39 @@ public class ProductDAO {
             throw new RuntimeException("Error getting product by id: " + ex.getMessage(), ex);
         }
         return null; // nếu không tìm thấy
+    }
+
+    public int getOwnerIdByProductId(int productId) {
+        String sql = "SELECT user_id FROM products WHERE id = ?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, productId);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) return rs.getInt("user_id");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public String getImageUrlByProductId(int productId) {
+        String imageUrl = null;
+        String sql = "SELECT image_url FROM product_details WHERE product_id = ? LIMIT 1";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                imageUrl = rs.getString("image_url");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return imageUrl;
     }
 }

@@ -1,12 +1,10 @@
 package controller;
 
-import DAO.BookingScheduleDAO;
-import DAO.CartDAO;
+import DAO.ProductDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import model.BookingSchedule;
-import model.Product;
 import model.ProductView;
 
 import java.io.IOException;
@@ -15,7 +13,7 @@ import java.util.*;
 @WebServlet("/cart")
 public class CartController extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    private CartDAO cartDAO = new CartDAO();
+    private ProductDAO productDAO = new ProductDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -27,12 +25,10 @@ public class CartController extends HttpServlet {
             cart = new ArrayList<>();
         }
 
-        BookingScheduleDAO bookingDAO = new BookingScheduleDAO();
-
         // Lấy booking schedules cho từng sản phẩm trong cart
         for (ProductView pv : cart) {
             if (pv != null) {
-                List<BookingSchedule> bookings = bookingDAO.getBookingsByProductId(pv.getId());
+                List<BookingSchedule> bookings = productDAO.getBookingsByProductId(pv.getId());
 
                 // Đảm bảo không trả về null mà là danh sách rỗng nếu không có booking
                 if (bookings == null) {
@@ -74,7 +70,7 @@ public class CartController extends HttpServlet {
             }
 
             if (!found) {
-                ProductView product = cartDAO.getProductById(productId);
+                ProductView product = productDAO.getProductViewById(productId);
                 if (product != null) {
                     product.setQuantity(1); // Đặt mặc định là 1
                     cart.add(product);

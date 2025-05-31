@@ -122,8 +122,16 @@ public class ProductService {
         Connection connection = null;
         try {
             connection = JDBC.getConnection();
-            String query = "SELECT p.*, pd.image_url, pd.category " +
-                    "FROM products p JOIN product_details pd ON p.id = pd.product_id";
+            String query = "SELECT p.*, " +
+                    "ANY_VALUE(pd.image_url) AS image_url, " +
+                    "ANY_VALUE(pd.category) AS category, " +
+                    "IFNULL(AVG(pr.rating), 0) AS rating " +
+                    "FROM products p " +
+                    "JOIN product_details pd ON p.id = pd.product_id " +
+                    "LEFT JOIN product_reviews pr ON p.id = pr.product_id " +
+                    "GROUP BY p.id";
+
+
             PreparedStatement stmt = connection.prepareStatement(query);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
