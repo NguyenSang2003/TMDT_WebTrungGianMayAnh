@@ -58,7 +58,6 @@ public class UserDAO {
         return exists;
     }
 
-
     public boolean registerWithEmail(String email, String username, String password) {
         if (checkEmailExist(email)) {
             return false; // Email đã tồn tại, không thể đăng ký
@@ -193,7 +192,6 @@ public class UserDAO {
         return isVerified;
     }
 
-
     public List<User> getAllUsersForAdmin() {
         List<User> users = new ArrayList<>();
         Connection connection = null;
@@ -254,13 +252,6 @@ public class UserDAO {
         return user;
     }
 
-    /**
-     * Cập nhật mật khẩu mới dựa vào email của người dùng.
-     *
-     * @param email       Email của người dùng cần cập nhật mật khẩu.
-     * @param newPassword Mật khẩu mới cần cập nhật.
-     * @return true nếu cập nhật thành công, false nếu thất bại.
-     */
     /**
      * Cập nhật mật khẩu mới dựa vào email của người dùng.
      *
