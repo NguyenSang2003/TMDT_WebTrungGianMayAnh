@@ -1,9 +1,11 @@
 package controller;
 
+import DAO.BookingScheduleDAO;
 import DAO.CartDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
+import model.BookingSchedule;
 import model.Product;
 import model.ProductView;
 
@@ -17,15 +19,36 @@ public class CartController extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy giỏ hàng từ session
         HttpSession session = request.getSession();
-        List<Product> cart = (List<Product>) session.getAttribute("cart");
+
+        // Lấy cart từ session, nếu không có thì tạo mới
+        List<ProductView> cart = (List<ProductView>) session.getAttribute("cart");
         if (cart == null) {
             cart = new ArrayList<>();
         }
-        request.setAttribute("cart", cart); // đẩy sang JSP
+
+        BookingScheduleDAO bookingDAO = new BookingScheduleDAO();
+
+        // Lấy booking schedules cho từng sản phẩm trong cart
+        for (ProductView pv : cart) {
+            if (pv != null) {
+                List<BookingSchedule> bookings = bookingDAO.getBookingsByProductId(pv.getId());
+
+                // Đảm bảo không trả về null mà là danh sách rỗng nếu không có booking
+                if (bookings == null) {
+                    bookings = new ArrayList<>();
+                }
+                pv.setBookingSchedules(bookings);
+            }
+        }
+
+        // Cập nhật cart vào request để JSP dùng
+        request.setAttribute("cart", cart);
+
+        // Chuyển tiếp đến cart.jsp để hiển thị giỏ hàng
         request.getRequestDispatcher("/cart.jsp").forward(request, response);
     }
+
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -95,6 +118,4 @@ public class CartController extends HttpServlet {
             response.sendRedirect("error.jsp");
         }
     }
-
-
 }

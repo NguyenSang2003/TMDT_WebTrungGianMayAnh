@@ -1,7 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, java.math.BigDecimal, model.Product, model.User" %>
+<%@ page import="java.util.List, java.math.BigDecimal" %>
 
-<%@ page import="java.util.List, java.util.ArrayList, java.math.BigDecimal, model.ProductView, model.User" %>
+<%@ page import="java.util.List, java.util.ArrayList, java.math.BigDecimal, model.User" %>
+<%@ page import="java.time.LocalDate" %>
+<%@ page import="model.*" %>
 
 <%
     // Lấy user và cart từ session/request
@@ -42,6 +44,16 @@
 
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
+
+    <style>
+        /* làm mờ ngày đã đặt */
+        .booked-day {
+            color: #999 !important;
+            background-color: #f0f0f0 !important;
+            pointer-events: none;  /* Không cho click */
+            opacity: 0.6;
+        }
+    </style>
 </head>
 <body>
 
@@ -168,6 +180,7 @@
                 <th>Ảnh</th>
                 <th>Tên sản phẩm</th>
                 <th>Giá thuê/ngày</th>
+                <th>Chọn ngày thuê</th>
                 <th>Số lượng</th>
                 <th>Xóa</th>
             </tr>
@@ -186,6 +199,34 @@
                 </td>
                 <td><%= p.getName() %></td>
                 <td class="text-end"><%= String.format("%,d", p.getPricePerDay().longValue()) %> đ/ngày</td>
+                <td>
+                    <label>Chọn thời gian thuê:</label>
+                    <input type="text" id="rentalDate_<%= p.getId() %>" name="rentalDate_<%= p.getId() %>"
+                           class="form-control rental-date" placeholder="Chọn khoảng ngày" autocomplete="off" />
+
+                    <p class="text-muted mt-2">
+                        Ngày đã đặt:
+                    <ul class="mb-0 ps-3">
+                        <%
+                            List<model.BookingSchedule> schedules = p.getBookingSchedules();
+                            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+                        %>
+                        <%
+                            if (schedules == null || schedules.isEmpty()) {
+                        %>
+                        <li>Còn trống</li>
+                        <%
+                        } else {
+                            for (BookingSchedule schedule : schedules) {
+                        %>
+                        <li><%= sdf.format(schedule.getRentStart()) %> - <%= sdf.format(schedule.getRentEnd()) %></li>
+                        <%
+                                }
+                            }
+                        %>
+                    </ul>
+                    </p>
+                </td>
                 <td class="text-center">
                     <form action="cart" method="post" class="d-inline-flex align-items-center justify-content-center">
                         <input type="hidden" name="action" value="updateQuantity"/>
@@ -213,7 +254,7 @@
             %>
             <tr class="table-secondary">
                 <td colspan="2" class="fw-bold text-center">Tổng cộng</td>
-                <td colspan="2" class="fw-bold text-center"><%= String.format("%,d", total.longValue()) %> đ/ngày</td>
+                <td colspan="3" class="fw-bold text-center"><%= String.format("%,d", total.longValue()) %> đ/ngày</td>
                 <td></td>
             </tr>
             </tbody>
@@ -228,8 +269,6 @@
         <%
             }
         %>
-
-
     </div>
 </div>
 
@@ -350,5 +389,39 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="assets/js/google-map.js"></script>
 <script src="assets/js/main.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<script>
+    <%
+    java.text.SimpleDateFormat jsFormat = new java.text.SimpleDateFormat("yyyy-MM-dd"); // cho flatpickr
+    java.text.SimpleDateFormat displayFormat = new java.text.SimpleDateFormat("dd/MM/yyyy"); // hiển thị đẹp cho người dùng
+    for (ProductView p : cart) {
+        List<BookingSchedule> schedules = p.getBookingSchedules();
+%>
+    flatpickr("#rentalDate_<%= p.getId() %>", {
+        mode: "range",
+        minDate: "today",
+        dateFormat: "d/m/Y",
+        disable: [
+            <% if (schedules != null) {
+                for (BookingSchedule s : schedules) {
+                    String from = displayFormat.format(s.getRentStart());
+                    String to = displayFormat.format(s.getRentEnd());
+            %>
+            { from: "<%= from %>", to: "<%= to %>" },
+            <% } } %>
+        ],
+        onDayCreate: function(dObj, dStr, fp, dayElem) {
+            // làm mờ ngày đã disable bằng cách thêm class
+            if(dayElem.classList.contains('flatpickr-disabled')) {
+                dayElem.classList.add('booked-day');
+            }
+        }
+    });
+    <% } %>
+</script>
+
 </body>
 </html>
