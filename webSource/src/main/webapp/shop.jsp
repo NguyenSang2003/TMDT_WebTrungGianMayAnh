@@ -28,7 +28,11 @@
     <link rel="stylesheet" href="assets/css/flaticon.css">
     <link rel="stylesheet" href="assets/css/icomoon.css">
     <link rel="stylesheet" href="assets/css/style.css">
+<<<<<<< HEAD
+    <link rel="stylesheet" href="assets/css/shop.css">
+=======
     <link rel="stylesheet" href="assets/css_handMade/shop.css">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
 
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
@@ -40,7 +44,11 @@
     <div class="container">
 
         <%-- Logo và tên góc trái trên cùng --%>
+<<<<<<< HEAD
+        <a class="navbar-brand d-flex align-items-center" href="index.jsp">
+=======
         <a class="navbar-brand d-flex align-items-center" href="index">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <img src="assets/images/logo.PNG" alt="Logo"
                  style="height: 40px; margin-right: 10px; border-radius: 4px">
             <div style="line-height: 1;">
@@ -58,6 +66,17 @@
         <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
+<<<<<<< HEAD
+                <li class="nav-item active"><a href="index.jsp" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
+                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+
+                <!-- Dropdown mới cho "Về Chúng Tôi" và "Blog" -->
+                <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
+                    <div class="dropdown-menu rounded-0 m-0 dropdown-menu">
+=======
                 <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item active"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
@@ -66,12 +85,16 @@
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
                     <div class="dropdown-menu rounded-0 m-0">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
                         <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
                         <a href="blog.jsp" class="dropdown-item">Blog</a>
                     </div>
                 </li>
 
                 <li class="nav-item"><a href="contact.jsp" class="nav-link">Liên Hệ</a></li>
+<<<<<<< HEAD
+                <li class="nav-item"><a href="login.jsp" class="nav-link">Đăng Nhập</a></li>
+=======
 
                 <%-- Nếu chưa đăng nhập --%>
                 <%
@@ -107,6 +130,7 @@
                     </div>
                 </li>
                 <% } %>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </ul>
         </div>
     </div>
@@ -119,8 +143,13 @@
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
             <div class="col-md-9 ftco-animate pb-5">
+<<<<<<< HEAD
+                <p class="breadcrumbs"><span class="mr-2"><a href="index.jsp">Home <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Cars <i
+=======
                 <p class="breadcrumbs"><span class="mr-2"><a href="index.jsp">Trang Chủ <i
                         class="ion-ios-arrow-forward"></i></a></span> <span>Cửa Hàng <i
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
                         class="ion-ios-arrow-forward"></i></span></p>
                 <h1 class="mb-3 bread">Cửa Hàng</h1>
             </div>
@@ -131,136 +160,224 @@
 <div class="container">
     <input type="text" style="margin-top: 10px " class="search-box" placeholder="Nhập từ khóa sản phẩm...">
 
+<<<<<<< HEAD
+<div class="container">
+    <div class="title" style="text-align: center;font-size: 30px;color: black" >Cửa hàng</div>
+    <input type="text" class="search-box" placeholder="Nhập từ khóa sản phẩm...">
+
+    <div class="product-grid">
+
+        <!-- Sản phẩm 1 -->
+        <div class="product-card">
+            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/image_1.jpg" alt="FX3">
+=======
     <div class="product-grid">
 
         <!-- Sản phẩm 1 -->
         <div class="product-card">
             <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
             <img src="assets/images/mayanh_1.jpg" alt="FX3">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <div class="product-info">
                 <h3>Sony FX3 Full-Frame Cinema Camera</h3>
                 <div class="price">1,000,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
+<<<<<<< HEAD
+                <div class="rating">★★★★★</div>
+=======
                 <div class="rating-detai">
                     <div class="rating">★ ★ ★ ★ ★</div>
                     <a class="detail">Xem chi tiết</a>
                 </div>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </div>
         </div>
 
         <!-- Sản phẩm 2 -->
         <div class="product-card">
+<<<<<<< HEAD
+            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/image_2.jpg" alt="A7 IV">
+=======
             <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
             <img src="assets/images/mayanh_2.jpg" alt="A7 IV">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <div class="product-info">
                 <h3>Sony Alpha A7 IV</h3>
                 <div class="price">900,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
+<<<<<<< HEAD
+                <div class="rating">★★★★★</div>
+=======
                 <div class="rating-detai">
                     <div class="rating">★ ★ ★ ★ ★</div>
                     <a class="detail">Xem chi tiết</a>
                 </div>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </div>
         </div>
 
         <!-- Sản phẩm 3 -->
         <div class="product-card">
+<<<<<<< HEAD
+            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/image_3.jpg" alt="A7 III">
+=======
             <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
             <img src="assets/images/mayanh_3.jpg" alt="A7 III">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <div class="product-info">
                 <h3>Sony Alpha A7 III</h3>
                 <div class="price">850,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
+<<<<<<< HEAD
+                <div class="rating">★★★★★</div>
+=======
                 <div class="rating-detai">
                     <div class="rating">★ ★ ★ ★ ★</div>
                     <a class="detail">Xem chi tiết</a>
                 </div>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </div>
         </div>
 
         <!-- Sản phẩm 4 -->
         <div class="product-card">
+<<<<<<< HEAD
+            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/image_4.jpg" alt="AX100">
+=======
             <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
             <img src="assets/images/mayquay_1.jpg" alt="AX100">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <div class="product-info">
                 <h3>Sony FDR-AX100 4K Camcorder</h3>
                 <div class="price">550,000 đ/ngày</div>
                 <div class="category">Máy quay</div>
+<<<<<<< HEAD
+                <div class="rating">★★★★☆</div>
+=======
                 <div class="rating-detai">
                     <div class="rating">★ ★ ★ ★ ☆</div>
                     <a class="detail">Xem chi tiết</a>
                 </div>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </div>
         </div>
 
         <!-- Sản phẩm 5 -->
         <div class="product-card">
+<<<<<<< HEAD
+            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/image_5.jpg" alt="C200">
+=======
             <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
             <img src="assets/images/mayquay_2.jpg" alt="C200">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <div class="product-info">
                 <h3>Canon EOS C200</h3>
                 <div class="price">750,000 đ/ngày</div>
                 <div class="category">Máy quay</div>
+<<<<<<< HEAD
+                <div class="rating">★★★★☆</div>
+=======
                 <div class="rating-detai">
                     <div class="rating">★ ★ ★ ★ ☆</div>
                     <a class="detail">Xem chi tiết</a>
                 </div>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </div>
         </div>
 
         <!-- Sản phẩm 6 -->
         <div class="product-card">
+<<<<<<< HEAD
+            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/image_6.jpg" alt="5D IV">
+=======
             <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
             <img src="assets/images/mayanh_4.jpg" alt="5D IV">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <div class="product-info">
                 <h3>Canon EOS 5D IV</h3>
                 <div class="price">650,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
+<<<<<<< HEAD
+                <div class="rating">★★★★★</div>
+=======
                 <div class="rating-detai">
                     <div class="rating">★ ★ ★ ★ ★</div>
                     <a class="detail">Xem chi tiết</a>
                 </div>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </div>
         </div>
 
         <!-- Sản phẩm 7 -->
         <div class="product-card">
+<<<<<<< HEAD
+            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/image_7.jpg" alt="6D Mark II">
+=======
             <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
             <img src="assets/images/mayanh_5.jpg" alt="6D Mark II">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <div class="product-info">
                 <h3>Canon 6D Mark II</h3>
                 <div class="price">400,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
+<<<<<<< HEAD
+                <div class="rating">★★★★☆</div>
+=======
                 <div class="rating-detai">
                     <div class="rating">★ ★ ★ ★ ☆</div>
                     <a class="detail">Xem chi tiết</a>
                 </div>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </div>
         </div>
 
         <!-- Sản phẩm 8 -->
         <div class="product-card">
+<<<<<<< HEAD
+            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/image_8.jpg" alt="6D">
+=======
             <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
             <img src="assets/images/mayanh_6.jpg" alt="6D">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <div class="product-info">
                 <h3>Canon EOS 6D</h3>
                 <div class="price">380,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
+<<<<<<< HEAD
+                <div class="rating">★★★★☆</div>
+=======
                 <div class="rating-detai">
                     <div class="rating">★ ★ ★ ★ ☆</div>
                     <a class="detail">Xem chi tiết</a>
                 </div>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </div>
         </div>
 
         <!-- Sản phẩm 9 -->
         <div class="product-card">
+<<<<<<< HEAD
+            <button class="cart-btn"><img src="assets/images/cart.jpg" style="width: 40px;height: 40px"></button>
+            <img src="assets/images/image_9.jpg" alt="80D">
+=======
             <button class="cart-btn"><img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px"></button>
             <img src="assets/images/mayanh_7.jpg" alt="80D">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             <div class="product-info">
                 <h3>Canon EOS 80D</h3>
                 <div class="price">380,000 đ/ngày</div>
                 <div class="category">Máy ảnh</div>
+<<<<<<< HEAD
+                <div class="rating">★★★★☆</div>
+=======
                 <div class="rating">★ ★ ★ ★ ☆</div>
 
                 <a class="detail">Xem chi tiết</a>
@@ -446,6 +563,7 @@
                 <div class="rating">★ ★ ★ ★ ☆</div>
 
                 <a class="detail">Xem chi tiết</a>
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
             </div>
         </div>
 
@@ -454,7 +572,11 @@
 
 
 <%-- start phần Footer --%>
+<<<<<<< HEAD
+<footer class="ftco-footer ftco-bg-dark ftco-section">
+=======
 <footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
+>>>>>>> 947617c82241f17ccc8be537b76b7d93ec24a372
     <div class="container">
         <div class="row mb-5">
             <!-- Cột Logo & Giới thiệu -->

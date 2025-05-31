@@ -7,7 +7,13 @@ import java.sql.SQLException;
 import utils.ConfigReader;
 
 public class JDBC {
-    private static String url = ConfigReader.getProperty("db.url");
+//    private static String url = ConfigReader.getProperty("db.url");
+    private static String url = "jdbc:mysql://" +
+        ConfigReader.getProperty("db.host") + ":" +
+        ConfigReader.getProperty("db.port") + "/" +
+        ConfigReader.getProperty("db.dbname") + "?" +
+        ConfigReader.getProperty("db.option");
+
     private static String username = ConfigReader.getProperty("db.username");
     private static String password = ConfigReader.getProperty("db.password");
 
