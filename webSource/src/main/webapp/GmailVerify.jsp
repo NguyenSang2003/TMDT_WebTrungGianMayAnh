@@ -3,14 +3,6 @@
 
 <%
     User user = (User) session.getAttribute("user");
-    String email = (String) request.getAttribute("email");
-    Boolean resent = (Boolean) request.getAttribute("resent");
-    String reason = (String) request.getAttribute("reason");
-
-    Long lastSentTime = (Long) session.getAttribute("lastVerificationEmailTime");
-    long now = System.currentTimeMillis();
-    boolean allowResend = (lastSentTime == null || now - lastSentTime >= 60 * 1000);
-
 //    String contextPath = request.getContextPath();
 %>
 
