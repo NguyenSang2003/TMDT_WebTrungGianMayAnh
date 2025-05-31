@@ -143,4 +143,72 @@ public class ProductDAO {
         product.setViewCount(rs.getInt("view_count"));
         product.setSoldCount(rs.getInt("sold_count"));
     }
+
+    public List<BookingSchedule> getBookingsByProductId(int productId) {
+        String sql = "SELECT * FROM booking_schedule WHERE product_id = ? AND status IN ('cho_duyet', 'xac_nhan')";
+        List<BookingSchedule> bookings = new ArrayList<>();
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, productId);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                BookingSchedule booking = new BookingSchedule();
+                booking.setId(rs.getInt("id"));
+                booking.setProductId(rs.getInt("product_id"));
+                booking.setRenterId(rs.getInt("renter_id"));
+                booking.setOwnerId(rs.getInt("owner_id"));
+                booking.setOrderId(rs.getObject("order_id") != null ? rs.getInt("order_id") : null);
+                booking.setRentStart(rs.getDate("rent_start"));
+                booking.setRentEnd(rs.getDate("rent_end"));
+                booking.setStatus(rs.getString("status"));
+                booking.setCreatedAt(rs.getTimestamp("created_at"));
+                booking.setUpdatedAt(rs.getTimestamp("updated_at"));
+                bookings.add(booking);
+            }
+
+        } catch (SQLException ex) {
+            throw new RuntimeException("Lỗi khi lấy booking theo sản phẩm: " + ex.getMessage(), ex);
+        }
+
+        return bookings;
+    }
+
+    public ProductView getProductById(int id) {
+        String sql = "SELECT p.*, pd.image_url, pd.category, pr.rating " +
+                "FROM products p " +
+                "JOIN product_details pd ON p.id = pd.product_id " +
+                "JOIN product_reviews pr ON p.id = pr.product_id " +
+                "WHERE p.id = ?";
+
+        try (Connection connection = JDBC.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                ProductView pv = new ProductView();
+                pv.setId(rs.getInt("id"));
+                pv.setUserId(rs.getInt("user_id"));
+                pv.setName(rs.getString("name"));
+                pv.setPricePerDay(rs.getBigDecimal("price_per_day"));
+                pv.setQuantity(rs.getInt("quantity"));
+                pv.setStatus(rs.getString("status"));
+                pv.setCreatedAt(rs.getTimestamp("created_at"));
+                pv.setUpdatedAt(rs.getTimestamp("updated_at"));
+                pv.setViewCount(rs.getInt("view_count"));
+                pv.setSoldCount(rs.getInt("sold_count"));
+                pv.setRating(rs.getDouble("rating"));
+                pv.setImageUrl(rs.getString("image_url"));
+                pv.setCategory(rs.getString("category"));
+                return pv;
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error getting product by id: " + ex.getMessage(), ex);
+        }
+        return null; // nếu không tìm thấy
+    }
 }
