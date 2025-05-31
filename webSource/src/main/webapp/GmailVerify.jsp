@@ -133,6 +133,7 @@
 </nav>
 <!-- END nav -->
 
+<%-- breadcrumbs --%>
 <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('assets/images/bg_3.jpg');"
          data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
@@ -148,35 +149,33 @@
     </div>
 </section>
 
-<section class="ftco-section contact-section">
+<%-- Gmail verify section start --%>
+<section class="ftco-section contact-section" style="padding-bottom: 20px">
     <div class="gmail-verify-wrapper">
         <div class="container">
             <div class="row d-flex mb-5 contact-info">
                 <div class="container">
-                    <h2>Tài khoản <span class="email"><%= user.getUsername() %></span> với Gmail là
-                        <span class="email"><%= user.getEmail() %></span> chưa được xác minh</h2>
-                    <p>Vui lòng bấm nút "Gửi mã xác minh" và tới gmail của bạn để xác minh tài khoản.</p>
+                    <h2>
+                        Tài khoản <span class="email"><%= user.getUsername() %></span> với Gmail là
+                        <span class="email"><%= user.getEmail() %></span> chưa được xác minh
+                    </h2>
+                    <p>Vui lòng bấm nút "Gửi mã xác minh" và kiểm tra gmail của bạn để xác minh tài khoản.</p>
 
-                    <% if (resent != null && resent) { %>
-                    <div class="message" style="color: green;">Mã xác minh đã được gửi!</div>
-                    <% } else if (resent != null && !resent && reason != null) { %>
-                    <div class="message" style="color: red;"><%= reason %>
-                    </div>
-                    <% } %>
+                    <button id="btnResendCode" class="btn btn-success" disabled>
+                        Gửi mã xác minh
+                    </button>
 
-                    <% if (allowResend) { %>
-                    <a class="resend-link"
-                       href="<%= request.getContextPath() %>/resendVerification?email=<%= user.getEmail() %>">
-                        <%= (lastSentTime == null) ? "Gửi mã xác minh" : "Gửi lại mã xác minh" %>
-                    </a>
-                    <% } else { %>
-                    <p style="color: rgb(128,128,128);">Bạn phải đợi ít nhất 1 phút trước khi gửi lại mã xác minh.</p>
-                    <% } %>
+                    <div id="countdown"
+                         style="margin-top: 10px; font-size: 13px; color: orange; font-weight: bold;"></div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<%-- Gmail verify section end --%>
+
+<script src="assets/js_handMade/gmailVerify.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section">

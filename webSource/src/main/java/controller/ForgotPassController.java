@@ -21,7 +21,6 @@ public class ForgotPassController extends HttpServlet {
         req.setCharacterEncoding("UTF-8");
         resp.setCharacterEncoding("UTF-8");
 
-
         // Lấy email từ client
         String email = req.getParameter("email");
         String message = "";

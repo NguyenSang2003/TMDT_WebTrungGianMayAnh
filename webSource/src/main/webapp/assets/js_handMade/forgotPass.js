@@ -2,9 +2,9 @@ window.onload = function () {
     const emailInput = document.getElementById("emailInput");
     const validationMessage = document.getElementById("emailValidationMessage");
     const sendMailButton = document.getElementById("btnSendMail");
-    const countdownDisplay = document.getElementById("countdown"); // Phần tử hiển thị đếm ngược
+    const countdownDisplay = document.getElementById("countdown");
 
-    // Kiểm tra input của gmail nhập vào
+    // kiểm tra input của gmail nhập vào
     emailInput.addEventListener("input", function () {
         const email = emailInput.value;
 
@@ -13,12 +13,12 @@ window.onload = function () {
         if (!emailRegex.test(email)) {
             validationMessage.style.color = "red";
             validationMessage.textContent = "Gmail không hợp lệ";
-            sendMailButton.disabled = true; // Vô hiệu hóa nút gửi mail
-            return; // Dừng lại nếu định dạng không hợp lệ
+            sendMailButton.disabled = true; // Ẩn nút gửi mail
+            return; // Dừng ở đây, không cần gửi request
         }
 
         // Gửi AJAX để kiểm tra email trên server
-        fetch("validate-gmail", {
+        fetch("validate-email", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -30,27 +30,27 @@ window.onload = function () {
                 if (data.isValid) {
                     validationMessage.style.color = "#00ff00";
                     validationMessage.textContent = "Gmail hợp lệ";
-                    sendMailButton.disabled = false; // Kích hoạt nút gửi mail nếu hợp lệ
+                    sendMailButton.disabled = false; // Bật nút gửi mail
                 } else {
                     validationMessage.style.color = "red";
                     validationMessage.textContent = "Gmail không hợp lệ";
-                    sendMailButton.disabled = true; // Vô hiệu hóa nút gửi mail nếu không hợp lệ
+                    sendMailButton.disabled = true; // Ẩn nút gửi mail
                 }
             })
             .catch(error => {
-                console.error("Lỗi khi xác minh email:", error);
+                console.error("Error:", error);
             });
     });
 
-    // Sự kiện click cho nút gửi mail
+    // nút gửi mail
     sendMailButton.addEventListener("click", function (e) {
         e.preventDefault();
         const email = emailInput.value;
 
-        // Ngay khi click, disable nút để ngăn chặn gửi nhiều lần
+        // Vô hiệu hóa nút ngay khi click để ngăn spam
         sendMailButton.disabled = true;
 
-        // Gửi yêu cầu forgot-pass đến server
+        // Gửi yêu cầu forgot-pass như hiện tại
         fetch("forgot-pass", {
             method: "POST",
             headers: {
@@ -66,13 +66,12 @@ window.onload = function () {
                     icon: data.status === "success" ? "success" : "error",
                     button: "OK",
                 });
-                // Sau khi gửi email, bắt đầu đếm ngược 90 giây
+                // Khởi chạy đếm ngược 90 giây
                 startCountdown(90);
             })
             .catch(error => {
                 console.error("Lỗi gửi yêu cầu:", error);
                 swal("Lỗi!", "Không thể gửi yêu cầu, vui lòng thử lại.", "error");
-                // Khởi chạy đếm ngược để tránh gửi quá nhiều yêu cầu liên tiếp khi có lỗi
                 startCountdown(90);
             });
     });
@@ -99,4 +98,4 @@ window.onload = function () {
             }
         }, 1000);
     }
-};
+}
