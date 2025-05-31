@@ -7,6 +7,7 @@ public class ProductDetail {
     private String brand;
     private String model;
     private String imageUrl;
+    private String category;
     private String productCondition;
     private String accessories;
     private double weight;
@@ -58,6 +59,14 @@ public class ProductDetail {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getProductCondition() {

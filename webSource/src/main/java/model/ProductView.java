@@ -2,6 +2,7 @@ package model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.*;
 
 // lop join 2 bảng product và product_detail lại để lấy url ra xài
 public class ProductView {
@@ -15,8 +16,12 @@ public class ProductView {
     private Timestamp updatedAt;
     private int viewCount;
     private int soldCount;
+    private double rating;
     private String imageUrl; // từ product_details.image_url
+    private String category; // từ product_details.category
     private String formattedPricePerDay;
+    private Date rentStart;
+    private Date rentEnd;
 
     // Getters and Setters
     public int getId() {
@@ -99,6 +104,14 @@ public class ProductView {
         this.soldCount = soldCount;
     }
 
+    public double getRating() {
+        return rating;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
     public String getImageUrl() {
         return imageUrl;
     }
@@ -107,11 +120,52 @@ public class ProductView {
         this.imageUrl = imageUrl;
     }
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
     public String getFormattedPricePerDay() {
         return formattedPricePerDay;
     }
 
-    public void setFormattedPricePerDay(String formattedPricePerDay) {
-        this.formattedPricePerDay = formattedPricePerDay;
+    public void setFormattedPricePerDay(String formattedPricePerDay) { this.formattedPricePerDay = formattedPricePerDay; }
+
+    public Date getRentStart() { return rentStart; }
+
+    public void setRentStart(Date rentStart) { this.rentStart = rentStart; }
+
+    public Date getRentEnd() { return rentEnd; }
+
+    public void setRentEnd(Date rentEnd) { this.rentEnd = rentEnd; }
+
+    private List<BookingSchedule> bookingSchedules;
+
+    public List<BookingSchedule> getBookingSchedules() {
+        return bookingSchedules;
+    }
+
+    public void setBookingSchedules(List<BookingSchedule> bookingSchedules) {
+        this.bookingSchedules = bookingSchedules;
+        updateRentPeriod(); // cập nhật rentStart và rentEnd ngay khi có bookingSchedules mới
+    }
+
+    public void updateRentPeriod() {
+        if (bookingSchedules != null && !bookingSchedules.isEmpty()) {
+            this.rentStart = bookingSchedules.stream()
+                    .map(BookingSchedule::getRentStart)
+                    .min(Date::compareTo)
+                    .orElse(null);
+            this.rentEnd = bookingSchedules.stream()
+                    .map(BookingSchedule::getRentEnd)
+                    .max(Date::compareTo)
+                    .orElse(null);
+        } else {
+            this.rentStart = null;
+            this.rentEnd = null;
+        }
     }
 }
