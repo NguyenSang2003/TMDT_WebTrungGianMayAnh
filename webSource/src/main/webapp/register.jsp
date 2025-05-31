@@ -64,6 +64,8 @@
 
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
+    <link rel="stylesheet" href="assets/css_handMade/register.css">
+
 </head>
 
 <body>
@@ -117,34 +119,34 @@
 <div class="container">
     <h2 class="page-title">Đăng ký</h2>
 
-    <%
-        String status = (String) request.getAttribute("status");
-        if (status != null && !status.trim().isEmpty()) {
-            String bgColor = "";
-            String textColor = "#ffffff";
-            if ("success".equals(status)) {
-                bgColor = "green";
-            } else {
-                bgColor = "red";
-            }
-    %>
-    <div class="notification2" style="background-color: <%= bgColor %>; color: <%= textColor %>;">
-        <% if ("email_exists".equals(status)) { %>
-        <p class="pThongBao">Email đã tồn tại. Vui lòng nhập email khác.</p>
-        <% } else if ("username_exists".equals(status)) { %>
-        <p class="pThongBao">Tên người dùng đã tồn tại. Vui lòng chọn tên khác.</p>
-        <% } else if ("password_error".equals(status)) { %>
-        <p class="pThongBao">Mật khẩu nhập lại không khớp hoặc độ dài mật khẩu phải từ 6 ký tự.</p>
-        <% } else if ("register_failed".equals(status)) { %>
-        <p class="pThongBao">Đăng ký không thành công. Vui lòng thử lại!</p>
-        <% } else if ("success".equals(status)) { %>
-        <p class="pThongBao">Đăng ký thành công!</p>
-        <% } %>
-    </div>
-    <%
-            request.removeAttribute("status");
-        }
-    %>
+    <%--    <%--%>
+    <%--        String status = (String) request.getAttribute("status");--%>
+    <%--        if (status != null && !status.trim().isEmpty()) {--%>
+    <%--            String bgColor = "";--%>
+    <%--            String textColor = "#ffffff";--%>
+    <%--            if ("success".equals(status)) {--%>
+    <%--                bgColor = "green";--%>
+    <%--            } else {--%>
+    <%--                bgColor = "red";--%>
+    <%--            }--%>
+    <%--    %>--%>
+    <%--    <div class="notification2" style="background-color: <%= bgColor %>; color: <%= textColor %>;">--%>
+    <%--        <% if ("email_exists".equals(status)) { %>--%>
+    <%--        <p class="pThongBao">Email đã tồn tại. Vui lòng nhập email khác.</p>--%>
+    <%--        <% } else if ("username_exists".equals(status)) { %>--%>
+    <%--        <p class="pThongBao">Tên người dùng đã tồn tại. Vui lòng chọn tên khác.</p>--%>
+    <%--        <% } else if ("password_error".equals(status)) { %>--%>
+    <%--        <p class="pThongBao">Mật khẩu nhập lại không khớp hoặc độ dài mật khẩu phải từ 6 ký tự.</p>--%>
+    <%--        <% } else if ("register_failed".equals(status)) { %>--%>
+    <%--        <p class="pThongBao">Đăng ký không thành công. Vui lòng thử lại!</p>--%>
+    <%--        <% } else if ("success".equals(status)) { %>--%>
+    <%--        <p class="pThongBao">Đăng ký thành công!</p>--%>
+    <%--        <% } %>--%>
+    <%--    </div>--%>
+    <%--    <%--%>
+    <%--            request.removeAttribute("status");--%>
+    <%--        }--%>
+    <%--    %>--%>
 
 
     <div class="form">
@@ -155,29 +157,34 @@
                     <span class="icon"><ion-icon name="person"></ion-icon></span>
                     <input type="text" id="userName" name="userName" placeholder="Nhập tên người dùng" required>
                     <label>Tên người dùng:</label>
+                    <small></small>
                 </div>
                 <div class="input-box">
                     <span class="icon"><ion-icon name="mail-open"></ion-icon></span>
                     <input type="email" id="email" name="email" placeholder="Nhập Email" required>
                     <label>Email:</label>
+                    <small></small>
                 </div>
                 <div class="input-box">
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
                     <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
                     <label>Mật khẩu:</label>
+                    <small></small>
                 </div>
                 <div class="input-box">
                     <span class="icon"><ion-icon name="lock-closed"></ion-icon></span>
                     <input type="password" id="retypePassword" name="retypePassword" placeholder="Nhập lại mật khẩu"
                            required>
                     <label>Nhập lại mật khẩu:</label>
+                    <small></small>
                 </div>
                 <div class="remenber-forgot">
                     <label>
                         <input type="checkbox" required> Tôi đồng ý với các điều khoản &amp; điều kiện
                     </label>
                 </div>
-                <button type="submit" class="btn btn-success">Đăng Ký</button>
+                <button type="submit" id="registerBtn" class="btn btn-success" disabled>Đăng Ký</button>
+
                 <div class="login-register">
                     <p>
                         <span style="font-size: 14px; color: #1CA8FF">Bạn đã có tài khoản? </span>
@@ -190,7 +197,7 @@
     </div>
 </div>
 
-<%--<script src="assets/js_handMade/register.js"></script>--%>
+<script src="assets/js_handMade/register.js"></script>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section">

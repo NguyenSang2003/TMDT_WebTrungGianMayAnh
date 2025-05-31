@@ -21,7 +21,6 @@ public class ValidateEmailController extends HttpServlet {
         String email = req.getParameter("email");
         boolean isValid = false;
 
-
         // Kiểm tra định dạng email
         if (email != null && email.matches("^[\\w._%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
             // Kiểm tra email có tồn tại trong hệ thống hay không
