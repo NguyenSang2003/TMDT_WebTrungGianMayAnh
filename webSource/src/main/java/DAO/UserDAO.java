@@ -254,5 +254,41 @@ public class UserDAO {
         return user;
     }
 
+    /**
+     * Cập nhật mật khẩu mới dựa vào email của người dùng.
+     *
+     * @param email       Email của người dùng cần cập nhật mật khẩu.
+     * @param newPassword Mật khẩu mới cần cập nhật.
+     * @return true nếu cập nhật thành công, false nếu thất bại.
+     */
+    /**
+     * Cập nhật mật khẩu mới dựa vào email của người dùng.
+     *
+     * @param email       Email của người dùng cần cập nhật mật khẩu.
+     * @param newPassword Mật khẩu mới cần cập nhật.
+     * @return true nếu cập nhật thành công, false nếu thất bại.
+     */
+    public boolean updatePasswordByEmail(String email, String newPassword) {
+        Connection connection = null;
+        try {
+            // Lấy kết nối từ JDBC
+            connection = JDBC.getConnection();
+
+            // Cập nhật mật khẩu trong bảng users
+            String sql = "UPDATE users SET password = ?, updated_at = ? WHERE email = ?";
+
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1, newPassword);
+            stmt.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
+            stmt.setString(3, email);
+
+            int rowsUpdated = stmt.executeUpdate();
+            return rowsUpdated > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi cập nhật mật khẩu: " + e.getMessage(), e);
+        } finally {
+            JDBC.closeConnection(connection);
+        }
+    }
 
 }

@@ -148,7 +148,7 @@
             }
 
             // Gửi AJAX để kiểm tra email trên server
-            fetch("validate-email", {
+            fetch("validate-gmail", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/x-www-form-urlencoded"
