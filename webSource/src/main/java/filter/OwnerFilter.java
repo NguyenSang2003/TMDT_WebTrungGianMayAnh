@@ -21,7 +21,7 @@ public class OwnerFilter implements Filter {
 
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
-        if (user == null || !"owner".equalsIgnoreCase(user.getRole())) {
+        if (user == null || !"nguoi_cho_thue".equalsIgnoreCase(user.getRole())) {
             resp.sendRedirect(req.getContextPath() + "/index.jsp");
             return;
         }
