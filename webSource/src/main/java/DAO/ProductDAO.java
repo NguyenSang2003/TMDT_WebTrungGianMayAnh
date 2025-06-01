@@ -143,4 +143,5 @@ public class ProductDAO {
         product.setViewCount(rs.getInt("view_count"));
         product.setSoldCount(rs.getInt("sold_count"));
     }
+
 }
