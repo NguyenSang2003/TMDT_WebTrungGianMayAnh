@@ -183,7 +183,7 @@ public class ProductDAO {
         String sql = "SELECT p.*, pd.image_url, pd.category, pr.rating " +
                 "FROM products p " +
                 "JOIN product_details pd ON p.id = pd.product_id " +
-                "JOIN product_reviews pr ON p.id = pr.product_id " +
+                "LEFT JOIN product_reviews pr ON p.id = pr.product_id " +
                 "WHERE p.id = ?";
 
         try (Connection connection = JDBC.getConnection();
@@ -204,7 +204,12 @@ public class ProductDAO {
                 pv.setUpdatedAt(rs.getTimestamp("updated_at"));
                 pv.setViewCount(rs.getInt("view_count"));
                 pv.setSoldCount(rs.getInt("sold_count"));
-                pv.setRating(rs.getDouble("rating"));
+                double rating = rs.getDouble("rating");
+                if (rs.wasNull()) {
+                    rating = 0;
+                }
+                pv.setRating(rating);
+
                 pv.setImageUrl(rs.getString("image_url"));
                 pv.setCategory(rs.getString("category"));
                 return pv;

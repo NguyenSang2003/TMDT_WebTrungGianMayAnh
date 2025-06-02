@@ -424,51 +424,52 @@
     });
     <% } %>
 
-    document.querySelector('form[action="checkout"]').addEventListener('submit', function (e) {
-        const form = e.target;
-        const cartDateInputs = [...document.querySelectorAll('.rental-date')];
-        let allDatesAreValid = true;
+    document.addEventListener('DOMContentLoaded', function () {
+        const checkoutForm = document.querySelector('form[action="checkout"]');
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', function (e) {
+                const form = e.target;
+                const cartDateInputs = [...document.querySelectorAll('.rental-date')];
+                let allDatesAreValid = true;
 
-        // Xóa input ẩn cũ để tránh trùng lặp
-        form.querySelectorAll('input[name^="rentStart_"], input[name^="rentEnd_"]').forEach(i => i.remove());
+                // Xóa input ẩn cũ để tránh trùng lặp
+                form.querySelectorAll('input[name^="rentStart_"], input[name^="rentEnd_"]').forEach(i => i.remove());
 
-        cartDateInputs.forEach(input => {
-            const parts = input.value.split(' to ');
-            let start = parts[0]?.trim();
-            let end = parts[1]?.trim();
+                cartDateInputs.forEach(input => {
+                    const parts = input.value.split(' to ');
+                    let start = parts[0]?.trim();
+                    let end = parts[1]?.trim();
+                    const productId = input.id.split('_')[1];
 
-            const productId = input.id.split('_')[1];
+                    if (!start) {
+                        console.warn(`Chưa chọn ngày cho sản phẩm ${productId}`);
+                        allDatesAreValid = false;
+                        return;
+                    }
 
-            if (!start) {
-                console.warn(`Chưa chọn ngày cho sản phẩm ${productId}`);
-                allDatesAreValid = false;
-                return;
-            }
+                    if (!end) end = start;
 
-            // Nếu chỉ chọn 1 ngày, gán end = start (tức là thuê 1 ngày)
-            if (!end) end = start;
+                    const startInput = document.createElement('input');
+                    startInput.type = 'hidden';
+                    startInput.name = `rentStart_${productId}`;
+                    startInput.value = start;
+                    form.appendChild(startInput);
 
-            // Tạo input ẩn cho rentStart
-            const startInput = document.createElement('input');
-            startInput.type = 'hidden';
-            startInput.name = `rentStart_${productId}`;
-            startInput.value = start;
-            form.appendChild(startInput);
+                    const endInput = document.createElement('input');
+                    endInput.type = 'hidden';
+                    endInput.name = `rentEnd_${productId}`;
+                    endInput.value = end;
+                    form.appendChild(endInput);
+                });
 
-            // Tạo input ẩn cho rentEnd
-            const endInput = document.createElement('input');
-            endInput.type = 'hidden';
-            endInput.name = `rentEnd_${productId}`;
-            endInput.value = end;
-            form.appendChild(endInput);
-        });
-
-        if (!allDatesAreValid) {
-            e.preventDefault();
-            alert("Vui lòng chọn đầy đủ thời gian thuê cho tất cả sản phẩm.");
-            return false;
+                if (!allDatesAreValid) {
+                    e.preventDefault();
+                    alert("Vui lòng chọn đầy đủ thời gian thuê cho tất cả sản phẩm.");
+                }
+            });
         }
     });
+
 
 </script>
 

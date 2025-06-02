@@ -200,7 +200,7 @@
                                 <!-- Thông tin sản phẩm -->
                                 <div>
                                     <h5 class="card-title fw-semibold mb-1"><%= p.getName() %></h5>
-                                    <p class="mb-1 text-muted">💸 Giá thuê/ngày: <strong><%= p.getPricePerDay() %> VNĐ</strong></p>
+                                    <p class="mb-1 text-muted">💸 Giá thuê/ngày: <strong><%= String.format("%,.0f ₫/ngày ", p.getPricePerDay().doubleValue()) %> VNĐ</strong></p>
                                     <p class="mb-1 text-muted">🔢 Số lượng: <%= o.getQuantity() %></p>
                                 </div>
 
@@ -212,7 +212,7 @@
 
                                 <!-- Thành tiền -->
                                 <div class="mt-2">
-                                    <p class="fw-bold text-danger mb-0">💰 Thành tiền: <%= o.getTotalPrice() %> VNĐ</p>
+                                    <p class="fw-bold text-danger mb-0">💰 Thành tiền: <%= String.format("%,.0f ₫/ngày ", o.getTotalPrice()) %> VNĐ</p>
                                 </div>
                             </div>
 
