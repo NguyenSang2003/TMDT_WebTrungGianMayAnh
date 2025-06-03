@@ -1,6 +1,5 @@
 package controller;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,20 +14,22 @@ import java.util.UUID;
 
 @WebServlet("/resendVerification")
 public class VerificationEmailController extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    // của gmailVerify đề gửi mail verify
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json");
 
         HttpSession session = request.getSession(false);
         if (session == null) {
-            response.sendRedirect("login.jsp");
+            response.getWriter().write("{\"status\": \"error\", \"message\": \"Bạn chưa đăng nhập.\"}");
             return;
         }
 
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            response.sendRedirect("login.jsp");
+            response.getWriter().write("{\"status\": \"error\", \"message\": \"Không tìm thấy thông tin người dùng.\"}");
             return;
         }
 
@@ -36,34 +37,30 @@ public class VerificationEmailController extends HttpServlet {
         String username = user.getUsername();
 
         if (email == null || email.isEmpty()) {
-            response.sendRedirect("login.jsp");
+            response.getWriter().write("{\"status\": \"error\", \"message\": \"Email không hợp lệ.\"}");
             return;
         }
 
         Long lastSentTime = (Long) session.getAttribute("lastVerificationEmailTime");
         long now = System.currentTimeMillis();
 
-        if (lastSentTime != null && now - lastSentTime < 60 * 1000) {
-            request.setAttribute("resent", false);
-            request.setAttribute("reason", "Vui lòng chờ ít nhất 1 phút trước khi gửi lại mã xác minh.");
-            request.getRequestDispatcher("GmailVerify.jsp").forward(request, response);
+        // Kiểm tra nếu chưa đủ 90s thì không cho gửi
+        if (lastSentTime != null && now - lastSentTime < 90 * 1000) {
+            response.getWriter().write("{\"status\": \"error\", \"message\": \"Vui lòng chờ ít nhất 90 giây trước khi gửi lại.\"}");
             return;
         }
 
+        // Tạo mã xác minh mới và lưu
         String code = UUID.randomUUID().toString();
         VerificationCodeStore.store(email, code);
 
+        // Gửi email
         boolean sent = SendMail.sendVerificationEmail(email, code, username);
-        System.out.println("Gửi email xác minh " + (sent ? "THÀNH CÔNG" : "THẤT BẠI"));
-
         if (sent) {
             session.setAttribute("lastVerificationEmailTime", now);
+            response.getWriter().write("{\"status\": \"success\", \"message\": \"Mã xác minh đã được gửi tới email của bạn.\"}");
+        } else {
+            response.getWriter().write("{\"status\": \"error\", \"message\": \"Gửi email thất bại. Vui lòng thử lại sau.\"}");
         }
-
-        request.setAttribute("resent", sent);
-        if (!sent) {
-            request.setAttribute("reason", "Gửi email thất bại. Vui lòng thử lại sau.");
-        }
-        request.getRequestDispatcher("GmailVerify.jsp").forward(request, response);
     }
 }

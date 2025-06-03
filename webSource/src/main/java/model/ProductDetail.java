@@ -1,5 +1,7 @@
 package model;
 
+import java.math.BigDecimal;
+
 public class ProductDetail {
     private int id;
     private int productId;
@@ -10,7 +12,7 @@ public class ProductDetail {
     private String category;
     private String productCondition;
     private String accessories;
-    private double weight;
+    private BigDecimal weight;
     private String color;
 
     public int getId() {
@@ -85,11 +87,11 @@ public class ProductDetail {
         this.accessories = accessories;
     }
 
-    public double getWeight() {
+    public BigDecimal getWeight() {
         return weight;
     }
 
-    public void setWeight(double weight) {
+    public void setWeight(BigDecimal weight) {
         this.weight = weight;
     }
 
