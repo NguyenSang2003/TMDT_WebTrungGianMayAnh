@@ -29,12 +29,8 @@ public class UploadIdCardServlet extends HttpServlet {
 
         int userId = user.getId();
 
-        // Đường dẫn thư mục lưu ảnh cho user, đúng với thư mục deploy
-//        String uploadPath = request.getServletContext().getRealPath("/assets/images_userProfile/");
-//        System.out.println("Upload path thực tế: " + uploadPath);
-
-        // 🟩 Lấy đường dẫn thực tế tới thư mục /dataUpload/ trong webapp (tồn tại khi WAR chạy)
-        String uploadPath = request.getServletContext().getRealPath("/dataUpload/");
+        // Sử dụng thư mục động: /dataUpload/
+        String uploadPath = getServletContext().getRealPath("/dataUpload/");
         System.out.println("Upload path thực tế: " + uploadPath);
 
         //  Tạo thư mục nếu chưa tồn tại
@@ -44,24 +40,27 @@ public class UploadIdCardServlet extends HttpServlet {
         String idCardUrl = null;
         String idCardWithUserUrl = null;
 
+        // Duyệt qua các phần được upload trong request
         for (Part part : request.getParts()) {
             String fieldName = part.getName();
 
+            // Xử lý file upload cho ảnh CMND/CCCD
             if (fieldName.equals("idCardImage") && part.getSize() > 0) {
                 String fileName = "idCard" + userId + ".png";
-                File file = new File(uploadPath, fileName);
+                File file = new File(uploadDir, fileName);
                 part.write(file.getAbsolutePath());
-                System.out.println("✅ Đã ghi file CMND: " + file.getAbsolutePath() + " - Kích thước: " + file.length());
+                System.out.println("Đã ghi file CMND: " + file.getAbsolutePath() + " - Kích thước: " + file.length());
 
-                // URL để truy cập (từ trình duyệt)
+                // Lưu URL tương đối, dựa trên thư mục /dataUpload/
                 idCardUrl = "dataUpload/" + fileName;
             }
 
+            // Xử lý file upload cho ảnh chụp cùng CMND/CCCD
             if (fieldName.equals("idCardWithUserImage") && part.getSize() > 0) {
                 String fileName = "idCardPeople" + userId + ".png";
-                File file = new File(uploadPath, fileName);
+                File file = new File(uploadDir, fileName);
                 part.write(file.getAbsolutePath());
-                System.out.println("✅ Đã ghi file chụp cùng CMND: " + file.getAbsolutePath() + " - Kích thước: " + file.length());
+                System.out.println("Đã ghi file chụp cùng CMND: " + file.getAbsolutePath() + " - Kích thước: " + file.length());
 
                 idCardWithUserUrl = "dataUpload/" + fileName;
             }
@@ -78,6 +77,5 @@ public class UploadIdCardServlet extends HttpServlet {
 
         response.sendRedirect("profile");
     }
-
 
 }

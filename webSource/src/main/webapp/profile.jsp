@@ -183,6 +183,11 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>Xác thực CMND & Họ tên:</th>
+                    <td><%= profile.isVerifiedIdentity() ? "Đã xác thực" : "Chưa xác thực" %>
+                    </td>
+                </tr>
+                <tr>
                     <th>Trạng thái tài khoản:</th>
                     <td><%= user.isActive() ? "Hoạt động" : "Không hoạt động" %>
                     </td>
@@ -237,7 +242,7 @@
         <%-- Thông tin ảnh CMND và upload --%>
         <h2>Ảnh CMND/CCCD</h2>
         <div class="form-section">
-            <form method="post" action="upload-idcard" enctype="multipart/form-data">
+            <form method="post" action="./upload-idcard" enctype="multipart/form-data">
 
                 <% if (profile.getIdCardImageUrl() != null && !profile.getIdCardImageUrl().isEmpty()) { %>
                 <label>Ảnh CMND/CCCD (2 mặt):</label>

@@ -38,7 +38,7 @@ public class UserProfileDAO {
     }
 
     public void updateProfile(UserProfile profile) {
-        String sql = "UPDATE user_profiles SET full_name = ?, id_card_number = ?, address = ?, phone_number = ?, date_of_birth = ?, id_card_image_url = ?, id_card_with_user_image_url = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?";
+        String sql = "UPDATE user_profiles SET full_name = ?, id_card_number = ?, address = ?, phone_number = ?, date_of_birth = ?, updated_at = CURRENT_TIMESTAMP WHERE user_id = ?";
         try (Connection conn = JDBC.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
 
@@ -47,9 +47,7 @@ public class UserProfileDAO {
             stmt.setString(3, profile.getAddress());
             stmt.setString(4, profile.getPhoneNumber());
             stmt.setDate(5, profile.getDateOfBirth());
-            stmt.setString(6, profile.getIdCardImageUrl());
-            stmt.setString(7, profile.getIdCardWithUserImageUrl());
-            stmt.setInt(8, profile.getUserId());
+            stmt.setInt(6, profile.getUserId());
 
             stmt.executeUpdate();
         } catch (SQLException e) {

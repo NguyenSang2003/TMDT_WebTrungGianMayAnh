@@ -86,8 +86,6 @@ public class ProfileController extends HttpServlet {
         String address = req.getParameter("address");
         String phone = req.getParameter("phone");
         String dobStr = req.getParameter("dob");
-        String idCardImageUrl = req.getParameter("idCardImageUrl");
-        String idCardWithUserImageUrl = req.getParameter("idCardWithUserImageUrl");
 
         Date dob = dobStr != null && !dobStr.isEmpty() ? Date.valueOf(dobStr) : null;
 
@@ -98,8 +96,6 @@ public class ProfileController extends HttpServlet {
         profile.setAddress(address);
         profile.setPhoneNumber(phone);
         profile.setDateOfBirth(dob);
-        profile.setIdCardImageUrl(idCardImageUrl);
-        profile.setIdCardWithUserImageUrl(idCardWithUserImageUrl);
 
         profileDAO.updateProfile(profile);
 
