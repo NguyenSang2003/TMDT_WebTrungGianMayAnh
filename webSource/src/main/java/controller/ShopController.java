@@ -9,7 +9,9 @@ import model.ProductView;
 import services.ProductService;
 
 import java.io.IOException;
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 @WebServlet("/shop")
 public class ShopController extends HttpServlet {
@@ -20,11 +22,15 @@ public class ShopController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            // Lấy danh sách sản phẩm để hiển thị trên shop
-            List<ProductView> productViews = productService.getAllProducts();
-            request.setAttribute("productViews", productViews);
+            List<ProductView> products = productService.getAllProductViews();
 
-            // Forward về trang shop.jsp
+            // Định dạng giá thuê theo chuẩn Việt Nam
+            NumberFormat currencyFormatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+            for (ProductView product : products) {
+                product.setFormattedPricePerDay(currencyFormatter.format(product.getPricePerDay()));
+            }
+
+            request.setAttribute("products", products);
             request.getRequestDispatcher("shop.jsp").forward(request, response);
 
         } catch (Exception e) {

@@ -3,7 +3,6 @@ package controller;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import model.Product;
 import model.ProductDetail;
 import model.ProductView;
 import services.ProductDetailService;
