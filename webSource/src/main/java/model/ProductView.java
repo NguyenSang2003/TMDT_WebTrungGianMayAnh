@@ -23,7 +23,6 @@ public class ProductView {
     private Date rentStart;
     private Date rentEnd;
     private String brand;
-    private String category;
 
     // Getters and Setters
     public int getId() {
@@ -177,13 +176,5 @@ public class ProductView {
 
     public void setBrand(String brand) {
         this.brand = brand;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
     }
 }

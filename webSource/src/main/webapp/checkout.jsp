@@ -158,20 +158,6 @@
 </section>
 
 <div class="container mt-5">
-    <% String paymentStatus = (String) request.getAttribute("paymentStatus"); %>
-    <% if ("fail".equals(paymentStatus)) { %>
-    <div class="alert alert-danger text-center" role="alert">
-        Thanh toán thất bại! Vui lòng thử lại.
-    </div>
-    <% } %>
-
-    <% if ("failTime".equals(request.getAttribute("paymentStatusTime"))) { %>
-    <div class="alert alert-danger text-center" role="alert">
-        Vui lòng chọn đúng khoảng thời gian thuê cho từng sản phẩm!
-    </div>
-    <% } %>
-
-
     <h2 class="text-center mb-4"><span class="title-underline">Thanh toán</span></h2>
 
     <div class="border p-4 rounded">
@@ -181,6 +167,9 @@
             <div class="col-md-8">
                 <%
                     List<OrderView> recentOrderViews = (List<OrderView>) request.getAttribute("recentOrderViews");
+                    Double shippingFee = (Double) request.getAttribute("shippingFee");
+                    if (shippingFee == null) shippingFee = 0.0;
+                    double totalAmount = 0;
                 %>
 
                 <h4 class="fw-bold mb-4">🛒 Thông tin đơn hàng</h4>
@@ -189,6 +178,7 @@
                 <% for (OrderView ov : recentOrderViews) {
                     Order o = ov.getOrder();
                     Product p = ov.getProduct();
+                    totalAmount += o.getTotalPrice();
                 %>
                 <div class="card mb-3 shadow-sm">
                     <div class="row g-0 align-items-center">
@@ -227,11 +217,18 @@
                 <!-- Extra Options -->
                 <div class="border-top pt-4 mt-4">
                     <div class="mb-3">
-                        <strong>🚚 Phí vận chuyển:</strong> <span class="ms-2">50,000 vnd</span>
+                        <strong>🚚 Phí vận chuyển:</strong>
+                        <span class="ms-2">
+                            <%= (shippingFee == null || shippingFee == 0) ? "Free" : String.format("%,.0f ₫", shippingFee) %>
+                        </span>
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">🎁 Mã giảm giá</label>
                         <input type="text" class="form-control w-75" placeholder="Nhập mã giảm giá">
+                    </div>
+                    <div class="mb-3">
+                        <strong>💰 Tổng thanh toán: </strong>
+                        <span class="ms-2"><%= String.format("%,.0f ₫", totalAmount + shippingFee) %></span>  <!-- Cộng phí vận chuyển -->
                     </div>
                     <div class="mb-3">
                         <label for="note" class="form-label fw-semibold">📝 Ghi chú đơn hàng</label>
@@ -240,7 +237,6 @@
                     <button class="btn btn-danger px-4 py-2 fw-bold">Thanh toán</button>
                 </div>
             </div>
-
 
             <!-- Right: Image -->
             <div class="col-md-4 text-center"

@@ -227,7 +227,6 @@
                     <% } } %>
                 </ul>
             </div>
-
             <% } %>
 
             <!-- Ghi chú đơn hàng + Chính sách -->
@@ -404,73 +403,80 @@
     flatpickr("#rentalDate_<%= p.getId() %>", {
         mode: "range",
         minDate: "today",
-        dateFormat: "Y-m-d", // <-- Đây là định dạng sẽ được gửi lên server
+        dateFormat: "Y-m-d", // Định dạng gửi lên server
         altInput: true,
-        altFormat: "d-m-Y", // <-- Đây là định dạng hiển thị cho người dùng
+        altFormat: "d-m-Y", // Định dạng hiển thị cho người dùng
         disable: [
             <% if (schedules != null) {
                 for (BookingSchedule s : schedules) {
                     String from = serverFormat.format(s.getRentStart());
                     String to = serverFormat.format(s.getRentEnd());
             %>
-            { from: "<%= from %>", to: "<%= to %>" },
+            {from: "<%= from %>", to: "<%= to %>"},
             <% } } %>
         ],
-        onDayCreate: function(dObj, dStr, fp, dayElem) {
-            if(dayElem.classList.contains('flatpickr-disabled')) {
+        onDayCreate: function (dObj, dStr, fp, dayElem) {
+            if (dayElem.classList.contains('flatpickr-disabled')) {
                 dayElem.classList.add('booked-day');
             }
         }
     });
     <% } %>
-
     document.addEventListener('DOMContentLoaded', function () {
-        const checkoutForm = document.querySelector('form[action="checkout"]');
-        if (checkoutForm) {
-            checkoutForm.addEventListener('submit', function (e) {
-                const form = e.target;
-                const cartDateInputs = [...document.querySelectorAll('.rental-date')];
-                let allDatesAreValid = true;
+        const form = document.querySelector('form[action="checkout"]');
+        if (!form) return;
 
-                // Xóa input ẩn cũ để tránh trùng lặp
-                form.querySelectorAll('input[name^="rentStart_"], input[name^="rentEnd_"]').forEach(i => i.remove());
+        form.addEventListener('submit', function (e) {
+            // 1. Lấy danh sách các .rental-date có id chứa dấu "_"
+            const cartDateInputs = Array.from(document.querySelectorAll('.rental-date'))
+                .filter(input => input.id && input.id.includes('_'));
+            let allDatesAreValid = true;
 
-                cartDateInputs.forEach(input => {
-                    const parts = input.value.split(' to ');
-                    let start = parts[0]?.trim();
-                    let end = parts[1]?.trim();
-                    const productId = input.id.split('_')[1];
+            // 2. Xóa các input ẩn cũ để tránh trùng lặp
+            form.querySelectorAll('input[name^="rentStart_"], input[name^="rentEnd_"]').forEach(i => i.remove());
 
-                    if (!start) {
-                        console.warn(`Chưa chọn ngày cho sản phẩm ${productId}`);
-                        allDatesAreValid = false;
-                        return;
-                    }
+            // 3. Duyệt qua từng input hợp lệ
+            cartDateInputs.forEach(input => {
+                const parts = input.value.split(' to ');
+                const start = parts[0]?.trim();
+                const end = parts[1]?.trim() || start; // nếu chỉ chọn 1 ngày => end = start
 
-                    if (!end) end = start;
-
-                    const startInput = document.createElement('input');
-                    startInput.type = 'hidden';
-                    startInput.name = `rentStart_${productId}`;
-                    startInput.value = start;
-                    form.appendChild(startInput);
-
-                    const endInput = document.createElement('input');
-                    endInput.type = 'hidden';
-                    endInput.name = `rentEnd_${productId}`;
-                    endInput.value = end;
-                    form.appendChild(endInput);
-                });
-
-                if (!allDatesAreValid) {
-                    e.preventDefault();
-                    alert("Vui lòng chọn đầy đủ thời gian thuê cho tất cả sản phẩm.");
+                const idParts = input.id.split('_');
+                if (idParts.length < 2) {
+                    console.warn(`Input có id không đúng định dạng: ${input.id}`);
+                    allDatesAreValid = false;
+                    return;
                 }
+                const productId = idParts[1];
+
+                if (!start) {
+                    console.warn(`Chưa chọn ngày cho sản phẩm ${productId}`);
+                    allDatesAreValid = false;
+                    return;
+                }
+
+                // Tạo 2 input ẩn rentStart và rentEnd
+                const startInput = document.createElement('input');
+                startInput.type = 'hidden';
+                startInput.name = `rentStart_` + String(productId);
+                startInput.value = start;
+                form.appendChild(startInput);
+
+                const endInput = document.createElement('input');
+                endInput.type = 'hidden';
+                endInput.name = `rentEnd_` + String(productId);
+                endInput.value = end;
+                form.appendChild(endInput);
             });
-        }
+
+            // 4. Nếu có ít nhất một sản phẩm chưa chọn ngày, chặn submit và cảnh báo
+            if (!allDatesAreValid) {
+                e.preventDefault();
+                alert("Vui lòng chọn đầy đủ thời gian thuê cho tất cả sản phẩm.");
+                return false;
+            }
+        });
     });
-
-
 </script>
 
 </body>
