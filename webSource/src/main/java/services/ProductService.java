@@ -1,5 +1,6 @@
 package services;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -206,6 +207,51 @@ public class ProductService {
         }
 
         return relatedProducts;
+    }
+
+    /**
+     * Lấy danh sách ProductView hiển thị trong product grid của shop.
+     * Chỉ lấy thông tin: id, name, price_per_day, image_url, category,
+     * trung bình đánh giá (averageRating) và tổng số đánh giá (totalReviews).
+     */
+    public List<ProductView> getAllProductViews() {
+        List<ProductView> productViews = new ArrayList<>();
+        Connection connection = null;
+        String sql = "SELECT p.id, p.name, p.price_per_day, pd.image_url, pd.category, " +
+                "AVG(pr.rating) AS averageRating, COUNT(pr.rating) AS totalReviews " +
+                "FROM products p " +
+                "JOIN product_details pd ON p.id = pd.product_id " +
+                "LEFT JOIN product_reviews pr ON p.id = pr.product_id " +
+                "GROUP BY p.id, p.name, p.price_per_day, pd.image_url, pd.category";
+
+        try {
+            connection = JDBC.getConnection();
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ProductView pv = new ProductView();
+                pv.setId(rs.getInt("id"));
+                pv.setName(rs.getString("name"));
+                pv.setPricePerDay(rs.getBigDecimal("price_per_day"));
+                pv.setImageUrl(rs.getString("image_url"));
+                pv.setCategory(rs.getString("category"));
+
+                // Nếu không có review, AVG(pr.rating) có thể trả về null
+                BigDecimal avgRating = rs.getBigDecimal("averageRating");
+                if (avgRating == null) {
+                    avgRating = BigDecimal.ZERO;
+                }
+                pv.setAverageRating(avgRating);
+                pv.setTotalReviews(rs.getInt("totalReviews"));
+
+                productViews.add(pv);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi lấy danh sách sản phẩm: " + e.getMessage(), e);
+        } finally {
+            JDBC.closeConnection(connection);
+        }
+        return productViews;
     }
 
 }
