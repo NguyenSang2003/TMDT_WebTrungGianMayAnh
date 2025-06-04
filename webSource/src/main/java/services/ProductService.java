@@ -9,6 +9,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
+import java.math.RoundingMode;
 
 import database.JDBC;
 import model.ProductView;
@@ -241,7 +242,9 @@ public class ProductService {
                 if (avgRating == null) {
                     avgRating = BigDecimal.ZERO;
                 }
-                pv.setAverageRating(avgRating);
+                // Làm tròn lên
+                int roundedRating = avgRating.setScale(0, RoundingMode.CEILING).intValue();
+                pv.setAverageRating(new BigDecimal(roundedRating));  // Lưu lại giá trị đã làm tròn
                 pv.setTotalReviews(rs.getInt("totalReviews"));
 
                 productViews.add(pv);

@@ -2,6 +2,7 @@ package model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.math.RoundingMode;
 
 // lớp join 2 bảng product và product_detail lại để view
 public class ProductView {
@@ -22,7 +23,7 @@ public class ProductView {
     private String category;
     private String model;
     private BigDecimal averageRating; // Trung bình đánh giá
-    private int totalReviews;         // Tổng số lượt đánh giá
+    private int totalReviews; // Tổng số lượt đánh giá
 
     // getter setter
     public int getId() {
@@ -168,4 +169,5 @@ public class ProductView {
     public void setTotalReviews(int totalReviews) {
         this.totalReviews = totalReviews;
     }
+
 }
