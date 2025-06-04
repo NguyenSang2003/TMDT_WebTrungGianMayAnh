@@ -42,14 +42,6 @@
             display: inline-block;
             padding-bottom: 5px;
         }
-        .product-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-        }
-        .note-box {
-            height: 120px;
-        }
     </style>
 </head>
 <body>
