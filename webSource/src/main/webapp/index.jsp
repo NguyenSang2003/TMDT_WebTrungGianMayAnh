@@ -280,11 +280,14 @@
                                         <span class="small-text-color">/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="cart-btn btn btn-primary py-2 mr-1"
+
+                                    <a class="cart-btn btn btn-primary py-2 mr-1"
+                                       data-bs-toggle="tooltip" data-bs-placement="top"
                                        data-id="<%= product.getId() %>"
                                        title="Thêm vào giỏ hàng">
                                         <span class="material-symbols-outlined">shopping_cart</span>
                                     </a>
+
                                     <a href="product-detail?id=<%= product.getId() %>"
                                        class="btn btn-secondary py-2 ml-1" data-bs-toggle="tooltip"
                                        data-bs-placement="top" title="Xem chi tiết">
@@ -332,10 +335,14 @@
                                         <span class="small-text-color">/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="btn btn-primary py-2 mr-1" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title="Thêm vào giỏ hàng">
+
+                                    <a class="cart-btn btn btn-primary py-2 mr-1"
+                                       data-bs-toggle="tooltip" data-bs-placement="top"
+                                       data-id="<%= product.getId() %>"
+                                       title="Thêm vào giỏ hàng">
                                         <span class="material-symbols-outlined">shopping_cart</span>
                                     </a>
+
                                     <a href="product-detail?id=<%= product.getId() %>"
                                        class="btn btn-secondary py-2 ml-1" data-bs-toggle="tooltip"
                                        data-bs-placement="top" title="Xem chi tiết">
@@ -383,10 +390,13 @@
                                         <span class="small-text-color">/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="btn btn-primary py-2 mr-1" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title="Thêm vào giỏ hàng">
+                                    <a class="cart-btn btn btn-primary py-2 mr-1"
+                                       data-bs-toggle="tooltip" data-bs-placement="top"
+                                       data-id="<%= product.getId() %>"
+                                       title="Thêm vào giỏ hàng">
                                         <span class="material-symbols-outlined">shopping_cart</span>
                                     </a>
+
                                     <a href="product-detail?id=<%= product.getId() %>"
                                        class="btn btn-secondary py-2 ml-1" data-bs-toggle="tooltip"
                                        data-bs-placement="top" title="Xem chi tiết">
