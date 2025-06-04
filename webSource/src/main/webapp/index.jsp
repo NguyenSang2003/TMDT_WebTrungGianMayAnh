@@ -45,14 +45,6 @@
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        });
-    </script>
 
 </head>
 <body>
@@ -82,8 +74,8 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item active"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
-                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
-                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+                <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
@@ -288,8 +280,9 @@
                                         <span class="small-text-color">/ngày</span></p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
-                                    <a href="#" class="btn btn-primary py-2 mr-1" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title="Thêm vào giỏ hàng">
+                                    <a href="#" class="cart-btn btn btn-primary py-2 mr-1"
+                                       data-id="<%= product.getId() %>"
+                                       title="Thêm vào giỏ hàng">
                                         <span class="material-symbols-outlined">shopping_cart</span>
                                     </a>
                                     <a href="product-detail?id=<%= product.getId() %>"
@@ -541,7 +534,7 @@
                     <h2 class="ftco-heading-2">Đường tắt khác</h2>
                     <ul class="list-unstyled">
                         <li><a href="index" class="py-2 d-block">Trang Chủ</a></li>
-                        <li><a href="shop.jsp" class="py-2 d-block">Cửa Hàng</a></li>
+                        <li><a href="shop" class="py-2 d-block">Cửa Hàng</a></li>
                         <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
                         <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>
                         <li><a href="#" class="py-2 d-block">Chính sách bảo mật & Cookie</a></li>
@@ -625,6 +618,9 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="assets/js/google-map.js"></script>
 <script src="assets/js/main.js"></script>
+
+<%-- js_handMade --%>
+<script src="assets/js_handMade/addcart.js"></script>
 
 </body>
 </html>

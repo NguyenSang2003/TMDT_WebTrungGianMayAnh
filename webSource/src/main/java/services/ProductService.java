@@ -121,7 +121,48 @@ public class ProductService {
         return list;
     }
 
-    // Cho product details
+    public List<ProductView> getAllProducts() {
+        List<ProductView> list = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = JDBC.getConnection();
+            String query = "SELECT p.*, " +
+                    "ANY_VALUE(pd.image_url) AS image_url, " +
+                    "ANY_VALUE(pd.category) AS category, " +
+                    "IFNULL(AVG(pr.rating), 0) AS rating " +
+                    "FROM products p " +
+                    "JOIN product_details pd ON p.id = pd.product_id " +
+                    "LEFT JOIN product_reviews pr ON p.id = pr.product_id " +
+                    "GROUP BY p.id";
+
+            PreparedStatement stmt = connection.prepareStatement(query);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                ProductView pv = new ProductView();
+                pv.setId(rs.getInt("id"));
+                pv.setUserId(rs.getInt("user_id"));
+                pv.setName(rs.getString("name"));
+                pv.setPricePerDay(rs.getBigDecimal("price_per_day"));
+                pv.setQuantity(rs.getInt("quantity"));
+                pv.setStatus(rs.getString("status"));
+                pv.setCreatedAt(rs.getTimestamp("created_at"));
+                pv.setUpdatedAt(rs.getTimestamp("updated_at"));
+                pv.setViewCount(rs.getInt("view_count"));
+                pv.setSoldCount(rs.getInt("sold_count"));
+                pv.setRating(rs.getDouble("rating"));
+                pv.setImageUrl(rs.getString("image_url"));
+                pv.setCategory(rs.getString("category"));
+                list.add(pv);
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException("Error getting most viewed products: " + ex.getMessage(), ex);
+        } finally {
+            JDBC.closeConnection(connection);
+        }
+        return list;
+    }
+
+    // Lấy chi tiết 1 sản phẩm theo ID
     public ProductView getProductViewById(int productId) {
         ProductView pv = null;
         Connection connection = null;
