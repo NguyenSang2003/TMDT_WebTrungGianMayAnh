@@ -31,7 +31,6 @@
     <link rel="stylesheet" href="assets/css/flaticon.css">
     <link rel="stylesheet" href="assets/css/icomoon.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css_handMade/shop.css">
 
     <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -41,18 +40,7 @@
 
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
-
-    <style>
-        .star-rating {
-            display: inline-block;
-            font-size: 16px;
-        }
-
-        .btn_details2 {
-            width: auto !important;
-            margin-bottom: auto !important;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css_handMade/shop.css">
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
