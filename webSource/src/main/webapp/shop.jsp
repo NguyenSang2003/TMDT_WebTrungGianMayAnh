@@ -31,41 +31,25 @@
     <link rel="stylesheet" href="assets/css/flaticon.css">
     <link rel="stylesheet" href="assets/css/icomoon.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css_handMade/shop.css">
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Material Symbols Outlined -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
+    <link rel="stylesheet" href="assets/css_handMade/shop.css">
 
-    <style>
-        .star-rating {
-            display: inline-block;
-            font-size: 16px;
-            direction: ltr;
-            unicode-bidi: bidi-override;
-        }
-
-        .star {
-            display: inline-block;
-            color: lightgray;
-        }
-
-        .star.full {
-            color: gold;
-        }
-
-        .star.half {
-            position: relative;
-            color: lightgray;
-        }
-
-        .star.half::before {
-            content: '★';
-            color: gold;
-            position: absolute;
-            width: 50%;
-            overflow: hidden;
-        }
-    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -176,16 +160,16 @@
 
 <%-- Phần sản phẩm --%>
 <div class="container">
-    <input type="text" style="margin-top: 10px " class="search-box" placeholder="Nhập từ khóa sản phẩm...">
+    <input type="text" style="margin-top: 10px" class="search-box" placeholder="Nhập từ khóa sản phẩm...">
 
     <div class="product-grid">
         <%
             List<ProductView> products = (List<ProductView>) request.getAttribute("products");
+            java.util.Map ratingHtmlMap = (java.util.Map) request.getAttribute("ratingHtmlMap");
             if (products != null && !products.isEmpty()) {
                 for (ProductView product : products) {
         %>
         <div class="product-card">
-
             <!-- Nút thêm vào giỏ -->
             <button class="cart-btn">
                 <img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px" alt="Cart">
@@ -195,47 +179,21 @@
             <div class="product-info">
                 <h3><%= product.getName() %>
                 </h3>
-
                 <div class="price"><%= product.getFormattedPricePerDay() %> vnđ/ngày</div>
-
                 <div class="category"><%= product.getCategory() %>
                 </div>
-
-                <%--                <div class="rating-detai">--%>
-                <%--                    <!-- Hiển thị rating (trung bình đánh giá) -->--%>
-                <%--                    <div class="rating">--%>
-                <%--                        <%= product.getAverageRating() %> (được đánh giá bởi <%= product.getTotalReviews() %> người)--%>
-                <%--                    </div>--%>
-
                 <div class="rating-detai">
                     <div class="star-rating">
-                        <%
-                            double avg = product.getAverageRating().doubleValue();
-                            int fullStars = (int) avg;
-                            boolean hasHalfStar = (avg - fullStars) >= 0.25 && (avg - fullStars) < 0.75;
-                            int totalStars = 5;
-                            for (int i = 1; i <= totalStars; i++) {
-                                if (i <= fullStars) {
-                        %>
-                        <span class="star full">&#9733;</span>
-                        <%
-                        } else if (i == fullStars + 1 && hasHalfStar) {
-                        %>
-                        <span class="star half">&#9733;</span>
-                        <%
-                        } else {
-                        %>
-                        <span class="star">&#9733;</span>
-                        <%
-                                }
-                            }
-                        %>
-                        (<%= product.getTotalReviews() %> đánh giá)
+                        <%= ratingHtmlMap.get(product.getId()) %>
+                        <%= product.getTotalReviews() %> (đánh giá)
                     </div>
 
                     <%-- Nút chi tiết --%>
-                    <a href="product-detail?id=<%= product.getId() %>" class="btn btn-secondary py-2 ml-1"
-                       data-bs-toggle="tooltip" data-bs-placement="top" title="Xem chi tiết">
+                    <a href="product-detail?id=<%= product.getId() %>"
+                       class="btn btn-secondary py-2 ml-1 btn_details2"
+                       data-bs-toggle="tooltip"
+                       data-bs-placement="top"
+                       title="Xem chi tiết">
                         <span class="material-symbols-outlined">info</span>
                     </a>
                 </div>
@@ -245,7 +203,6 @@
                 }
             }
         %>
-
     </div>
 </div>
 <%-- Phần sản phẩm end --%>
@@ -282,7 +239,7 @@
                     <h2 class="ftco-heading-2">Đường tắt khác</h2>
                     <ul class="list-unstyled">
                         <li><a href="index.jsp" class="py-2 d-block">Trang Chủ</a></li>
-                        <li><a href="shop.jsp" class="py-2 d-block">Cửa Hàng</a></li>
+                        <li><a href="shop" class="py-2 d-block">Cửa Hàng</a></li>
                         <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
                         <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>
                         <li><a href="#" class="py-2 d-block">Chính sách bảo mật & Cookie</a></li>

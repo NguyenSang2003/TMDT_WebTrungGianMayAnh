@@ -2,6 +2,7 @@ package model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.math.RoundingMode;
 import java.util.*;
 
 // lớp join 2 bảng product và product_detail lại để view
@@ -212,5 +213,5 @@ public class ProductView {
     public void setTotalReviews(int totalReviews) {
         this.totalReviews = totalReviews;
     }
-  
+
 }

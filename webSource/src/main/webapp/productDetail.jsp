@@ -82,7 +82,7 @@
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
-                <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
+                <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
 
@@ -421,7 +421,7 @@
                     <h2 class="ftco-heading-2">Đường tắt khác</h2>
                     <ul class="list-unstyled">
                         <li><a href="index" class="py-2 d-block">Trang Chủ</a></li>
-                        <li><a href="shop.jsp" class="py-2 d-block">Cửa Hàng</a></li>
+                        <li><a href="shop" class="py-2 d-block">Cửa Hàng</a></li>
                         <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
                         <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>
                         <li><a href="#" class="py-2 d-block">Chính sách bảo mật & Cookie</a></li>
