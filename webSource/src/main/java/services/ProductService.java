@@ -1,15 +1,14 @@
 package services;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
 
 import database.JDBC;
+import model.Product;
+import model.ProductDetail;
 import model.ProductView;
 
 public class ProductService {
@@ -207,5 +206,43 @@ public class ProductService {
 
         return relatedProducts;
     }
+    // lấy tất cả danh sách sản phẩm
+    public List<ProductView> getAllProducts() {
+
+        List<ProductView> productView = new ArrayList<>();
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            connection = JDBC.getConnection();
+            statement = connection.prepareStatement("SELECT p.id, p.name, p.price_per_day, pd.brand, p.status, pd.image_url " +
+                    "FROM products p JOIN product_details pd ON p.id = pd.product_id");
+            rs = statement.executeQuery();
+
+            while (rs.next()) {
+                ProductView product = new ProductView();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setPricePerDay(rs.getBigDecimal("price_per_day"));
+
+                product.setBrand(rs.getString("brand"));
+                product.setStatus(rs.getString("status"));
+                product.setImageUrl(rs.getString("image_url"));
+
+                productView.add(product);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (statement != null) statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+            JDBC.closeConnection(connection);
+        }
+        return productView;
+    }
+
+
+
 
 }

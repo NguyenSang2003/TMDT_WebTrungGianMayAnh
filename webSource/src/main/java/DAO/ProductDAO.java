@@ -1,9 +1,6 @@
 package DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +9,17 @@ import model.Product;
 
 public class ProductDAO {
 
-    // Thêm mới sản phẩm
-    public boolean addProduct(Product product) {
+    // Thêm mới sản phẩm // sửa lại thương thức addProduct để thêm được vào product_details
+    public boolean addProduct(Product product, String brand, String imageUrl) {
         Connection connection = null;
         try {
             connection = JDBC.getConnection();
+            connection.setAutoCommit(false); // bắt đầu transaction
+
+            // Insert vào bảng products
             String query = "INSERT INTO products (user_id, name, price_per_day, quantity, status, created_at, updated_at) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement stmt = connection.prepareStatement(query);
+            PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
             stmt.setInt(1, product.getUserId());
@@ -31,13 +31,47 @@ public class ProductDAO {
             stmt.setTimestamp(7, now); // updated_at
 
             int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            if (rowsAffected == 0) {
+                connection.rollback();
+                return false;
+            }
+
+            // Lấy product_id vừa insert
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                int productId = generatedKeys.getInt(1);
+
+                // Insert vào product_details
+                String detailQuery = "INSERT INTO product_details (product_id, brand, image_url) VALUES (?, ?, ?)";
+                PreparedStatement detailStmt = connection.prepareStatement(detailQuery);
+                detailStmt.setInt(1, productId);
+                detailStmt.setString(2, brand);
+                detailStmt.setString(3, imageUrl);
+                detailStmt.executeUpdate();
+            } else {
+                connection.rollback();
+                return false;
+            }
+
+            connection.commit();
+            return true;
         } catch (SQLException e) {
+            try {
+                if (connection != null) connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             throw new RuntimeException("Lỗi khi thêm sản phẩm: " + e.getMessage(), e);
         } finally {
+            try {
+                if (connection != null) connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             JDBC.closeConnection(connection);
         }
     }
+
 
     // Lấy tất cả sản phẩm của người cho thuê
     public List<Product> getAllProductsByUserId(int userId) {
@@ -112,23 +146,44 @@ public class ProductDAO {
         }
     }
 
-    // Xóa sản phẩm
+    // Xóa sản phẩm // sửa lại phương thức để xóa trong cả product details do khóa ngoại
     public boolean deleteProduct(int productId) {
         Connection connection = null;
         try {
             connection = JDBC.getConnection();
-            String query = "DELETE FROM products WHERE id = ?";
-            PreparedStatement stmt = connection.prepareStatement(query);
-            stmt.setInt(1, productId);
+            connection.setAutoCommit(false); // Bắt đầu transaction
 
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            // Xóa product_details trước
+            String deleteDetailsQuery = "DELETE FROM product_details WHERE product_id = ?";
+            PreparedStatement deleteDetailsStmt = connection.prepareStatement(deleteDetailsQuery);
+            deleteDetailsStmt.setInt(1, productId);
+            deleteDetailsStmt.executeUpdate();
+
+            // Xóa products sau
+            String deleteProductQuery = "DELETE FROM products WHERE id = ?";
+            PreparedStatement deleteProductStmt = connection.prepareStatement(deleteProductQuery);
+            deleteProductStmt.setInt(1, productId);
+            int rows = deleteProductStmt.executeUpdate();
+
+            connection.commit();
+            return rows > 0;
         } catch (SQLException e) {
+            try {
+                if (connection != null) connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             throw new RuntimeException("Lỗi khi xóa sản phẩm: " + e.getMessage(), e);
         } finally {
+            try {
+                if (connection != null) connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             JDBC.closeConnection(connection);
         }
     }
+
 
     // Phương thức dùng chung để mapping dữ liệu từ ResultSet sang đối tượng Product
     private void populateProductFromResultSet(Product product, ResultSet rs) throws SQLException {
