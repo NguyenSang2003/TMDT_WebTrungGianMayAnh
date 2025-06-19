@@ -1,0 +1,96 @@
+/* Phần bao bọc toàn bộ giao diện */
+.profile-wrapper {
+    font-family: Arial, sans-serif;
+    background: #f1f1f1;
+    margin: 0;
+    padding: 20px;
+}
+
+/* Khung chứa nội dung bên trong */
+.profile-wrapper .container {
+    max-width: 800px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề chính */
+.profile-wrapper h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Các phần thông tin tài khoản và form */
+.profile-wrapper .info-section,
+.profile-wrapper .form-section {
+    margin-bottom: 30px;
+}
+
+/* Bảng thông tin người dùng */
+.profile-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+/* Cấu trúc bảng với padding và đường viền */
+.profile-wrapper table th,
+.profile-wrapper table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/* Nhãn trong form */
+.profile-wrapper form label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Ô nhập liệu */
+.profile-wrapper form input[type="text"],
+.profile-wrapper form input[type="email"],
+.profile-wrapper form input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Nút gửi form */
+.profile-wrapper form input[type="submit"] {
+    background-color: #28a745;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block;
+    margin: 15px auto;
+}
+
+/* Hiệu ứng khi di chuột vào nút */
+.profile-wrapper form input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Phần preview ảnh */
+.profile-wrapper .img-preview {
+    margin-top: 10px;
+    text-align: center; /* Căn giữa ảnh */
+}
+
+/* Kích thước ảnh trong phần xem trước */
+.profile-wrapper .img-preview img {
+    max-width: 55%; /* Điều chỉnh kích thước ảnh */
+    height: auto;
+    border: 1px solid #000000;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto; /* Giữ ảnh luôn căn giữa */
+}
