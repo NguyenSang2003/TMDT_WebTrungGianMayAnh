@@ -4,6 +4,7 @@ public class BlogContent {
     private int id;
     private int blogId;
     private String content;
+    private String imageUrl; // thêm thuộc tính
 
     public int getId() {
         return id;
@@ -28,5 +29,12 @@ public class BlogContent {
     public void setContent(String content) {
         this.content = content;
     }
-}
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+}
