@@ -7,7 +7,6 @@
     User user = (User) session.getAttribute("user");
 %>
 
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -105,7 +104,7 @@
                             <i class="fa fa-envelope"></i> Xác thực Gmail
                         </a>
                         <% } else { %>
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
                         <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
@@ -134,6 +133,7 @@
 </nav>
 <!-- END nav -->
 
+<%-- breadCrumbs --%>
 <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('assets/images/bg_3.jpg');"
          data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
@@ -148,7 +148,9 @@
         </div>
     </div>
 </section>
+<%-- breadCrumbs end --%>
 
+<%-- Phần thanh tóán --%>
 <div class="container mt-5">
     <h2 class="text-center mb-4"><span class="title-underline">Thanh toán</span></h2>
 
@@ -170,6 +172,7 @@
                 <% for (OrderView ov : recentOrderViews) {
                     Order o = ov.getOrder();
                     Product p = ov.getProduct();
+                    OrderItems item = ov.getOrderItem();
                     totalAmount += o.getTotalPrice();
                 %>
                 <div class="card mb-3 shadow-sm">
@@ -181,20 +184,27 @@
                             <div class="card-body d-flex flex-column gap-2">
                                 <!-- Thông tin sản phẩm -->
                                 <div>
-                                    <h5 class="card-title fw-semibold mb-1"><%= p.getName() %></h5>
-                                    <p class="mb-1 text-muted">💸 Giá thuê/ngày: <strong><%= String.format("%,.0f ₫/ngày ", p.getPricePerDay().doubleValue()) %> VNĐ</strong></p>
-                                    <p class="mb-1 text-muted">🔢 Số lượng: <%= o.getQuantity() %></p>
+                                    <h5 class="card-title fw-semibold mb-1"><%= p.getName() %>
+                                    </h5>
+                                    <p class="mb-1 text-muted">💸 Giá thuê/ngày:
+                                        <strong><%= String.format("%,.0f ₫/ngày ", p.getPricePerDay().doubleValue()) %>
+                                            VNĐ</strong></p>
+                                    <p class="mb-1 text-muted">🔢 Số lượng: <%= item.getQuantity() %>
+                                    </p>
                                 </div>
 
                                 <!-- Thông tin thời gian thuê -->
                                 <div class="d-flex flex-column flex-md-row justify-content-between">
-                                    <p class="mb-1 text-muted me-3">📅 Ngày thuê: <strong><%= o.getRentStart() %></strong></p>
-                                    <p class="mb-1 text-muted me-3">📆 Ngày trả: <strong><%= o.getRentEnd() %></strong></p>
+                                    <p class="mb-1 text-muted me-3">📅 Ngày thuê: <strong><%= o.getRentStart() %>
+                                    </strong></p>
+                                    <p class="mb-1 text-muted me-3">📆 Ngày trả: <strong><%= o.getRentEnd() %>
+                                    </strong></p>
                                 </div>
 
                                 <!-- Thành tiền -->
                                 <div class="mt-2">
-                                    <p class="fw-bold text-danger mb-0">💰 Thành tiền: <%= String.format("%,.0f ₫/ngày ", o.getTotalPrice()) %> VNĐ</p>
+                                    <p class="fw-bold text-danger mb-0">💰 Thành
+                                        tiền: <%= String.format("%,.0f ₫/ngày ", o.getTotalPrice()) %> VNĐ</p>
                                 </div>
                             </div>
 
@@ -220,7 +230,8 @@
                     </div>
                     <div class="mb-3">
                         <strong>💰 Tổng thanh toán: </strong>
-                        <span class="ms-2"><%= String.format("%,.0f ₫", totalAmount + shippingFee) %></span>  <!-- Cộng phí vận chuyển -->
+                        <span class="ms-2"><%= String.format("%,.0f ₫", totalAmount + shippingFee) %></span>
+                        <!-- Cộng phí vận chuyển -->
                     </div>
                     <div class="mb-3">
                         <label for="note" class="form-label fw-semibold">📝 Ghi chú đơn hàng</label>
@@ -241,6 +252,7 @@
         </div>
     </div>
 </div>
+<%-- Phần thanh tóán end--%>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">

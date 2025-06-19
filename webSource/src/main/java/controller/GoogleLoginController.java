@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import model.User;
+import utils.ConfigReader;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -15,9 +16,9 @@ import java.util.UUID;
 @WebServlet(name = "GoogleLogin", value = "/google-login")
 public class GoogleLoginController extends HttpServlet {
 
-    private static final String CLIENT_ID = "134467488708-o84o20ueqj6e42snbdb3ksjtppr885a6.apps.googleusercontent.com";
-    private static final String CLIENT_SECRET = "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";
-    private static final String REDIRECT_URI = "http://localhost:8080/webSource_war/google-login";
+    private static final String CLIENT_ID = ConfigReader.getProperty("GOOGLE_CLIENT_ID");
+    private static final String CLIENT_SECRET = ConfigReader.getProperty("GOOGLE_CLIENT_SECRET");
+    private static final String REDIRECT_URI = ConfigReader.getProperty("GOOGLE_REDIRECT_URI");
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -25,7 +26,7 @@ public class GoogleLoginController extends HttpServlet {
 
         String code = request.getParameter("code");
         if (code == null || code.isEmpty()) {
-            response.sendRedirect("dangnhap.jsp");
+            response.sendRedirect("login.jsp");
             return;
         }
 
@@ -63,7 +64,7 @@ public class GoogleLoginController extends HttpServlet {
             boolean success = userDAO.registerWithEmail(email, username, password);
 
             if (!success) {
-                response.sendRedirect("dangnhap.jsp?error=register_failed");
+                response.sendRedirect("login.jsp?error=register_failed");
                 return;
             }
 
@@ -77,7 +78,7 @@ public class GoogleLoginController extends HttpServlet {
         session.setAttribute("userEmail", user.getEmail());
         session.setAttribute("user", user);
 
-        response.sendRedirect("index.jsp");
+        response.sendRedirect("index");
     }
 
     private String postURL(String urlStr, String urlParams) throws IOException {
