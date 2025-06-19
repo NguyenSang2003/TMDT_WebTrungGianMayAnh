@@ -191,7 +191,7 @@ public class UserDAO {
 
         return isVerified;
     }
-
+            // sẽ sưa phương thuc nay
     public List<User> getAllUsersForAdmin() {
         List<User> users = new ArrayList<>();
         Connection connection = null;
@@ -281,5 +281,49 @@ public class UserDAO {
             JDBC.closeConnection(connection);
         }
     }
+    public boolean addUser(User user) {
+        String sql = "INSERT INTO users (username, password, email, role, isVerifyEmail, is_active, created_at, updated_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword()); // nhớ mã hoá nếu có
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getRole());
+            stmt.setBoolean(5, user.isVerifyEmail());
+            stmt.setBoolean(6, user.isActive());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi thêm user: " + e.getMessage(), e);
+        }
+    }
+
+    public boolean updateUser(User user) {
+        String sql = "UPDATE users SET username=?, email=?, role=?, isVerifyEmail=?, is_active=?, updated_at=NOW() WHERE id=?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getRole());
+            stmt.setBoolean(4, user.isVerifyEmail());
+            stmt.setBoolean(5, user.isActive());
+            stmt.setInt(6, user.getId());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi cập nhật user: " + e.getMessage(), e);
+        }
+    }
+
+    public boolean deleteUser(int id) {
+        String sql = "DELETE FROM users WHERE id=?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi xoá user: " + e.getMessage(), e);
+        }
+    }
+
 
 }
