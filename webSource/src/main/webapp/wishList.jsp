@@ -20,6 +20,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Sản phẩm yêu thích</title>
+    <link rel="icon" type="image/PNG" href="assets/images/logo.PNG"/>
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
           rel="stylesheet">
 
@@ -53,12 +54,7 @@
             height: auto;
             margin-right: 1rem;
         }
-
-        .container {
-            margin-top: 20px;
-        }
     </style>
-
 </head>
 <body>
 
@@ -198,11 +194,11 @@
                             data-product-id="<%= product.getId() %>">Xóa
                     </button>
 
-                    <form action="cart" method="post">
-                        <input type="hidden" name="action" value="addToCart"/>
-                        <input type="hidden" name="productId" value="<%= product.getId() %>"/>
-                        <button type="submit" class="btn btn-outline-primary btn-sm">Thêm vào giỏ hàng</button>
-                    </form>
+                    <button type="button"
+                            class="cart-btn btn btn-outline-primary btn-sm"
+                            data-id="<%= product.getId() %>">
+                        Thêm vào giỏ hàng
+                    </button>
 
                 </div>
             </div>
@@ -222,64 +218,6 @@
     <% } %>
 </div>
 <%-- WishList container end --%>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const buttons = document.querySelectorAll(".btn-remove-wishlist");
-
-        buttons.forEach(btn => {
-            btn.addEventListener("click", function () {
-                const productId = this.dataset.productId;
-
-                Swal.fire({
-                    title: "Bạn có chắc muốn xóa?",
-                    text: "Sản phẩm sẽ bị xóa khỏi danh sách yêu thích.",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Xóa",
-                    cancelButtonText: "Hủy"
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        fetch("wishlist?productId=" + productId, {
-                            method: "DELETE"
-                        })
-                            .then(response => {
-                                if (response.status === 401) {
-                                    // Chưa đăng nhập, session hết hạn
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "Phiên đăng nhập đã hết",
-                                        text: "Vui lòng đăng nhập lại.",
-                                        confirmButtonText: "Đăng nhập"
-                                    }).then(() => {
-                                        window.location.href = "login.jsp";
-                                    });
-                                    return;
-                                }
-
-                                if (response.ok) {
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Đã xóa!",
-                                        text: "Sản phẩm đã được xóa khỏi yêu thích.",
-                                        timer: 1500,
-                                        showConfirmButton: false
-                                    }).then(() => {
-                                        window.location.reload(); // Tải lại để cập nhật
-                                    });
-                                } else {
-                                    Swal.fire("Lỗi!", "Xóa sản phẩm thất bại.", "error");
-                                }
-                            });
-
-                    }
-                });
-            });
-        });
-    });
-</script>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
@@ -370,15 +308,6 @@
 </footer>
 <%-- end phần Footer --%>
 
-<!-- loader -->
-<%--<div id="ftco-loader" class="show fullscreen">--%>
-<%--    <svg class="circular" width="48px" height="48px">--%>
-<%--        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>--%>
-<%--        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"--%>
-<%--                stroke="#F96D00"/>--%>
-<%--    </svg>--%>
-<%--</div>--%>
-
 <!-- JS scripts -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery-migrate-3.0.1.min.js"></script>
@@ -402,7 +331,8 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <%-- js_handMade --%>
-<script src="assets/js_handMade/.js"></script>
+<script src="assets/js_handMade/removeWishList.js"></script>
+<script src="assets/js_handMade/addcart.js"></script>
 
 </body>
 </html>

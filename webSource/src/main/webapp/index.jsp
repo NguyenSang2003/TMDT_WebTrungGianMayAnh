@@ -19,6 +19,7 @@
 <html lang="en">
 <head>
     <title>EagleCam Selection 365</title>
+    <link rel="icon" type="image/PNG" href="assets/images/logo.PNG"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -317,12 +318,14 @@
                                        title="Thêm vào giỏ hàng">
                                         <span class="material-symbols-outlined">shopping_cart</span>
                                     </a>
+
                                     <a href="product-detail?id=<%= product.getId() %>"
                                        class="btn btn-secondary py-2 ml-1"
                                        data-bs-toggle="tooltip" data-bs-placement="top"
                                        title="Xem chi tiết">
                                         <span class="material-symbols-outlined">info</span>
                                     </a>
+
                                 </p>
                             </div>
                         </div>

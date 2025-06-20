@@ -14,6 +14,7 @@
 <html lang="en">
 <head>
     <title>EagleCam Selection 365</title>
+    <link rel="icon" type="image/PNG" href="assets/images/logo.PNG"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -33,10 +34,10 @@
     <link rel="stylesheet" href="assets/css/icomoon.css">
     <link rel="stylesheet" href="assets/css/style.css">
 
-    <%--    <!-- Material Icons -->--%>
+    <!-- Material Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <%--    <!-- Material Symbols Outlined -->--%>
+    <!-- Material Symbols Outlined -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
     <%-- css_handMade --%>
@@ -44,14 +45,14 @@
     <link rel="stylesheet" href="assets/css_handMade/shop.css">
     <link rel="stylesheet" href="assets/css_handMade/wishList.css">
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        });
-    </script>
+    <%--    <script>--%>
+    <%--        document.addEventListener("DOMContentLoaded", function () {--%>
+    <%--            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));--%>
+    <%--            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {--%>
+    <%--                return new bootstrap.Tooltip(tooltipTriggerEl);--%>
+    <%--            });--%>
+    <%--        });--%>
+    <%--    </script>--%>
 </head>
 <body>
 
@@ -80,8 +81,8 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item active"><a href="shop" class="nav-link">Cửa Hàng</a></li>
-                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
-                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+                <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
@@ -173,37 +174,25 @@
                     boolean isInWishlist = wishlistIds != null && wishlistIds.contains(product.getId());
         %>
 
-        <div class="product-card">
-            <!-- Nút thêm vào giỏ -->
-            <a class="cart-btn btn btn-primary py-2 mr-1"
-               data-bs-toggle="tooltip" data-bs-placement="top"
-               data-id="<%= product.getId() %>"
-               title="Thêm vào giỏ hàng">
-                <span class="material-symbols-outlined">shopping_cart</span>
-            </a>
-
-            <!-- ❤️ Nút wishlist -->
+        <div class="product-card" style="position: relative;">
+            <!-- Nút wishlist -->
             <% if (user != null) { %>
             <% if (isInWishlist) { %>
-            <form method="post" action="wishlist" style="display:inline;">
+            <form method="post" action="wishlist"
+                  style="position: absolute; top: 10px; right: 10px;">
                 <input type="hidden" name="productId" value="<%= product.getId() %>">
-                <button type="submit"
-                        class="btn btn-danger py-2"
-                        disabled data-bs-toggle="tooltip"
-                        data-bs-placement="top" title="Đã yêu thích">
-                    <span class="material-symbols-outlined">bookmark_heart</span>
+                <button type="submit" class="wishlist-btn liked" disabled
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Đã yêu thích">
+                    <span class="material-icons">favorite</span>
                 </button>
             </form>
             <% } else { %>
             <form method="post" action="wishlist"
                   style="position: absolute; top: 10px; right: 10px;">
-                <input type="hidden" name="productId"
-                       value="<%= product.getId() %>">
-                <button type="submit"
-                        class="btn btn-outline-danger py-2"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top" title="Thêm vào yêu thích">
-                    <span class="material-symbols-outlined">bookmark_heart</span>
+                <input type="hidden" name="productId" value="<%= product.getId() %>">
+                <button type="submit" class="wishlist-btn not-liked"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào yêu thích">
+                    <span class="material-icons">favorite</span>
                 </button>
             </form>
             <% } %>
@@ -212,27 +201,41 @@
             <!-- Hình ảnh sản phẩm -->
             <img src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>">
 
-            <!-- Thông tin -->
+            <!-- Thông tin sản phẩm -->
             <div class="product-info">
                 <h3><%= product.getName() %>
                 </h3>
-                <div class="price"><%= product.getFormattedPricePerDay() %> vnđ/ngày</div>
-                <div class="category"><%= product.getCategory() %>
+                <div class="price">
+                    <%= product.getFormattedPricePerDay() %> vnđ/ngày
+                </div>
+                <div class="category">
+                    <%= product.getCategory() %>
                 </div>
                 <div class="rating-detai">
                     <div class="star-rating">
-                        <%= ratingHtmlMap.get(product.getId()) %>
-                        <%= product.getTotalReviews() %> (đánh giá)
+                        <%= ratingHtmlMap.get(product.getId()) %><br>
+                        <span class="review-count">( <%= product.getTotalReviews() %> đánh giá)</span>
                     </div>
 
-                    <%-- Nút chi tiết --%>
-                    <a href="product-detail?id=<%= product.getId() %>"
-                       class="btn btn-secondary py-2 ml-1 btn_details2"
-                       data-bs-toggle="tooltip"
-                       data-bs-placement="top"
-                       title="Xem chi tiết">
-                        <span class="material-symbols-outlined">info</span>
-                    </a>
+                    <!-- Nút chức năng -->
+                    <div class="d-flex justify-content-between mt-2">
+                        <!-- Thêm vào giỏ -->
+                        <button class="btn btn-primary py-2 mr-1 add-to-cart-btn"
+                                data-id="<%= product.getId() %>"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào giỏ hàng"
+                                style="flex: 1;">
+                            <span class="material-symbols-outlined">shopping_cart</span>
+                        </button>
+
+                        <!-- Xem chi tiết -->
+                        <a href="product-detail?id=<%= product.getId() %>"
+                           class="btn btn-success py-2 ml-1"
+                           data-bs-toggle="tooltip" data-bs-placement="top" title="Xem chi tiết"
+                           style="flex: 1;">
+                            <span class="material-symbols-outlined">info</span>
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -360,6 +363,9 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="assets/js/google-map.js"></script>
 <script src="assets/js/main.js"></script>
+
+<%-- js_handMade --%>
+<script src="assets/js_handMade/addcart.js"></script>
 
 </body>
 </html>
