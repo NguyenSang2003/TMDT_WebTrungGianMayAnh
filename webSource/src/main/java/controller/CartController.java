@@ -58,7 +58,15 @@ public class CartController extends HttpServlet {
         }
 
         if ("add".equals(action)) {
-            int productId = Integer.parseInt(request.getParameter("productId"));
+
+            int productId;
+            try {
+                productId = Integer.parseInt(request.getParameter("productId"));
+            } catch (NumberFormatException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID sản phẩm không hợp lệ");
+                return;
+            }
+
             System.out.println(">>> Nhận productId: " + productId);
             boolean found = false;
 
@@ -116,7 +124,14 @@ public class CartController extends HttpServlet {
 
             session.setAttribute("cart", cart);
             System.out.println(">>> Cập nhật giỏ hàng vào session thành công, redirect về cart");
-            response.sendRedirect("cart");
+
+            if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"message\": \"Đã thêm vào giỏ hàng thành công\"}");
+            } else {
+                response.sendRedirect("cart");
+            }
 
         } else if ("remove".equals(action)) {
             int productId = Integer.parseInt(request.getParameter("productId"));
