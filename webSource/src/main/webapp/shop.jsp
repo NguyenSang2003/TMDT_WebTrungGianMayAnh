@@ -1,12 +1,13 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%@ page import="model.User" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.ProductView" %>
+<%@ page import="java.util.Set" %>
 
 <%
     User user = (User) session.getAttribute("user");
+    Set<Integer> wishlistIds = (Set<Integer>) request.getAttribute("wishlistIds");
 %>
 
 <!DOCTYPE html>
@@ -32,15 +33,16 @@
     <link rel="stylesheet" href="assets/css/icomoon.css">
     <link rel="stylesheet" href="assets/css/style.css">
 
-    <!-- Material Icons -->
+    <%--    <!-- Material Icons -->--%>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- Material Symbols Outlined -->
+    <%--    <!-- Material Symbols Outlined -->--%>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
     <link rel="stylesheet" href="assets/css_handMade/shop.css">
+    <link rel="stylesheet" href="assets/css_handMade/wishList.css">
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -126,8 +128,8 @@
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
-                        <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
-                        <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>
+                        <a href="wishlist" class="dropdown-item">Sản phẩm yêu thích</a>
                         <% } %>
                         <% } %>
 
@@ -168,14 +170,49 @@
             java.util.Map ratingHtmlMap = (java.util.Map) request.getAttribute("ratingHtmlMap");
             if (products != null && !products.isEmpty()) {
                 for (ProductView product : products) {
+                    boolean isInWishlist = wishlistIds != null && wishlistIds.contains(product.getId());
         %>
+
         <div class="product-card">
             <!-- Nút thêm vào giỏ -->
-            <button class="cart-btn">
-                <img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px" alt="Cart">
-            </button>
+            <a class="cart-btn btn btn-primary py-2 mr-1"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               data-id="<%= product.getId() %>"
+               title="Thêm vào giỏ hàng">
+                <span class="material-symbols-outlined">shopping_cart</span>
+            </a>
 
+            <!-- ❤️ Nút wishlist -->
+            <% if (user != null) { %>
+            <% if (isInWishlist) { %>
+            <form method="post" action="wishlist" style="display:inline;">
+                <input type="hidden" name="productId" value="<%= product.getId() %>">
+                <button type="submit"
+                        class="btn btn-danger py-2"
+                        disabled data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Đã yêu thích">
+                    <span class="material-symbols-outlined">bookmark_heart</span>
+                </button>
+            </form>
+            <% } else { %>
+            <form method="post" action="wishlist"
+                  style="position: absolute; top: 10px; right: 10px;">
+                <input type="hidden" name="productId"
+                       value="<%= product.getId() %>">
+                <button type="submit"
+                        class="btn btn-outline-danger py-2"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top" title="Thêm vào yêu thích">
+                    <span class="material-symbols-outlined">bookmark_heart</span>
+                </button>
+            </form>
+            <% } %>
+            <% } %>
+
+            <!-- Hình ảnh sản phẩm -->
             <img src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>">
+
+            <!-- Thông tin -->
             <div class="product-info">
                 <h3><%= product.getName() %>
                 </h3>

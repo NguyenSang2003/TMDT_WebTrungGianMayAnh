@@ -1,17 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List, java.math.BigDecimal" %>
+<%@ page import="java.util.List" %>
 
-<%@ page import="java.util.List, java.util.ArrayList, java.math.BigDecimal, model.User" %>
+<%@ page import="java.util.List, java.util.ArrayList, model.User" %>
 <%@ page import="model.ProductView" %>
-<%@ page import="model.BookingSchedule" %>
 
 <%
     // Lấy user và cart từ session/request
     User user = (User) session.getAttribute("user");
 
-    List<ProductView> cart = (List<ProductView>) request.getAttribute("cart");
-    if (cart == null) {
-        cart = new ArrayList<>();
+    // Lấy thông tin danh sách wishlist từ session/request
+    List<ProductView> wishlist = (List<ProductView>) request.getAttribute("wishlist");
+    if (wishlist == null) {
+        wishlist = new ArrayList<>();
     }
 %>
 
@@ -19,7 +19,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Giỏ hàng</title>
+    <title>Sản phẩm yêu thích</title>
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
           rel="stylesheet">
 
@@ -42,8 +42,22 @@
     <!-- Material Symbols Outlined -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
+
+    <style>
+        .product-img {
+            width: 100px;
+            height: auto;
+            margin-right: 1rem;
+        }
+
+        .container {
+            margin-top: 20px;
+        }
+    </style>
 
 </head>
 <body>
@@ -73,7 +87,7 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item "><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
-                <li class="nav-item active"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
                 <li class="nav-item dropdown">
@@ -107,7 +121,7 @@
                             <i class="fa fa-envelope"></i> Xác thực Gmail
                         </a>
                         <% } else { %>
-                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
                         <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
@@ -122,7 +136,7 @@
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
                         <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>
-                        <a href="wishlist" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <a href="wishList" class="dropdown-item active">Sản phẩm yêu thích</a>
                         <% } %>
                         <% } %>
 
@@ -144,138 +158,128 @@
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
             <div class="col-md-9 ftco-animate pb-5">
                 <p class="breadcrumbs"><span class="mr-2"><a href="index">Trang Chủ <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Giỏ Hàng <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Sản phẩm yêu thích <i
                         class="ion-ios-arrow-forward"></i></span></p>
-                <h1 class="mb-3 bread">Giỏ Hàng</h1>
+                <h1 class="mb-3 bread">Sản phẩm yêu thích</h1>
             </div>
         </div>
     </div>
 </section>
 <%-- breadCrumbs end --%>
 
-<%-- Phần cart start --%>
+<%-- WishList container start --%>
 <div class="container py-4">
-    <h2 class="mb-2 fw-bold text-center" style="font-size: 28px;">Giỏ hàng của bạn</h2>
-    <p class="text-center mb-4" style="font-size: 18px; color: #555;">Có <%= cart.size() %> sản phẩm trong giỏ hàng</p>
+    <h2 class="mb-2 fw-bold text-center" style="font-size: 28px;">Các sản phẩm yêu thích của bạn.</h2>
+    <p class="text-center mb-4" style="font-size: 18px; color: #555;">Có <%= wishlist.size() %> sản phẩm trong danh sách
+        yêu thích</p>
 
-    <% if (cart.isEmpty()) { %>
+    <% if (wishlist.isEmpty()) { %>
     <div class="text-center" style="min-height: 300px;">
-        <img loading="lazy" src="assets/images/empty_cart.jpeg" alt="Giỏ hàng trống" style="max-width: 500px;">
-        <p class="mt-3 text-muted">Giỏ hàng của bạn đang trống</p>
+        <img loading="lazy" src="assets/images/empty_wishList.png" alt="Danh sách yêu thích trống"
+             style="max-width: 500px;">
+        <p class="mt-3 text-muted">Danh sách sản phẩm yêu thích của bạn đang trống</p>
     </div>
     <% } else { %>
     <div class="row">
-        <!-- Sản phẩm trong giỏ -->
-        <div class="col-md-8">
-            <% BigDecimal total = BigDecimal.ZERO; %>
-            <% for (ProductView p : cart) { %>
-            <% total = total.add(p.getPricePerDay().multiply(BigDecimal.valueOf(p.getQuantity()))); %>
-            <div class="d-flex border p-3 mb-3 align-items-start position-relative">
-                <img src="<%= p.getImageUrl() %>" alt="<%= p.getName() %>"
-                     style="width: 100px; height: auto; margin: 0 1rem" class="me-3">
+        <!-- Danh sách sản phẩm yêu thích -->
+        <div class="col-md-9">
+            <% for (ProductView product : wishlist) { %>
+            <div class="d-flex border p-3 mb-3 align-items-center position-relative">
+                <img class="product-img" src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>">
                 <div class="flex-grow-1">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <strong><%= p.getName() %>
-                        </strong>
-                        <form action="cart" method="post">
-                            <input type="hidden" name="action" value="remove"/>
-                            <input type="hidden" name="productId" value="<%= p.getId() %>"/>
-                            <button type="submit" class="btn btn-link text-danger p-0"
-                                    style="position: absolute; top: 20px; right: 20px;">X
-                            </button>
-                        </form>
-                    </div>
-                    <p><%= String.format("%,d", p.getPricePerDay().longValue()) %> vnd</p>
+                    <h5 class="mb-1"><%= product.getName() %>
+                    </h5>
+                    <p class="mb-0 text-muted">Giá: <%= String.format("%,d", product.getPricePerDay().longValue()) %>
+                        vnd</p>
+                </div>
+                <div class="d-flex flex-column align-items-end">
 
-                    <form action="cart" method="post" class="d-flex align-items-center">
-                        <input type="hidden" name="action" value="updateQuantity"/>
-                        <input type="hidden" name="productId" value="<%= p.getId() %>"/>
-                        <button type="submit" name="operation" value="decrease"
-                                class="btn btn-sm btn-outline-secondary">-
-                        </button>
-                        <input type="text" name="quantity" value="<%= p.getQuantity() %>" readonly
-                               class="form-control text-center mx-2" style="width: 50px;"/>
-                        <button type="submit" name="operation" value="increase"
-                                class="btn btn-sm btn-outline-secondary">+
-                        </button>
+                    <button class="btn btn-outline-danger btn-sm mb-2 btn-remove-wishlist"
+                            data-product-id="<%= product.getId() %>">Xóa
+                    </button>
+
+                    <form action="cart" method="post">
+                        <input type="hidden" name="action" value="addToCart"/>
+                        <input type="hidden" name="productId" value="<%= product.getId() %>"/>
+                        <button type="submit" class="btn btn-outline-primary btn-sm">Thêm vào giỏ hàng</button>
                     </form>
-                </div>
-                <div class="text-end ms-3" style="min-width: 120px; font-weight: bold; margin-top: auto">
-                    <%= String.format("%,d", p.getPricePerDay().multiply(BigDecimal.valueOf(p.getQuantity())).longValue()) %>
-                    vnd
-                </div>
-            </div>
-            <!-- Chọn ngày thuê cho sản phẩm -->
-            <div class="mt-2">
-                <label class="form-label">Chọn khoảng thời gian thuê</label>
-                <input type="text"
-                       name="rentalDate_<%= p.getId() %>" id="rentalDate_<%= p.getId() %>"
-                       class="form-control rental-date"
-                       placeholder="Chọn khoảng ngày"
-                       autocomplete="off"/>
 
-                <small class="text-muted">Không thể chọn những ngày đã được đặt trước.</small>
-
-                <!-- Hiển thị các ngày đã đặt -->
-                <p class="text-muted mt-2 mb-0">Ngày đã đặt:</p>
-                <ul class="text-muted ps-3 mb-2">
-                    <%
-                        List<BookingSchedule> schedules = p.getBookingSchedules();
-                        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
-                        if (schedules == null || schedules.isEmpty()) {
-                    %>
-                    <li>Còn trống</li>
-                    <% } else {
-                        for (BookingSchedule schedule : schedules) { %>
-                    <li><%= sdf.format(schedule.getRentStart()) %> - <%= sdf.format(schedule.getRentEnd()) %>
-                    </li>
-                    <% }
-                    } %>
-                </ul>
+                </div>
             </div>
             <% } %>
-
-            <!-- Ghi chú đơn hàng + Chính sách -->
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Ghi chú đơn hàng</label>
-                    <textarea class="form-control" placeholder="Ghi chú" rows="4"></textarea>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-bold">Chính sách mua hàng</label>
-                    <ul class="text-muted small ps-3">
-                        <li>Sản phẩm được đổi 1 lần duy nhất, không hỗ trả trả.</li>
-                        <li>Sản phẩm còn đủ tem mác, chưa qua sử dụng.</li>
-                        <li>Sản phẩm nguyên giá được đổi trong 30 ngày trên toàn hệ thống.</li>
-                        <li>Sản phẩm sale chỉ hỗ trợ đổi size (nếu còn hàng) trong 7 ngày trên toàn hệ thống.</li>
-                    </ul>
-                </div>
-            </div>
         </div>
 
-        <!-- Thông tin thanh toán -->
-        <div class="col-md-4">
+        <!-- Sidebar điều hướng -->
+        <div class="col-md-3">
             <div class="border rounded p-3 shadow-sm">
-                <h5 class="fw-bold mb-3">Thông tin đơn hàng</h5>
-                <div class="d-flex justify-content-between mb-2">
-                    <span>Tổng tiền:</span>
-                    <span class="fw-bold text-danger"><%= String.format("%,d", total.longValue()) %> vnd</span>
-                </div>
-                <p class="text-muted small">Phí vận chuyển sẽ được tính ở trang thanh toán. Bạn cũng có thể nhập mã giảm
-                    giá ở trang thanh toán.</p>
-                <form action="checkout" method="post">
-                    <button type="submit" class="btn btn-danger btn-lg w-100">Thanh toán</button>
-                </form>
-
-                <div class="text-center mt-3">
-                    <a href="shop" class="text-decoration-none small">&larr; Tiếp tục mua hàng</a>
-                </div>
+                <h5 class="fw-bold mb-3">Điều hướng</h5>
+                <a href="shop" class="btn btn-outline-secondary w-100 mb-2">Tiếp tục mua hàng</a>
+                <a href="cart" class="btn btn-outline-primary w-100">Xem giỏ hàng</a>
             </div>
         </div>
+
     </div>
     <% } %>
 </div>
-<%-- Phần cart end --%>
+<%-- WishList container end --%>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const buttons = document.querySelectorAll(".btn-remove-wishlist");
+
+        buttons.forEach(btn => {
+            btn.addEventListener("click", function () {
+                const productId = this.dataset.productId;
+
+                Swal.fire({
+                    title: "Bạn có chắc muốn xóa?",
+                    text: "Sản phẩm sẽ bị xóa khỏi danh sách yêu thích.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Xóa",
+                    cancelButtonText: "Hủy"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        fetch("wishlist?productId=" + productId, {
+                            method: "DELETE"
+                        })
+                            .then(response => {
+                                if (response.status === 401) {
+                                    // Chưa đăng nhập, session hết hạn
+                                    Swal.fire({
+                                        icon: "warning",
+                                        title: "Phiên đăng nhập đã hết",
+                                        text: "Vui lòng đăng nhập lại.",
+                                        confirmButtonText: "Đăng nhập"
+                                    }).then(() => {
+                                        window.location.href = "login.jsp";
+                                    });
+                                    return;
+                                }
+
+                                if (response.ok) {
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Đã xóa!",
+                                        text: "Sản phẩm đã được xóa khỏi yêu thích.",
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        window.location.reload(); // Tải lại để cập nhật
+                                    });
+                                } else {
+                                    Swal.fire("Lỗi!", "Xóa sản phẩm thất bại.", "error");
+                                }
+                            });
+
+                    }
+                });
+            });
+        });
+    });
+</script>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
@@ -398,39 +402,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 <%-- js_handMade --%>
-<script src="assets/js_handMade/cart.js"></script>
-<script>
-    <%
-    // Định dạng ngày cho Flatpickr khi hiển thị trên giao diện (ví dụ: 31/05/2025)
-    java.text.SimpleDateFormat displayFormat = new java.text.SimpleDateFormat("dd/MM/yyyy");
-    // Định dạng ngày mà Flatpickr sẽ gửi đi và DB lưu trữ (ví dụ: 2025-05-31)
-    java.text.SimpleDateFormat serverFormat = new java.text.SimpleDateFormat("yyyy-MM-dd");
-    %>
-    <% for (ProductView p : cart) { %>
-    <% List<BookingSchedule> schedules = p.getBookingSchedules(); %>
-    flatpickr("#rentalDate_<%= p.getId() %>", {
-        mode: "range",
-        minDate: "today",
-        dateFormat: "Y-m-d", // Định dạng gửi lên server
-        altInput: true,
-        altFormat: "d-m-Y", // Định dạng hiển thị cho người dùng
-        disable: [
-            <% if (schedules != null) {
-        for (BookingSchedule s : schedules) {
-            String from = serverFormat.format(s.getRentStart());
-            String to = serverFormat.format(s.getRentEnd());
-        %>
-            {from: "<%= from %>", to: "<%= to %>"},
-            <% } } %>
-        ],
-        onDayCreate: function (dObj, dStr, fp, dayElem) {
-            if (dayElem.classList.contains('flatpickr-disabled')) {
-                dayElem.classList.add('booked-day');
-            }
-        }
-    });
-    <% } %>
-</script>
+<script src="assets/js_handMade/.js"></script>
 
 </body>
 </html>

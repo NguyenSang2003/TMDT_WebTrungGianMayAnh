@@ -3,14 +3,16 @@
 <%@ page import="model.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.ProductView" %>
+<%@ page import="java.util.Set" %>
 
 <%
-    // Lấy thông tin user từ session .
     User user = (User) session.getAttribute("user");
     // Lấy danh sách sản phẩm từ request attribute (HomeController).
     List<ProductView> latestProducts = (List<ProductView>) request.getAttribute("latestProducts");
     List<ProductView> bestSellingProducts = (List<ProductView>) request.getAttribute("bestSellingProducts");
     List<ProductView> mostViewedProducts = (List<ProductView>) request.getAttribute("mostViewedProducts");
+
+    Set<Integer> wishlistIds = (Set<Integer>) request.getAttribute("wishlistIds");
 %>
 
 <!DOCTYPE html>
@@ -44,7 +46,7 @@
 
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
-
+    <link rel="stylesheet" href="assets/css_handMade/wishList.css">
 
 </head>
 <body>
@@ -122,8 +124,8 @@
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
-                        <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
-                        <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>
+                        <a href="wishlist" class="dropdown-item">Sản phẩm yêu thích</a>
                         <% } %>
                         <% } %>
 
@@ -263,34 +265,62 @@
             <div class="col-md-12">
                 <div class="carousel-car owl-carousel">
                     <% if (bestSellingProducts != null) {
-                        for (ProductView product : bestSellingProducts) { %>
+                        for (ProductView product : bestSellingProducts) {
+                            boolean isInWishlist = wishlistIds != null && wishlistIds.contains(product.getId());
+                    %>
                     <div class="item">
                         <div class="car-wrap rounded ftco-animate">
+                            <!-- Container hình ảnh cần có position: relative -->
                             <div class="img rounded d-flex align-items-end"
-                                 style="background-image: url('<%= product.getImageUrl() %>');">
+                                 style="background-image: url('<%= product.getImageUrl() %>'); position: relative;">
+                                <!-- Wishlist button đặt ở góc phải trên cùng -->
+                                <% if (user != null) { %>
+                                <% if (isInWishlist) { %>
+                                <form method="post" action="wishlist"
+                                      style="position: absolute; top: 10px; right: 10px;">
+                                    <input type="hidden" name="productId" value="<%= product.getId() %>">
+                                    <button type="submit" class="wishlist-btn liked" disabled
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Đã yêu thích">
+                                        <span class="material-icons">favorite</span>
+                                    </button>
+                                </form>
+                                <% } else { %>
+                                <form method="post" action="wishlist"
+                                      style="position: absolute; top: 10px; right: 10px;">
+                                    <input type="hidden" name="productId" value="<%= product.getId() %>">
+                                    <button type="submit" class="wishlist-btn not-liked"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào yêu thích">
+                                        <span class="material-icons">favorite</span>
+                                    </button>
+                                </form>
+                                <% } %>
+                                <% } %>
+
                             </div>
                             <div class="text">
-                                <h2 class="mb-0"><a
-                                        href="product-detail?id=<%= product.getId() %>"><%= product.getName() %>
-                                </a></h2>
+                                <h2 class="mb-0">
+                                    <a href="product-detail?id=<%= product.getId() %>">
+                                        <%= product.getName() %>
+                                    </a>
+                                </h2>
                                 <div class="d-flex mb-3">
                                     <span class="cat small-text-color">Sản phẩm bán chạy</span>
-                                    <p class="price ml-auto"><%= product.getFormattedPricePerDay() %>
-                                        vnđ
-                                        <span class="small-text-color">/ngày</span></p>
+                                    <p class="price ml-auto">
+                                        <%= product.getFormattedPricePerDay() %> vnđ
+                                        <span class="small-text-color">/ngày</span>
+                                    </p>
                                 </div>
                                 <p class="d-flex mb-0 d-block">
-
                                     <a class="cart-btn btn btn-primary py-2 mr-1"
                                        data-bs-toggle="tooltip" data-bs-placement="top"
                                        data-id="<%= product.getId() %>"
                                        title="Thêm vào giỏ hàng">
                                         <span class="material-symbols-outlined">shopping_cart</span>
                                     </a>
-
                                     <a href="product-detail?id=<%= product.getId() %>"
-                                       class="btn btn-secondary py-2 ml-1" data-bs-toggle="tooltip"
-                                       data-bs-placement="top" title="Xem chi tiết">
+                                       class="btn btn-secondary py-2 ml-1"
+                                       data-bs-toggle="tooltip" data-bs-placement="top"
+                                       title="Xem chi tiết">
                                         <span class="material-symbols-outlined">info</span>
                                     </a>
                                 </p>
@@ -318,12 +348,38 @@
             <div class="col-md-12">
                 <div class="carousel-car owl-carousel">
                     <% if (latestProducts != null) {
-                        for (ProductView product : latestProducts) { %>
+                        for (ProductView product : latestProducts) {
+                            boolean isInWishlist = wishlistIds != null && wishlistIds.contains(product.getId());
+                    %>
                     <div class="item">
                         <div class="car-wrap rounded ftco-animate">
+                            <!-- Container hình ảnh cần có position: relative -->
                             <div class="img rounded d-flex align-items-end"
-                                 style="background-image: url('<%= product.getImageUrl() %>');">
+                                 style="background-image: url('<%= product.getImageUrl() %>'); position: relative;">
+                                <!-- Wishlist button đặt ở góc phải trên cùng -->
+                                <% if (user != null) { %>
+                                <% if (isInWishlist) { %>
+                                <form method="post" action="wishlist"
+                                      style="position: absolute; top: 10px; right: 10px;">
+                                    <input type="hidden" name="productId" value="<%= product.getId() %>">
+                                    <button type="submit" class="wishlist-btn liked" disabled
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Đã yêu thích">
+                                        <span class="material-icons">favorite</span>
+                                    </button>
+                                </form>
+                                <% } else { %>
+                                <form method="post" action="wishlist"
+                                      style="position: absolute; top: 10px; right: 10px;">
+                                    <input type="hidden" name="productId" value="<%= product.getId() %>">
+                                    <button type="submit" class="wishlist-btn not-liked"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào yêu thích">
+                                        <span class="material-icons">favorite</span>
+                                    </button>
+                                </form>
+                                <% } %>
+                                <% } %>
                             </div>
+
                             <div class="text">
                                 <h2 class="mb-0"><a
                                         href="product-detail?id=<%= product.getId() %>"><%= product.getName() %>
@@ -348,6 +404,7 @@
                                        data-bs-placement="top" title="Xem chi tiết">
                                         <span class="material-symbols-outlined">info</span>
                                     </a>
+
                                 </p>
                             </div>
                         </div>
@@ -373,12 +430,39 @@
             <div class="col-md-12">
                 <div class="carousel-car owl-carousel">
                     <% if (mostViewedProducts != null) {
-                        for (ProductView product : mostViewedProducts) { %>
+                        for (ProductView product : mostViewedProducts) {
+                            boolean isInWishlist = wishlistIds != null && wishlistIds.contains(product.getId());
+                    %>
                     <div class="item">
                         <div class="car-wrap rounded ftco-animate">
+                            <!-- Container hình ảnh cần có position: relative -->
                             <div class="img rounded d-flex align-items-end"
-                                 style="background-image: url('<%= product.getImageUrl() %>');">
+                                 style="background-image: url('<%= product.getImageUrl() %>'); position: relative;">
+
+                                <!-- Wishlist button đặt ở góc phải trên cùng -->
+                                <% if (user != null) { %>
+                                <% if (isInWishlist) { %>
+                                <form method="post" action="wishlist"
+                                      style="position: absolute; top: 10px; right: 10px;">
+                                    <input type="hidden" name="productId" value="<%= product.getId() %>">
+                                    <button type="submit" class="wishlist-btn liked" disabled
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Đã yêu thích">
+                                        <span class="material-icons">favorite</span>
+                                    </button>
+                                </form>
+                                <% } else { %>
+                                <form method="post" action="wishlist"
+                                      style="position: absolute; top: 10px; right: 10px;">
+                                    <input type="hidden" name="productId" value="<%= product.getId() %>">
+                                    <button type="submit" class="wishlist-btn not-liked"
+                                            data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào yêu thích">
+                                        <span class="material-icons">favorite</span>
+                                    </button>
+                                </form>
+                                <% } %>
+                                <% } %>
                             </div>
+
                             <div class="text">
                                 <h2 class="mb-0"><a
                                         href="product-detail?id=<%= product.getId() %>"><%= product.getName() %>

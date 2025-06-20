@@ -1,22 +1,24 @@
 package controller;
 
+import DAO.WishlistDAO;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.ProductView;
+import model.User;
 import services.ProductService;
 
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @WebServlet("/shop")
 public class ShopController extends HttpServlet {
     private ProductService productService = new ProductService();
+    private WishlistDAO wishlistDAO = new WishlistDAO();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -61,8 +63,22 @@ public class ShopController extends HttpServlet {
             ratingHtmlMap.put(product.getId(), starHtml.toString());
         }
 
+        // ✅ Check wishlist if user is logged in
+        HttpSession session = request.getSession(false);
+        Set<Integer> wishlistIds = new HashSet<>();
+        if (session != null) {
+            User user = (User) session.getAttribute("user");
+            if (user != null) {
+                List<ProductView> wishlist = wishlistDAO.getWishlistByUserId(user.getId());
+                for (ProductView p : wishlist) {
+                    wishlistIds.add(p.getId());
+                }
+            }
+        }
+
         request.setAttribute("products", products);
         request.setAttribute("ratingHtmlMap", ratingHtmlMap);
+        request.setAttribute("wishlistIds", wishlistIds);
         request.getRequestDispatcher("shop.jsp").forward(request, response);
     }
 }
