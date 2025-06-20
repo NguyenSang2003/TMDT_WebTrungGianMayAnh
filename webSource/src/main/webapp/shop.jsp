@@ -220,7 +220,7 @@
                     <!-- Nút chức năng -->
                     <div class="d-flex justify-content-between mt-2">
                         <!-- Thêm vào giỏ -->
-                        <button class="btn btn-primary py-2 mr-1 add-to-cart-btn"
+                        <button class="btn btn-primary py-2 mr-1 cart-btn"
                                 data-id="<%= product.getId() %>"
                                 data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào giỏ hàng"
                                 style="flex: 1;">
