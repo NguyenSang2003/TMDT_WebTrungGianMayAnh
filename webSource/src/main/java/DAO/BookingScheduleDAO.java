@@ -38,5 +38,5 @@ public class BookingScheduleDAO {
         return false;
     }
 
-    // Có thể thêm: getBookingsByProductId, cancelBooking, updateStatus, checkAvailability, ...
+    // getBookingsByProductId, cancelBooking, updateStatus, checkAvailability, ...
 }

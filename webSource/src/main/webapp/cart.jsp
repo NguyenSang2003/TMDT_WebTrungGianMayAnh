@@ -2,7 +2,8 @@
 <%@ page import="java.util.List, java.math.BigDecimal" %>
 
 <%@ page import="java.util.List, java.util.ArrayList, java.math.BigDecimal, model.User" %>
-<%@ page import="model.*" %>
+<%@ page import="model.ProductView" %>
+<%@ page import="model.BookingSchedule" %>
 
 <%
     // Lấy user và cart từ session/request
@@ -19,6 +20,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Giỏ hàng</title>
+    <link rel="icon" type="image/PNG" href="assets/images/logo.PNG"/>
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
           rel="stylesheet">
 
@@ -44,15 +46,6 @@
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
 
-    <style>
-        /* làm mờ ngày đã đặt */
-        .booked-day {
-            color: #999 !important;
-            background-color: #f0f0f0 !important;
-            pointer-events: none; /* Không cho click */
-            opacity: 0.6;
-        }
-    </style>
 </head>
 <body>
 
@@ -115,7 +108,7 @@
                             <i class="fa fa-envelope"></i> Xác thực Gmail
                         </a>
                         <% } else { %>
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
                         <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
@@ -129,8 +122,8 @@
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
-                        <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
-                        <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>
+                        <a href="wishlist" class="dropdown-item">Sản phẩm yêu thích</a>
                         <% } %>
                         <% } %>
 
@@ -161,6 +154,7 @@
 </section>
 <%-- breadCrumbs end --%>
 
+<%-- Phần cart start --%>
 <div class="container py-4">
     <h2 class="mb-2 fw-bold text-center" style="font-size: 28px;">Giỏ hàng của bạn</h2>
     <p class="text-center mb-4" style="font-size: 18px; color: #555;">Có <%= cart.size() %> sản phẩm trong giỏ hàng</p>
@@ -282,7 +276,7 @@
     </div>
     <% } %>
 </div>
-
+<%-- Phần cart end --%>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
@@ -381,7 +375,6 @@
 <%--                stroke="#F96D00"/>--%>
 <%--    </svg>--%>
 <%--</div>--%>
-
 
 <!-- JS scripts -->
 <script src="assets/js/jquery.min.js"></script>

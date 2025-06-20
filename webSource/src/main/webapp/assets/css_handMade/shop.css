@@ -35,17 +35,6 @@
     object-fit: contain;
 }
 
-/* ==================== CART BUTTON ==================== */
-.cart-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-}
-
 /* ==================== PRODUCT INFO ==================== */
 .product-info h3 {
     font-size: 16px;
@@ -71,6 +60,7 @@
 /* ==================== RATING DETAILS ==================== */
 .rating-detai {
     display: flex;
+    justify-content: space-between;
 }
 
 .rating {

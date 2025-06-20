@@ -1,23 +1,26 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<%@ page import="model.User" %>
 <%@ page import="java.util.List" %>
+
+<%@ page import="java.util.List, java.util.ArrayList, model.User" %>
 <%@ page import="model.ProductView" %>
-<%@ page import="java.util.Set" %>
 
 <%
+    // Lấy user và cart từ session/request
     User user = (User) session.getAttribute("user");
-    Set<Integer> wishlistIds = (Set<Integer>) request.getAttribute("wishlistIds");
+
+    // Lấy thông tin danh sách wishlist từ session/request
+    List<ProductView> wishlist = (List<ProductView>) request.getAttribute("wishlist");
+    if (wishlist == null) {
+        wishlist = new ArrayList<>();
+    }
 %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <title>EagleCam Selection 365</title>
+    <meta charset="UTF-8">
+    <title>Sản phẩm yêu thích</title>
     <link rel="icon" type="image/PNG" href="assets/images/logo.PNG"/>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
           rel="stylesheet">
 
@@ -40,19 +43,18 @@
     <!-- Material Symbols Outlined -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
-    <link rel="stylesheet" href="assets/css_handMade/shop.css">
-    <link rel="stylesheet" href="assets/css_handMade/wishList.css">
 
-    <%--    <script>--%>
-    <%--        document.addEventListener("DOMContentLoaded", function () {--%>
-    <%--            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));--%>
-    <%--            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {--%>
-    <%--                return new bootstrap.Tooltip(tooltipTriggerEl);--%>
-    <%--            });--%>
-    <%--        });--%>
-    <%--    </script>--%>
+    <style>
+        .product-img {
+            width: 100px;
+            height: auto;
+            margin-right: 1rem;
+        }
+    </style>
 </head>
 <body>
 
@@ -79,8 +81,8 @@
         <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
-                <li class="nav-item active"><a href="shop" class="nav-link">Cửa Hàng</a></li>
+                <li class="nav-item "><a href="index" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
@@ -115,7 +117,7 @@
                             <i class="fa fa-envelope"></i> Xác thực Gmail
                         </a>
                         <% } else { %>
-                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
                         <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
@@ -130,7 +132,7 @@
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
                         <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>
-                        <a href="wishlist" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <a href="wishList" class="dropdown-item active">Sản phẩm yêu thích</a>
                         <% } %>
                         <% } %>
 
@@ -144,108 +146,78 @@
 </nav>
 <!-- END nav -->
 
-<%-- Bread crumbs --%>
+<%-- breadCrumbs --%>
 <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('assets/images/bg_3.jpg');"
          data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
             <div class="col-md-9 ftco-animate pb-5">
-                <p class="breadcrumbs"><span class="mr-2"><a href="index">Trang chủ<i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Cửa Hàng<i
+                <p class="breadcrumbs"><span class="mr-2"><a href="index">Trang Chủ <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Sản phẩm yêu thích <i
                         class="ion-ios-arrow-forward"></i></span></p>
-                <h1 class="mb-3 bread">Cửa Hàng</h1>
+                <h1 class="mb-3 bread">Sản phẩm yêu thích</h1>
             </div>
         </div>
     </div>
 </section>
-<%-- Bread crumbs end --%>
+<%-- breadCrumbs end --%>
 
-<%-- Phần sản phẩm --%>
-<div class="container">
-    <input type="text" style="margin-top: 10px" class="search-box" placeholder="Nhập từ khóa sản phẩm...">
+<%-- WishList container start --%>
+<div class="container py-4">
+    <h2 class="mb-2 fw-bold text-center" style="font-size: 28px;">Các sản phẩm yêu thích của bạn.</h2>
+    <p class="text-center mb-4" style="font-size: 18px; color: #555;">Có <%= wishlist.size() %> sản phẩm trong danh sách
+        yêu thích</p>
 
-    <div class="product-grid">
-        <%
-            List<ProductView> products = (List<ProductView>) request.getAttribute("products");
-            java.util.Map ratingHtmlMap = (java.util.Map) request.getAttribute("ratingHtmlMap");
-            if (products != null && !products.isEmpty()) {
-                for (ProductView product : products) {
-                    boolean isInWishlist = wishlistIds != null && wishlistIds.contains(product.getId());
-        %>
-
-        <div class="product-card" style="position: relative;">
-            <!-- Nút wishlist -->
-            <% if (user != null) { %>
-            <% if (isInWishlist) { %>
-            <form method="post" action="wishlist"
-                  style="position: absolute; top: 10px; right: 10px;">
-                <input type="hidden" name="productId" value="<%= product.getId() %>">
-                <button type="submit" class="wishlist-btn liked" disabled
-                        data-bs-toggle="tooltip" data-bs-placement="top" title="Đã yêu thích">
-                    <span class="material-icons">favorite</span>
-                </button>
-            </form>
-            <% } else { %>
-            <form method="post" action="wishlist"
-                  style="position: absolute; top: 10px; right: 10px;">
-                <input type="hidden" name="productId" value="<%= product.getId() %>">
-                <button type="submit" class="wishlist-btn not-liked"
-                        data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào yêu thích">
-                    <span class="material-icons">favorite</span>
-                </button>
-            </form>
-            <% } %>
-            <% } %>
-
-            <!-- Hình ảnh sản phẩm -->
-            <img src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>">
-
-            <!-- Thông tin sản phẩm -->
-            <div class="product-info">
-                <h3><%= product.getName() %>
-                </h3>
-                <div class="price">
-                    <%= product.getFormattedPricePerDay() %> vnđ/ngày
+    <% if (wishlist.isEmpty()) { %>
+    <div class="text-center" style="min-height: 300px;">
+        <img loading="lazy" src="assets/images/empty_wishList.png" alt="Danh sách yêu thích trống"
+             style="max-width: 500px;">
+        <p class="mt-3 text-muted">Danh sách sản phẩm yêu thích của bạn đang trống</p>
+    </div>
+    <% } else { %>
+    <div class="row">
+        <!-- Danh sách sản phẩm yêu thích -->
+        <div class="col-md-9">
+            <% for (ProductView product : wishlist) { %>
+            <div class="d-flex border p-3 mb-3 align-items-center position-relative">
+                <img class="product-img" src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>">
+                <div class="flex-grow-1">
+                    <h5 class="mb-1"><%= product.getName() %>
+                    </h5>
+                    <p class="mb-0 text-muted">Giá: <%= String.format("%,d", product.getPricePerDay().longValue()) %>
+                        vnd</p>
                 </div>
-                <div class="category">
-                    <%= product.getCategory() %>
-                </div>
-                <div class="rating-detai">
-                    <div class="star-rating">
-                        <%= ratingHtmlMap.get(product.getId()) %><br>
-                        <span class="review-count">( <%= product.getTotalReviews() %> đánh giá)</span>
-                    </div>
+                <div class="d-flex flex-column align-items-end">
 
-                    <!-- Nút chức năng -->
-                    <div class="d-flex justify-content-between mt-2">
-                        <!-- Thêm vào giỏ -->
-                        <button class="btn btn-primary py-2 mr-1 cart-btn"
-                                data-id="<%= product.getId() %>"
-                                data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào giỏ hàng"
-                                style="flex: 1;">
-                            <span class="material-symbols-outlined">shopping_cart</span>
-                        </button>
+                    <button class="btn btn-outline-danger btn-sm mb-2 btn-remove-wishlist"
+                            data-product-id="<%= product.getId() %>">Xóa
+                    </button>
 
-                        <!-- Xem chi tiết -->
-                        <a href="product-detail?id=<%= product.getId() %>"
-                           class="btn btn-success py-2 ml-1"
-                           data-bs-toggle="tooltip" data-bs-placement="top" title="Xem chi tiết"
-                           style="flex: 1;">
-                            <span class="material-symbols-outlined">info</span>
-                        </a>
-                    </div>
+                    <button type="button"
+                            class="cart-btn btn btn-outline-primary btn-sm"
+                            data-id="<%= product.getId() %>">
+                        Thêm vào giỏ hàng
+                    </button>
 
                 </div>
             </div>
+            <% } %>
         </div>
-        <%
-                }
-            }
-        %>
+
+        <!-- Sidebar điều hướng -->
+        <div class="col-md-3">
+            <div class="border rounded p-3 shadow-sm">
+                <h5 class="fw-bold mb-3">Điều hướng</h5>
+                <a href="shop" class="btn btn-outline-secondary w-100 mb-2">Tiếp tục mua hàng</a>
+                <a href="cart" class="btn btn-outline-primary w-100">Xem giỏ hàng</a>
+            </div>
+        </div>
+
     </div>
+    <% } %>
 </div>
-<%-- Phần sản phẩm end --%>
+<%-- WishList container end --%>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
@@ -278,10 +250,10 @@
                 <div class="ftco-footer-widget mb-4 ml-md-5">
                     <h2 class="ftco-heading-2">Đường tắt khác</h2>
                     <ul class="list-unstyled">
-                        <li><a href="index.jsp" class="py-2 d-block">Trang Chủ</a></li>
+                        <li><a href="index" class="py-2 d-block">Trang Chủ</a></li>
                         <li><a href="shop" class="py-2 d-block">Cửa Hàng</a></li>
                         <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
-                        <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>
+                        <li><a href="cart" class="py-2 d-block">Giỏ Hàng</a></li>
                         <li><a href="#" class="py-2 d-block">Chính sách bảo mật & Cookie</a></li>
                     </ul>
                 </div>
@@ -336,15 +308,6 @@
 </footer>
 <%-- end phần Footer --%>
 
-<!-- loader -->
-<div id="ftco-loader" class="show fullscreen">
-    <svg class="circular" width="48px" height="48px">
-        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
-        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
-                stroke="#F96D00"/>
-    </svg>
-</div>
-
 <!-- JS scripts -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery-migrate-3.0.1.min.js"></script>
@@ -364,7 +327,11 @@
 <script src="assets/js/google-map.js"></script>
 <script src="assets/js/main.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <%-- js_handMade --%>
+<script src="assets/js_handMade/removeWishList.js"></script>
 <script src="assets/js_handMade/addcart.js"></script>
 
 </body>

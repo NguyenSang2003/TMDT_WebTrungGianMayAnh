@@ -1,0 +1,53 @@
+/* Định dạng cơ bản cho nút wishlist */
+.wishlist-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+    transition: transform 0.2s ease;
+}
+
+/* Áp dụng transition chung cho icon */
+.wishlist-btn span.material-icons {
+    transition: transform 0.2s ease, font-size 0.2s ease;
+}
+
+/* Trạng thái chưa yêu thích: icon nhỏ, fill transparent, chỉ có viền đỏ */
+.wishlist-btn.not-liked span.material-icons {
+    font-size: 27px;
+    color: transparent; /* ẩn fill */
+    -webkit-text-stroke: 1px red; /* tạo viền đỏ cho icon */
+}
+
+/* Hiệu ứng hover cho trạng thái chưa yêu thích */
+.wishlist-btn.not-liked:not(:disabled):hover span.material-icons {
+    transform: scale(1.3);
+}
+
+/* Trạng thái đã yêu thích: icon đầy màu đỏ, kích thước lớn hơn và hiệu ứng pulse */
+.wishlist-btn.liked span.material-icons,
+.wishlist-btn:disabled span.material-icons {
+    font-size: 30px;
+    color: red;
+    -webkit-text-stroke: 0px red;
+    animation: pulse 0.6s ease;
+}
+
+/* Hiệu ứng pulse cho trạng thái đã yêu thích */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Loại bỏ outline khi nhận focus */
+.wishlist-btn:focus {
+    outline: none;
+}
