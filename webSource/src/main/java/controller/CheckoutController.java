@@ -57,7 +57,6 @@ public class CheckoutController extends HttpServlet {
             }
 
             int renterId = user.getId();
-
             List<ProductView> cart = (List<ProductView>) session.getAttribute("cart");
             List<Integer> createdOrderIds = new ArrayList<>();
 
@@ -95,30 +94,46 @@ public class CheckoutController extends HttpServlet {
                 }
             }
 
+            // Gom sản phẩm theo owner
+            Map<Integer, List<ProductView>> productsByOwner = new HashMap<>();
+            for (ProductView p : cart) {
+                int ownerId = productDAO.getOwnerIdByProductId(p.getId());
+                productsByOwner.computeIfAbsent(ownerId, k -> new ArrayList<>()).add(p);
+            }
+
             boolean allCreated = true;
 
-            for (ProductView p : cart) {
-                Date rentStart = rentDates.get(p.getId())[0];
-                Date rentEnd = rentDates.get(p.getId())[1];
+            for (Map.Entry<Integer, List<ProductView>> entry : productsByOwner.entrySet()) {
+                int ownerId = entry.getKey();
+                List<ProductView> productList = entry.getValue();
 
-                long days = (rentEnd.getTime() - rentStart.getTime()) / (1000 * 60 * 60 * 24);
-                if (days == 0) days = 1;
-                else days++;
+                double totalPrice = 0;
+                Timestamp now = new Timestamp(System.currentTimeMillis());
 
-                double totalPrice = p.getPricePerDay().doubleValue() * p.getQuantity() * days;
+                // Tính tổng tiền của cả đơn hàng
+                for (ProductView p : productList) {
+                    Date rentStart = rentDates.get(p.getId())[0];
+                    Date rentEnd = rentDates.get(p.getId())[1];
+                    long days = (rentEnd.getTime() - rentStart.getTime()) / (1000 * 60 * 60 * 24);
+                    if (days == 0) days = 1;
+                    else days++;
+                    totalPrice += p.getPricePerDay().doubleValue() * p.getQuantity() * days;
+                }
 
-                int ownerId = productDAO.getOwnerIdByProductId(p.getId());
+                // Dùng thời gian thuê của sản phẩm đầu tiên làm mốc
+                Date rentStart = rentDates.get(productList.get(0).getId())[0];
+                Date rentEnd = rentDates.get(productList.get(0).getId())[1];
 
-                // Tạo order
+                // Tạo đơn hàng
                 Order order = new Order();
                 order.setRenterId(renterId);
                 order.setOwnerId(ownerId);
+                order.setTotalPrice(totalPrice);
                 order.setStatus("cho_duyet");
                 order.setRentStart(rentStart);
                 order.setRentEnd(rentEnd);
-                order.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-                order.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-                order.setTotalPrice(totalPrice);
+                order.setCreatedAt(now);
+                order.setUpdatedAt(now);
 
                 int orderId = orderDAO.create(order);
                 if (orderId == -1) {
@@ -126,39 +141,50 @@ public class CheckoutController extends HttpServlet {
                     break;
                 }
 
-                // Tạo orderItem tương ứng
-                OrderItems item = new OrderItems();
-                item.setOrderId(orderId);
-                item.setProductId(p.getId());
-                item.setOwnerId(ownerId);
-                item.setQuantity(p.getQuantity());
-                item.setPricePerDay(p.getPricePerDay().doubleValue());
-                item.setRentStart(rentStart);
-                item.setRentEnd(rentEnd);
-                item.setTotalPrice(totalPrice);
+                for (ProductView p : productList) {
+                    Date pStart = rentDates.get(p.getId())[0];
+                    Date pEnd = rentDates.get(p.getId())[1];
 
-                boolean itemCreated = orderItemsDAO.createOrderItem(item);
-                if (!itemCreated) {
-                    allCreated = false;
-                    break;
-                }
+                    long days = (pEnd.getTime() - pStart.getTime()) / (1000 * 60 * 60 * 24);
+                    if (days == 0) days = 1;
+                    else days++;
 
-                // Tạo booking schedule
-                BookingSchedule booking = new BookingSchedule();
-                booking.setProductId(p.getId());
-                booking.setRenterId(renterId);
-                booking.setOwnerId(ownerId);
-                booking.setOrderId(orderId);
-                booking.setRentStart(rentStart);
-                booking.setRentEnd(rentEnd);
-                booking.setStatus("cho_duyet");
-                booking.setCreatedAt(order.getCreatedAt());
-                booking.setUpdatedAt(order.getUpdatedAt());
+                    double itemTotal = p.getPricePerDay().doubleValue() * p.getQuantity() * days;
 
-                boolean booked = bookingDAO.createBooking(booking);
-                if (!booked) {
-                    allCreated = false;
-                    break;
+                    // OrderItem
+                    OrderItems item = new OrderItems();
+                    item.setOrderId(orderId);
+                    item.setProductId(p.getId());
+                    item.setOwnerId(ownerId);
+                    item.setQuantity(p.getQuantity());
+                    item.setPricePerDay(p.getPricePerDay().doubleValue());
+                    item.setRentStart(pStart);
+                    item.setRentEnd(pEnd);
+                    item.setTotalPrice(itemTotal);
+
+                    boolean itemCreated = orderItemsDAO.createOrderItem(item);
+                    if (!itemCreated) {
+                        allCreated = false;
+                        break;
+                    }
+
+                    // BookingSchedule
+                    BookingSchedule booking = new BookingSchedule();
+                    booking.setProductId(p.getId());
+                    booking.setRenterId(renterId);
+                    booking.setOwnerId(ownerId);
+                    booking.setOrderId(orderId);
+                    booking.setRentStart(pStart);
+                    booking.setRentEnd(pEnd);
+                    booking.setStatus("cho_duyet");
+                    booking.setCreatedAt(now);
+                    booking.setUpdatedAt(now);
+
+                    boolean booked = bookingDAO.createBooking(booking);
+                    if (!booked) {
+                        allCreated = false;
+                        break;
+                    }
                 }
 
                 createdOrderIds.add(orderId);
@@ -168,25 +194,25 @@ public class CheckoutController extends HttpServlet {
                 session.removeAttribute("cart");
                 session.setAttribute("createdOrderIds", createdOrderIds);
 
+                // Gửi recentOrderViews cho checkout.jsp
                 List<OrderView> recentOrderViews = new ArrayList<>();
-
                 for (int orderId : createdOrderIds) {
                     Order order = orderDAO.getOrderById(orderId);
+                    List<OrderItems> items = orderDAO.getOrderItemsByOrderId(orderId);
 
-                    // Lấy order items theo orderId
-                    List<OrderItems> orderItemsList = orderDAO.getOrderItemsByOrderId(orderId);
-                    if (orderItemsList.isEmpty()) continue;
+                    List<Product> products = new ArrayList<>();
+                    List<String> imageUrls = new ArrayList<>();
+                    for (OrderItems item : items) {
+                        Product product = productDAO.getProductById(item.getProductId());
+                        String img = productDAO.getImageUrlByProductId(item.getProductId());
+                        products.add(product);
+                        imageUrls.add(img);
+                    }
 
-                    OrderItems firstItem = orderItemsList.get(0); // chỉ lấy 1 item đầu tiên
-
-                    String imageUrl = productDAO.getImageUrlByProductId(firstItem.getProductId());
-                    Product product = productDAO.getProductById(firstItem.getProductId());
-
-                    recentOrderViews.add(new OrderView(order, firstItem, imageUrl, product));
+                    recentOrderViews.add(new OrderView(order, items, products, imageUrls));
                 }
 
                 session.setAttribute("recentOrderViews", recentOrderViews);
-
                 response.sendRedirect("checkout");
             } else {
                 request.setAttribute("paymentStatus", "fail");
@@ -199,6 +225,7 @@ public class CheckoutController extends HttpServlet {
             request.getRequestDispatcher("checkout.jsp").forward(request, response);
         }
     }
+
 
 }
 

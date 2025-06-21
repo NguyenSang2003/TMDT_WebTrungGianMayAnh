@@ -1,18 +1,26 @@
 package model;
 
+import java.util.List;
+
 public class OrderView {
     private Order order;
-    private OrderItems orderItem;
-    private Product product;
-    private String imageUrl;
+//    private OrderItems orderItem;
+//    private Product product;
+//    private String imageUrl;
 
-    public OrderView(Order order, OrderItems orderItem, String imageUrl, Product product) {
+    private List<OrderItems> items;
+    private List<Product> products;
+    private List<String> imageUrls;
+
+    // Constructor đầy đủ:
+    public OrderView(Order order, List<OrderItems> items, List<Product> products, List<String> imageUrls) {
         this.order = order;
-        this.orderItem = orderItem;
-        this.imageUrl = imageUrl;
-        this.product = product;
+        this.items = items;
+        this.products = products;
+        this.imageUrls = imageUrls;
     }
 
+    // getter setter
     public Order getOrder() {
         return order;
     }
@@ -21,27 +29,27 @@ public class OrderView {
         this.order = order;
     }
 
-    public OrderItems getOrderItem() {
-        return orderItem;
+    public List<OrderItems> getItems() {
+        return items;
     }
 
-    public void setOrderItem(OrderItems orderItem) {
-        this.orderItem = orderItem;
+    public void setItems(List<OrderItems> items) {
+        this.items = items;
     }
 
-    public Product getProduct() {
-        return product;
+    public List<Product> getProducts() {
+        return products;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProducts(List<Product> products) {
+        this.products = products;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

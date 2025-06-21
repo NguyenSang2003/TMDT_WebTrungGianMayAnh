@@ -168,53 +168,45 @@
 
                 <h4 class="fw-bold mb-4">🛒 Thông tin đơn hàng</h4>
 
-                <% if (recentOrderViews != null && !recentOrderViews.isEmpty()) { %>
                 <% for (OrderView ov : recentOrderViews) {
                     Order o = ov.getOrder();
-                    Product p = ov.getProduct();
-                    OrderItems item = ov.getOrderItem();
                     totalAmount += o.getTotalPrice();
+
+                    List<Product> products = ov.getProducts();
+                    List<OrderItems> items = ov.getItems();
+                    List<String> imageUrls = ov.getImageUrls();
+
+                    for (int i = 0; i < products.size(); i++) {
+                        Product p = products.get(i);
+                        OrderItems item = items.get(i);
+                        String image = imageUrls.get(i);
                 %>
                 <div class="card mb-3 shadow-sm">
                     <div class="row g-0 align-items-center">
                         <div class="col-md-3">
-                            <img src="<%= ov.getImageUrl() %>" class="img-fluid rounded-start" alt="Ảnh sản phẩm">
+                            <img src="<%= image %>" class="img-fluid rounded-start" alt="Ảnh sản phẩm">
                         </div>
                         <div class="col-md-9">
                             <div class="card-body d-flex flex-column gap-2">
-                                <!-- Thông tin sản phẩm -->
-                                <div>
-                                    <h5 class="card-title fw-semibold mb-1"><%= p.getName() %>
-                                    </h5>
-                                    <p class="mb-1 text-muted">💸 Giá thuê/ngày:
-                                        <strong><%= String.format("%,.0f ₫/ngày ", p.getPricePerDay().doubleValue()) %>
-                                            VNĐ</strong></p>
-                                    <p class="mb-1 text-muted">🔢 Số lượng: <%= item.getQuantity() %>
-                                    </p>
-                                </div>
-
-                                <!-- Thông tin thời gian thuê -->
-                                <div class="d-flex flex-column flex-md-row justify-content-between">
-                                    <p class="mb-1 text-muted me-3">📅 Ngày thuê: <strong><%= o.getRentStart() %>
-                                    </strong></p>
-                                    <p class="mb-1 text-muted me-3">📆 Ngày trả: <strong><%= o.getRentEnd() %>
-                                    </strong></p>
-                                </div>
-
-                                <!-- Thành tiền -->
-                                <div class="mt-2">
-                                    <p class="fw-bold text-danger mb-0">💰 Thành
-                                        tiền: <%= String.format("%,.0f ₫/ngày ", o.getTotalPrice()) %> VNĐ</p>
-                                </div>
+                                <h5 class="card-title fw-semibold mb-1"><%= p.getName() %>
+                                </h5>
+                                <p class="mb-1 text-muted">💸 Giá thuê/ngày:
+                                    <strong><%= String.format("%,.0f ₫/ngày ", p.getPricePerDay().doubleValue()) %>
+                                        VNĐ</strong></p>
+                                <p class="mb-1 text-muted">🔢 Số lượng: <%= item.getQuantity() %>
+                                </p>
+                                <p class="mb-1 text-muted me-3">📅 Ngày thuê: <strong><%= item.getRentStart() %>
+                                </strong></p>
+                                <p class="mb-1 text-muted me-3">📆 Ngày trả: <strong><%= item.getRentEnd() %>
+                                </strong></p>
+                                <p class="fw-bold text-danger mb-0">💰 Thành
+                                    tiền: <%= String.format("%,.0f ₫", item.getTotalPrice()) %> VNĐ</p>
                             </div>
-
                         </div>
                     </div>
                 </div>
-                <% } %>
-                <% } else { %>
-                <p class="text-muted mt-3">Không có đơn hàng đang chờ duyệt.</p>
-                <% } %>
+                <% } // end for products %>
+                <% } // end for orders %>
 
                 <!-- Extra Options -->
                 <div class="border-top pt-4 mt-4">
