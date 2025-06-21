@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             fetch('cart', {
                 method: 'POST',
                 headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: new URLSearchParams({
@@ -21,16 +22,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
             })
                 .then(response => {
-                    if (response.redirected) {
-                        // Nếu server redirect sang trang cart, ta có thể chuyển trang
-                        window.location.href = response.url;
-                    } else {
-                        alert('Đã thêm sản phẩm vào giỏ hàng!');
+                    if (!response.ok) {
+                        throw new Error("Lỗi response");
                     }
+                    return response.json();
+                })
+                .then(data => {
+                    Swal.fire({
+                        title: "Thành công!",
+                        text: data.message,
+                        icon: "success",
+                        showConfirmButton: false,
+                        timer: 1030
+                    });
                 })
                 .catch(error => {
                     console.error('Lỗi khi thêm giỏ hàng:', error);
-                    alert('Có lỗi xảy ra khi thêm giỏ hàng.');
+                    Swal.fire({
+                        title: "Lỗi!",
+                        text: "Không thể thêm sản phẩm. Vui lòng thử lại.",
+                        icon: "error"
+                    });
                 });
         });
     });
