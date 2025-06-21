@@ -43,9 +43,10 @@
     <!-- Material Symbols Outlined -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
-
 </head>
 <body>
 
@@ -72,7 +73,7 @@
         <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item "><a href="index" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item active"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
@@ -163,10 +164,17 @@
     <div class="text-center" style="min-height: 300px;">
         <img loading="lazy" src="assets/images/empty_cart.jpeg" alt="Giỏ hàng trống" style="max-width: 500px;">
         <p class="mt-3 text-muted">Giỏ hàng của bạn đang trống</p>
+
+        <div class="text-center mt-3">
+            <a href="shop" class="text-decoration-none small btn btn-outline-primary px-4 py-2">
+                &larr; Quay lại cửa hàng
+            </a>
+        </div>
     </div>
     <% } else { %>
     <div class="row">
-        <!-- Sản phẩm trong giỏ -->
+
+        <!-- Cột bên trái chứa danh sách sản phẩm -->
         <div class="col-md-8">
             <% BigDecimal total = BigDecimal.ZERO; %>
             <% for (ProductView p : cart) { %>
@@ -178,27 +186,36 @@
                     <div class="d-flex justify-content-between align-items-start">
                         <strong><%= p.getName() %>
                         </strong>
-                        <form action="cart" method="post">
+
+                        <%-- Form xóa 1 sản phẩm--%>
+                        <form class="remove-item-form" method="post">
                             <input type="hidden" name="action" value="remove"/>
                             <input type="hidden" name="productId" value="<%= p.getId() %>"/>
-                            <button type="submit" class="btn btn-link text-danger p-0"
+                            <button type="button" class="btn btn-link text-danger p-0 remove-item-btn"
                                     style="position: absolute; top: 20px; right: 20px;">X
                             </button>
                         </form>
+
                     </div>
                     <p><%= String.format("%,d", p.getPricePerDay().longValue()) %> vnd</p>
 
+                    <%-- Form tăng giản số lượng --%>
                     <form action="cart" method="post" class="d-flex align-items-center">
                         <input type="hidden" name="action" value="updateQuantity"/>
                         <input type="hidden" name="productId" value="<%= p.getId() %>"/>
+
                         <button type="submit" name="operation" value="decrease"
-                                class="btn btn-sm btn-outline-secondary">-
+                                class="btn btn-sm btn-outline-secondary"
+                                <%= p.getQuantity() <= 1 ? "disabled" : "" %>>-
                         </button>
+
                         <input type="text" name="quantity" value="<%= p.getQuantity() %>" readonly
                                class="form-control text-center mx-2" style="width: 50px;"/>
+
                         <button type="submit" name="operation" value="increase"
                                 class="btn btn-sm btn-outline-secondary">+
                         </button>
+
                     </form>
                 </div>
                 <div class="text-end ms-3" style="min-width: 120px; font-weight: bold; margin-top: auto">
@@ -254,8 +271,17 @@
             </div>
         </div>
 
-        <!-- Thông tin thanh toán -->
+        <!-- Cột bên phải chứa thông tin đơn hàng -->
         <div class="col-md-4">
+
+            <!-- Form Xóa tất cả -->
+            <form id="clear-cart-form" method="post" class="mb-3">
+                <input type="hidden" name="action" value="clearAll"/>
+                <button type="button" class="btn btn-outline-danger w-100" id="clear-cart-btn">Xóa tất cả sản phẩm
+                </button>
+            </form>
+
+            <!-- Thông tin đơn hàng -->
             <div class="border rounded p-3 shadow-sm">
                 <h5 class="fw-bold mb-3">Thông tin đơn hàng</h5>
                 <div class="d-flex justify-content-between mb-2">
@@ -367,15 +393,6 @@
 </footer>
 <%-- end phần Footer --%>
 
-<!-- loader -->
-<%--<div id="ftco-loader" class="show fullscreen">--%>
-<%--    <svg class="circular" width="48px" height="48px">--%>
-<%--        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>--%>
-<%--        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"--%>
-<%--                stroke="#F96D00"/>--%>
-<%--    </svg>--%>
-<%--</div>--%>
-
 <!-- JS scripts -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery-migrate-3.0.1.min.js"></script>
@@ -400,6 +417,8 @@
 
 <%-- js_handMade --%>
 <script src="assets/js_handMade/cart.js"></script>
+<script src="assets/js_handMade/deleteCart.js"></script>
+
 <script>
     <%
     // Định dạng ngày cho Flatpickr khi hiển thị trên giao diện (ví dụ: 31/05/2025)

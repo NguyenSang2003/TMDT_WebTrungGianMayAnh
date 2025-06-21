@@ -67,55 +67,28 @@ public class CartController extends HttpServlet {
                 return;
             }
 
-            System.out.println(">>> Nhận productId: " + productId);
+            System.out.println("Nhận productId: " + productId);
             boolean found = false;
 
             for (ProductView item : cart) {
                 if (item.getId() == productId) {
                     item.setQuantity(item.getQuantity() + 1);
                     found = true;
-                    System.out.println(">>> Tăng số lượng sản phẩm trong giỏ hàng");
+                    System.out.println("Tăng số lượng sản phẩm trong giỏ hàng");
                     break;
                 }
             }
 
             if (!found) {
-                System.out.println(">>> Sản phẩm chưa có trong giỏ, thêm mới");
+                System.out.println("Sản phẩm chưa có trong giỏ, thêm mới");
                 ProductView product = productDAO.getProductViewById(productId);
                 if (product != null) {
-//                    System.out.println("=== Product data ===");
-//                    System.out.println("ID: " + product.getId());
-//                    System.out.println("Name: " + product.getName());
-//                    System.out.println("UserId: " + product.getUserId());
-//                    System.out.println("PricePerDay: " + product.getPricePerDay());
-//                    System.out.println("Quantity: " + product.getQuantity());
-//                    System.out.println("Status: " + product.getStatus());
-//                    System.out.println("CreatedAt: " + product.getCreatedAt());
-//                    System.out.println("UpdatedAt: " + product.getUpdatedAt());
-//                    System.out.println("ViewCount: " + product.getViewCount());
-//                    System.out.println("SoldCount: " + product.getSoldCount());
-//                    System.out.println("Rating: " + product.getRating());
-//                    System.out.println("ImageUrl: " + product.getImageUrl());
-//                    System.out.println("Category: " + product.getCategory());
                     product.setQuantity(1);
                     cart.add(product);
-                    System.out.println(">>> Thêm sản phẩm: " + product.getName());
+                    System.out.println("Thêm sản phẩm: " + product.getName());
                 } else {
-                    System.out.println(">>> Không tìm thấy sản phẩm với ID: " + productId);
-//                    System.out.println("=== Product data ===");
-//                    System.out.println("Name: " + product.getName());
-//                    System.out.println("UserId: " + product.getUserId());
-//                    System.out.println("PricePerDay: " + product.getPricePerDay());
-//                    System.out.println("Quantity: " + product.getQuantity());
-//                    System.out.println("Status: " + product.getStatus());
-//                    System.out.println("CreatedAt: " + product.getCreatedAt());
-//                    System.out.println("UpdatedAt: " + product.getUpdatedAt());
-//                    System.out.println("ViewCount: " + product.getViewCount());
-//                    System.out.println("SoldCount: " + product.getSoldCount());
-//                    System.out.println("Rating: " + product.getRating());
-//                    System.out.println("ImageUrl: " + product.getImageUrl());
-//                    System.out.println("Category: " + product.getCategory());
-                    // Bạn có thể set status lỗi ở đây để backend trả lỗi
+                    System.out.println("Không tìm thấy sản phẩm với ID: " + productId);
+
                     response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                     response.getWriter().write("Không tìm thấy sản phẩm");
                     return; // Dừng xử lý, không redirect
@@ -123,7 +96,7 @@ public class CartController extends HttpServlet {
             }
 
             session.setAttribute("cart", cart);
-            System.out.println(">>> Cập nhật giỏ hàng vào session thành công, redirect về cart");
+            System.out.println("Cập nhật giỏ hàng vào session thành công, redirect về cart");
 
             if ("XMLHttpRequest".equals(request.getHeader("X-Requested-With"))) {
                 response.setContentType("application/json");
@@ -137,6 +110,13 @@ public class CartController extends HttpServlet {
             int productId = Integer.parseInt(request.getParameter("productId"));
             cart.removeIf(p -> p.getId() == productId);
             session.setAttribute("cart", cart);
+            System.out.println("delete 1 product " + productId);
+            response.sendRedirect("cart");
+
+        } else if ("clearAll".equals(action)) {
+            cart.clear();
+            session.setAttribute("cart", cart);
+            System.out.println("Delete cart");
             response.sendRedirect("cart");
 
         } else if ("updateQuantity".equals(action)) {
@@ -150,11 +130,8 @@ public class CartController extends HttpServlet {
                     if ("increase".equals(operation)) {
                         item.setQuantity(item.getQuantity() + 1);
                     } else if ("decrease".equals(operation)) {
-                        int newQuantity = item.getQuantity() - 1;
-                        if (newQuantity > 0) {
-                            item.setQuantity(newQuantity);
-                        } else {
-                            iterator.remove(); // an toàn hơn khi xóa trong vòng lặp
+                        if (item.getQuantity() > 1) {
+                            item.setQuantity(item.getQuantity() - 1);
                         }
                     }
                     break;
