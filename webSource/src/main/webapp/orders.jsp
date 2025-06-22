@@ -2,7 +2,6 @@
 <%@ page import="java.util.List" %>
 
 <%@ page import="java.util.List, java.util.ArrayList, model.User" %>
-<%@ page import="model.ProductView" %>
 <%@ page import="model.OrderView" %>
 
 <%
@@ -224,33 +223,17 @@
                         "cho_duyet".equals(status) &&
                         renterId == sessionUser.getId()) {
             %>
-            <form action="orders" method="post" style="display: inline;">
-                <input type="hidden" name="orderId" value="<%= orderView.getOrder().getId() %>"/>
-                <button type="submit" class="btn btn-outline-warning btn-sm"
-                        onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này không?')"
-                        data-bs-toggle="tooltip"
-                        data-bs-placement="top"
-                        title="Hủy đơn hàng">
-                    <span class="material-symbols-outlined">cancel</span>
-                </button>
-            </form>
+
+            <button type="button"
+                    class="btn btn-outline-warning btn-sm cancel-order-btn"
+                    data-id="<%= orderView.getOrder().getId() %>"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    title="Hủy đơn hàng">
+                <span class="material-symbols-outlined">cancel</span>
+            </button>
+
             <% } %>
-
-            <% String message = (String) session.getAttribute("message");
-                if (message != null) { %>
-            <script>
-                alert("<%= message %>");
-            </script>
-            <% session.removeAttribute("message");
-            } %>
-
-            <% String error = (String) session.getAttribute("error");
-                if (error != null) { %>
-            <script>
-                alert("<%= error %>");
-            </script>
-            <% session.removeAttribute("error");
-            } %>
 
         </div>
     </div>
@@ -369,6 +352,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<script src="assets/js_handMade/cancelOrders.js"></script>
 
 </body>
 </html>

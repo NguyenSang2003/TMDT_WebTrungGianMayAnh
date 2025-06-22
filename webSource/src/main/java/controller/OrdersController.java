@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpSession;
 import model.*;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,8 +72,12 @@ public class OrdersController extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
+        response.setContentType("application/json");
+        PrintWriter out = response.getWriter();
+
         if (user == null || !"khach_thue".equals(user.getRole())) {
-            response.sendRedirect("login.jsp");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            out.print("{\"status\":\"error\", \"message\":\"Bạn cần đăng nhập để thực hiện chức năng này.\"}");
             return;
         }
 
@@ -83,23 +88,26 @@ public class OrdersController extends HttpServlet {
                 int orderId = Integer.parseInt(orderIdParam);
                 Order order = orderDAO.getOrderById(orderId);
 
-                // Kiểm tra người dùng là người thuê và đơn còn chờ duyệt
                 if (order != null && order.getRenterId() == user.getId() && "cho_duyet".equals(order.getStatus())) {
                     order.setStatus("huy");
                     order.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
                     boolean success = orderDAO.updateOrderStatus(order);
-                    if (success) {
-                        session.setAttribute("message", "Đã hủy đơn hàng thành công!");
-                    } else {
-                        session.setAttribute("error", "Không thể hủy đơn hàng lúc này.");
-                    }
-                }
 
+                    if (success) {
+                        out.print("{\"status\":\"success\", \"message\":\"Đã hủy đơn hàng thành công!\"}");
+                    } else {
+                        out.print("{\"status\":\"error\", \"message\":\"Không thể hủy đơn hàng lúc này.\"}");
+                    }
+                } else {
+                    out.print("{\"status\":\"error\", \"message\":\"Không thể hủy đơn hàng.\"}");
+                }
             } catch (NumberFormatException e) {
                 e.printStackTrace();
+                out.print("{\"status\":\"error\", \"message\":\"Dữ liệu không hợp lệ.\"}");
             }
+        } else {
+            out.print("{\"status\":\"error\", \"message\":\"Thiếu mã đơn hàng.\"}");
         }
-
-        response.sendRedirect("orders");
     }
+
 }

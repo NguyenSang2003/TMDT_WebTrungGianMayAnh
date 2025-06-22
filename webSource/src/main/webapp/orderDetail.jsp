@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
-
-<%@ page import="java.util.List, java.util.ArrayList" %>
-<%@ page import="model.*" %>
+<%@ page import="model.OrderView" %>
+<%@ page import="model.User" %>
+<%@ page import="model.OrderItems" %>
+<%@ page import="model.Product" %>
 
 <%
     // Lấy user và cart từ session/request
