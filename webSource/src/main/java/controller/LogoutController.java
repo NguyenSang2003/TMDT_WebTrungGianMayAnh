@@ -21,9 +21,15 @@ public class LogoutController extends HttpServlet {
 
         session.removeAttribute("user");
         session.removeAttribute("userName");
+        session.removeAttribute("user_id");
+
+        // Logout khỏi Google luôn
+        String logoutGoogleUrl = "https://accounts.google.com/Logout?continue="
+                + "https://appengine.google.com/_ah/logout?continue="
+                + "http://localhost:8080/webSource_war/login.jsp";
 
         System.out.println("Logout success");
-        
-        response.sendRedirect("index");
+
+        response.sendRedirect("login.jsp");
     }
 }

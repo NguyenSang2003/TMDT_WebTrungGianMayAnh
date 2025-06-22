@@ -77,6 +77,7 @@ public class GoogleLoginController extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("userEmail", user.getEmail());
         session.setAttribute("user", user);
+        session.setMaxInactiveInterval(600); // 600 giây = 10 phút
 
         response.sendRedirect("index");
     }

@@ -95,4 +95,48 @@ public class OrderDAO {
         }
         return items;
     }
+
+    public List<Order> getOrdersByUserId(int userId) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE renter_id = ? OR owner_id = ?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, userId);
+            stmt.setInt(2, userId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                Order order = new Order();
+                order.setId(rs.getInt("id"));
+                order.setRenterId(rs.getInt("renter_id"));
+                order.setOwnerId(rs.getInt("owner_id"));
+                order.setTotalPrice(rs.getDouble("total_price"));
+                order.setStatus(rs.getString("status"));
+                order.setRentStart(rs.getDate("rent_start"));
+                order.setRentEnd(rs.getDate("rent_end"));
+                order.setCreatedAt(rs.getTimestamp("created_at"));
+                order.setUpdatedAt(rs.getTimestamp("updated_at"));
+                orders.add(order);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orders;
+    }
+
+    public boolean updateOrderStatus(Order order) {
+        String sql = "UPDATE orders SET status = ?, updated_at = ? WHERE id = ?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, order.getStatus());
+            stmt.setTimestamp(2, order.getUpdatedAt());
+            stmt.setInt(3, order.getId());
+
+            return stmt.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

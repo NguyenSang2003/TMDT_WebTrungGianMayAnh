@@ -96,4 +96,23 @@ public class Order {
     public void setOrderItems(List<OrderItems> orderItems) {
         this.orderItems = orderItems;
     }
+
+    // Phương thức chuyển đổi trạng thái sang dạng hiển thị bằng tiếng Việt:
+    public String getDisplayStatus() {
+        if (status == null) {
+            return "";
+        }
+        switch (status) {
+            case "cho_duyet":
+                return "Chờ duyệt";
+            case "dang_thue":
+                return "Đang thuê";
+            case "hoan_thanh":
+                return "Hoàn thành";
+            case "huy":
+                return "Hủy";
+            default:
+                return status;
+        }
+    }
 }

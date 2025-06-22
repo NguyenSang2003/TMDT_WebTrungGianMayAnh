@@ -167,7 +167,7 @@
                 %>
 
                 <h4 class="fw-bold mb-4">🛒 Thông tin đơn hàng</h4>
-
+                <% if (recentOrderViews != null && !recentOrderViews.isEmpty()) { %>
                 <% for (OrderView ov : recentOrderViews) {
                     Order o = ov.getOrder();
                     totalAmount += o.getTotalPrice();
@@ -207,7 +207,9 @@
                 </div>
                 <% } // end for products %>
                 <% } // end for orders %>
-
+                <% } else { %>
+                <p>Không có đơn hàng nào gần đây.</p>
+                <% } // end if recentOrderViews %>
                 <!-- Extra Options -->
                 <div class="border-top pt-4 mt-4">
                     <div class="mb-3">

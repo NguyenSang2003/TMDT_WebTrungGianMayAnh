@@ -4,10 +4,6 @@ import java.util.List;
 
 public class OrderView {
     private Order order;
-//    private OrderItems orderItem;
-//    private Product product;
-//    private String imageUrl;
-
     private List<OrderItems> items;
     private List<Product> products;
     private List<String> imageUrls;
