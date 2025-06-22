@@ -1,0 +1,52 @@
+/* Các style cho Order Card, có thể áp dụng cho các thẻ thông báo*/
+.order-card {
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #fff;
+    transition: box-shadow 0.3s ease;
+}
+
+.order-card:hover {
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Style cho nhãn trạng thái */
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+.status-cho_duyet {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.status-dang_thue {
+    background-color: #5bc0de;
+    color: white;
+}
+
+.status-hoan_thanh {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.status-huy {
+    background-color: #d9534f;
+    color: white;
+}
+
+/* Đảm bảo căn giữa nội dung bảng (bao gồm cả header và dữ liệu) */
+.table th,
+.table td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+/* canh chỉnh thêm các icon hoặc ký hiệu */
+.material-symbols-outlined {
+    vertical-align: middle;
+}
