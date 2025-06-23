@@ -16,6 +16,7 @@ public class UserProfile {
     private boolean isVerifiedIdentity;
     private java.sql.Timestamp createdAt;
     private java.sql.Timestamp updatedAt;
+    private String avatarUrl;
 
     public int getId() {
         return id;
@@ -111,6 +112,14 @@ public class UserProfile {
 
     public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    
+    public String getAvatarUrl() {
+        return avatar_url;
+    }
+
+    public void setAvatarUrl(String avatar_url) {
+        this.avatar_url = avatar_url;
     }
 }
 

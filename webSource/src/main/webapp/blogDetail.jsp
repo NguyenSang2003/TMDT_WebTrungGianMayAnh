@@ -272,7 +272,7 @@
     <h3 class="fw-bold mb-3"><%= detail.getBlog().getTitle() %></h3>
     <div class="d-flex ">
     	<%
-		    String imageUrl = detail.getBlogAuthor().getUserProfile().getIdCardWithUserImageUrl();
+		    String imageUrl = detail.getBlogAuthor().getUserProfile().getAvatarUrl();
 		    boolean hasImage = imageUrl != null && !imageUrl.trim().isEmpty();
 		%>
 		
@@ -301,7 +301,7 @@
     <h5 class="mt-4">💬 Bình luận</h5>
 	<% for (BlogComment cmt : comments) {
 	     model.UserView uv = detail.getCommentUserViews().get(cmt.getUserId());
-	     String avatar = uv.getUserProfile().getIdCardWithUserImageUrl();
+	     String avatar = uv.getUserProfile().getAvatarUrl();
 	     if (avatar == null || avatar.isEmpty()) {
 	         avatar = "assets/images/person_default.jpg";
 	     }
