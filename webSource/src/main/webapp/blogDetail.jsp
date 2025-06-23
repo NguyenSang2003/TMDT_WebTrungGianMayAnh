@@ -3,11 +3,11 @@
 <%@ page import="model.BlogDetailView" %>
 <%@ page import="model.BlogComment" %>
 <%@ page import="java.text.SimpleDateFormat" %>
-<jsp:useBean id="detail" class="model.BlogDetailView" scope="request" />
+<jsp:useBean id="detail" class="model.BlogDetailView" scope="request"/>
 <%
-	User user = (User) session.getAttribute("user");
-	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-	java.util.List<BlogComment> comments = detail.getComments();
+    User user = (User) session.getAttribute("user");
+    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    java.util.List<BlogComment> comments = detail.getComments();
 %>
 
 <!DOCTYPE html>
@@ -17,7 +17,7 @@
     <title>Chi tiết Blog - EagleCam</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link rel="stylesheet" href="assets/css/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/animate.css">
     <link rel="stylesheet" href="assets/css/owl.carousel.min.css">
     <link rel="stylesheet" href="assets/css/owl.theme.default.min.css">
@@ -30,145 +30,9 @@
     <link rel="stylesheet" href="assets/css/icomoon.css">
     <link rel="stylesheet" href="assets/css/style.css">
 
-    <style>
-        .blog-header {
-            background: url('assets/images/mayanh_1.jpg') center/cover no-repeat;
-            height: 300px;
-            position: relative;
-            color: white;
-        }
+    <%-- css_handMade --%>
+    <link rel="stylesheet" href="assets/css_handMade/blogDetail.css">
 
-        .blog-header .overlay {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.4);
-        }
-
-        .blog-header h1 {
-            position: relative;
-            z-index: 2;
-            top: 50%;
-            transform: translateY(-50%);
-            text-align: center;
-        }
-
-        .blog-content {
-            padding: 20px 0;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .blog-content .row {
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .blog-image {
-            flex: 1;
-            max-width: 50%;
-            padding-right: 15px;
-        }
-
-        .blog-image img {
-            max-width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .blog-details {
-            flex: 1;
-            max-width: 50%;
-            padding-left: 15px;
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 15px;
-            border: 1px solid #e9ecef;
-        }
-
-        .post-meta span {
-            display: block;
-            color: #606770;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        .post-content p {
-            margin-bottom: 10px;
-            color: #1c2526;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-
-        .post-content h3 {
-            color: #1a73e8;
-            font-size: 18px;
-            margin-top: 15px;
-            margin-bottom: 10px;
-        }
-
-        .post-content ul {
-            list-style-type: disc;
-            padding-left: 20px;
-            margin-bottom: 15px;
-        }
-
-        .post-content ul li {
-            color: #606770;
-            font-size: 15px;
-            margin-bottom: 8px;
-        }
-
-        .post-stats {
-            margin-top: 10px;
-            color: #606770;
-            font-size: 14px;
-        }
-
-        .post-stats span {
-            margin-right: 15px;
-        }
-
-        .post-actions {
-            margin-top: 15px;
-        }
-
-        .post-actions .btn {
-            margin-right: 10px;
-            font-size: 14px;
-            padding: 5px 10px;
-        }
-
-        .post-actions .form-control {
-            font-size: 14px;
-            padding: 5px 10px;
-        }
-
-        .comment-section {
-            margin-top: 15px;
-        }
-
-        .comment {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .comment .avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background-color: #ddd;
-            margin-right: 10px;
-        }
-
-        .comment .comment-text {
-            color: #606770;
-            font-size: 14px;
-        }
-    </style>
 </head>
 <body>
 
@@ -268,65 +132,72 @@
 </section>
 
 <section>
-  <div class="container py-5">
-    <h3 class="fw-bold mb-3"><%= detail.getBlog().getTitle() %></h3>
-    <div class="d-flex ">
-    	<%
-		    String imageUrl = detail.getBlogAuthor().getUserProfile().getAvatarUrl();
-		%>
-		<img src="<%=imageUrl %>"
-		     alt="imageUrl"
-		     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />
+    <div class="container py-5">
+        <h3 class="fw-bold mb-3"><%= detail.getBlog().getTitle() %>
+        </h3>
+        <div class="d-flex ">
+            <%
+                String imageUrl = detail.getBlogAuthor().getUserProfile().getAvatarUrl();
+            %>
+            <img src="<%=imageUrl %>"
+                 alt="imageUrl"
+                 style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>
 
 
-		<div class="ml-4">
-			<p class="text-muted">✍️ Tác giả: <%= detail.getBlogAuthor().getUserProfile().getFullName() %></p>
-	    	<p class="text-muted">🕒 Ngày đăng: <%= sdf.format(detail.getBlog().getCreatedAt()) %></p>
-		</div>
+            <div class="ml-4">
+                <p class="text-muted">✍️ Tác giả: <%= detail.getBlogAuthor().getUserProfile().getFullName() %>
+                </p>
+                <p class="text-muted">🕒 Ngày đăng: <%= sdf.format(detail.getBlog().getCreatedAt()) %>
+                </p>
+            </div>
+        </div>
+        <%
+            String blogImage = detail.getBlog().getImageUrl();
+            if (blogImage != null && !blogImage.trim().isEmpty()) {
+        %>
+        <img src="<%= blogImage %>" alt="Ảnh blog"
+             class="img-fluid rounded shadow-sm mb-3"
+             style="width: 100%; max-height: 500px; object-fit: cover;">
+        <% } %>
+
+        <p><%= detail.getBlog().getContent() %>
+        </p>
+
+        <hr/>
+        <h5 class="mt-4">💬 Bình luận</h5>
+        <% for (BlogComment cmt : comments) {
+            model.UserView uv = detail.getCommentUserViews().get(cmt.getUserId());
+            String avatar = uv.getUserProfile().getAvatarUrl();
+        %>
+        <div class="d-flex align-items-start mb-3">
+            <img src="<%= avatar %>"
+                 alt="avatar"
+                 style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>
+
+            <div class="bg-light p-2 px-3 ml-3 rounded shadow-sm w-100">
+                <strong><%= uv.getUserProfile().getFullName() %>
+                </strong>
+                <p class="mb-0"><%= cmt.getComment() %>
+                </p>
+                <small class="text-muted"><%= sdf.format(cmt.getCreatedAt()) %>
+                </small>
+            </div>
+        </div>
+        <% } %>
+
+        <% if (session.getAttribute("user") != null) { %>
+        <form method="post" action="blog-detail?id=<%= detail.getBlog().getId() %>" class="mt-4">
+            <div class="form-group">
+                <label for="comment">Viết bình luận:</label>
+                <textarea id="comment" name="comment" class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Gửi bình luận</button>
+        </form>
+        <% } else { %>
+        <p class="text-danger mt-4">Vui lòng <a href="login.jsp">đăng nhập</a> để bình luận.</p>
+        <% } %>
+
     </div>
-    <%
-	    String blogImage = detail.getBlog().getImageUrl();
-	    if (blogImage != null && !blogImage.trim().isEmpty()) {
-	%>
-	    <img src="<%= blogImage %>" alt="Ảnh blog"
-	         class="img-fluid rounded shadow-sm mb-3"
-	         style="width: 100%; max-height: 500px; object-fit: cover;">
-	<% } %>
-
-    <p><%= detail.getBlog().getContent() %></p>
-
-    <hr />
-    <h5 class="mt-4">💬 Bình luận</h5>
-	<% for (BlogComment cmt : comments) {
-	     model.UserView uv = detail.getCommentUserViews().get(cmt.getUserId());
-	     String avatar = uv.getUserProfile().getAvatarUrl();
-	%>
-	    <div class="d-flex align-items-start mb-3">
-	    	<img src="<%= avatar %>"
-			     alt="avatar"
-			     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />
-
-	        <div class="bg-light p-2 px-3 ml-3 rounded shadow-sm w-100">
-	            <strong><%= uv.getUserProfile().getFullName() %></strong>
-	            <p class="mb-0"><%= cmt.getComment() %></p>
-	            <small class="text-muted"><%= sdf.format(cmt.getCreatedAt()) %></small>
-	        </div>
-	    </div>
-	<% } %>
-
-	<% if (session.getAttribute("user") != null) { %>
-	    <form method="post" action="blog-detail?id=<%= detail.getBlog().getId() %>" class="mt-4">
-	        <div class="form-group">
-	            <label for="comment">Viết bình luận:</label>
-	            <textarea name="comment" class="form-control" rows="3" required></textarea>
-	        </div>
-	        <button type="submit" class="btn btn-primary mt-2">Gửi bình luận</button>
-	    </form>
-	<% } else { %>
-	    <p class="text-danger mt-4">Vui lòng <a href="login.jsp">đăng nhập</a> để bình luận.</p>
-	<% } %>
-		
-  </div>
 </section>
 
 <%-- start phần Footer --%>
@@ -438,33 +309,33 @@
 <script src="assets/js/main.js"></script>
 
 <script>
-  // Xem thêm nội dung
-  document.getElementById("toggle-content").addEventListener("click", function () {
-    const summary = document.getElementById("post-summary");
-    const full = document.getElementById("post-full");
-    if (full.classList.contains("d-none")) {
-      summary.classList.add("d-none");
-      full.classList.remove("d-none");
-      this.textContent = "Ẩn bớt";
-    } else {
-      summary.classList.remove("d-none");
-      full.classList.add("d-none");
-      this.textContent = "Xem thêm";
-    }
-  });
-
-  // Focus vào input khi bấm "Bình luận"
-  document.getElementById("comment-btn").addEventListener("click", function () {
-    document.getElementById("comment-input").focus();
-  });
-
-  // Sao chép URL khi chia sẻ
-  function sharePost() {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
-      alert("Đã sao chép liên kết vào bộ nhớ tạm!");
+    // Xem thêm nội dung
+    document.getElementById("toggle-content").addEventListener("click", function () {
+        const summary = document.getElementById("post-summary");
+        const full = document.getElementById("post-full");
+        if (full.classList.contains("d-none")) {
+            summary.classList.add("d-none");
+            full.classList.remove("d-none");
+            this.textContent = "Ẩn bớt";
+        } else {
+            summary.classList.remove("d-none");
+            full.classList.add("d-none");
+            this.textContent = "Xem thêm";
+        }
     });
-  }
+
+    // Focus vào input khi bấm "Bình luận"
+    document.getElementById("comment-btn").addEventListener("click", function () {
+        document.getElementById("comment-input").focus();
+    });
+
+    // Sao chép URL khi chia sẻ
+    function sharePost() {
+        const url = window.location.href;
+        navigator.clipboard.writeText(url).then(() => {
+            alert("Đã sao chép liên kết vào bộ nhớ tạm!");
+        });
+    }
 </script>
 
 </body>

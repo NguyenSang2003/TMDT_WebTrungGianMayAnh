@@ -253,4 +253,75 @@ public class ProductDAO {
 
         return imageUrl;
     }
+
+    // tìm kiếm sản phẩm theo từ khóa
+    public static List<ProductView> getFilteredProducts(String keyword, String brand, String model, String category) {
+        List<ProductView> products = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT p.*, pd.image_url, pd.category, pd.brand, pd.model ");
+        sql.append("FROM products p ");
+        sql.append("LEFT JOIN product_details pd ON p.id = pd.product_id ");
+        sql.append("WHERE 1=1 ");
+
+        // Danh sách các tham số sẽ được gán cho PreparedStatement
+        List<Object> parameters = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append("AND p.name LIKE ? ");
+            parameters.add("%" + keyword + "%");
+        }
+        if (brand != null && !brand.trim().isEmpty()) {
+            sql.append("AND pd.brand = ? ");
+            parameters.add(brand);
+        }
+        if (model != null && !model.trim().isEmpty()) {
+            sql.append("AND pd.model = ? ");
+            parameters.add(model);
+        }
+        if (category != null && !category.trim().isEmpty()) {
+            sql.append("AND pd.category = ? ");
+            parameters.add(category);
+        }
+
+        try (Connection connection = JDBC.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql.toString())) {
+
+            // Gán các tham số vào PreparedStatement
+            for (int i = 0; i < parameters.size(); i++) {
+                stmt.setObject(i + 1, parameters.get(i));
+            }
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                ProductView productView = new ProductView();
+                // Lấy dữ liệu từ bảng products
+                productView.setId(rs.getInt("id"));
+                productView.setUserId(rs.getInt("user_id"));
+                productView.setName(rs.getString("name"));
+                productView.setPricePerDay(rs.getBigDecimal("price_per_day"));
+                productView.setQuantity(rs.getInt("quantity"));
+                productView.setStatus(rs.getString("status"));
+                productView.setCreatedAt(rs.getTimestamp("created_at"));
+                productView.setUpdatedAt(rs.getTimestamp("updated_at"));
+                productView.setViewCount(rs.getInt("view_count"));
+                productView.setSoldCount(rs.getInt("sold_count"));
+
+                // Lấy dữ liệu từ bảng product_details
+                productView.setImageUrl(rs.getString("image_url"));
+                productView.setCategory(rs.getString("category"));
+                productView.setBrand(rs.getString("brand"));
+                productView.setModel(rs.getString("model"));
+
+                // Nếu thông tin đánh giá chưa có, có thể để mặc định
+                productView.setAverageRating(BigDecimal.ZERO);
+                productView.setTotalReviews(0);
+
+                products.add(productView);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi tìm và lọc sản phẩm: " + e.getMessage(), e);
+        }
+        return products;
+    }
+
 }

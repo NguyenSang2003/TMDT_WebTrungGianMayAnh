@@ -24,19 +24,32 @@ public class ShopController extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<ProductView> products = productService.getAllProductViews();
+        String keyword = request.getParameter("keyword");
+        String brand = request.getParameter("brand");
+        String model = request.getParameter("model");
+        String category = request.getParameter("category");
+
+        List<ProductView> products;
+
+        // Nếu có ít nhất một tiêu chí lọc (keyword, brand, model, category) được nhập
+        if ((keyword != null && !keyword.trim().isEmpty()) ||
+                (brand != null && !brand.trim().isEmpty()) ||
+                (model != null && !model.trim().isEmpty()) ||
+                (category != null && !category.trim().isEmpty())) {
+
+            products = productService.searchAndFilterProducts(keyword, brand, model, category);
+        } else {
+            products = productService.getAllProductViews();
+        }
 
         // Định dạng giá thuê theo chuẩn Việt Nam
         NumberFormat currencyFormatter = NumberFormat.getInstance(new Locale("vi", "VN"));
-
-        // Map chứa chuỗi HTML của rating cho mỗi sản phẩm
         Map<Integer, String> ratingHtmlMap = new HashMap<>();
 
         for (ProductView product : products) {
             product.setFormattedPricePerDay(currencyFormatter.format(product.getPricePerDay()));
 
-            // Tính toán số sao:
-            // Lấy giá trị trung bình rating
+            // Tính toán số sao từ averageRating
             double avg = product.getAverageRating().doubleValue();
             int fullStars = (int) avg;
             boolean hasHalfStar = false;
@@ -44,11 +57,10 @@ public class ShopController extends HttpServlet {
             if (fraction >= 0.25 && fraction < 0.75) {
                 hasHalfStar = true;
             } else if (fraction >= 0.75) {
-                fullStars++; // làm tròn lên nếu phần thập phân >= 0.75
+                fullStars++;
             }
             int emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
 
-            // Xây dựng chuỗi HTML dựa vào số sao
             StringBuilder starHtml = new StringBuilder();
             for (int i = 0; i < fullStars; i++) {
                 starHtml.append("<span class=\"star full\">&#9733;</span>");
@@ -59,11 +71,10 @@ public class ShopController extends HttpServlet {
             for (int i = 0; i < emptyStars; i++) {
                 starHtml.append("<span class=\"star\">&#9733;</span>");
             }
-
             ratingHtmlMap.put(product.getId(), starHtml.toString());
         }
 
-        // ✅ Check wishlist if user is logged in
+        // Kiểm tra wishlist nếu user đã đăng nhập
         HttpSession session = request.getSession(false);
         Set<Integer> wishlistIds = new HashSet<>();
         if (session != null) {

@@ -11,6 +11,7 @@ import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
 
+import DAO.ProductDAO;
 import database.JDBC;
 import model.ProductView;
 
@@ -250,7 +251,7 @@ public class ProductService {
 
         return relatedProducts;
     }
-    
+
     /**
      * Lấy danh sách ProductView hiển thị trong product grid của shop.
      * Chỉ lấy thông tin: id, name, price_per_day, image_url, category,
@@ -297,4 +298,9 @@ public class ProductService {
         }
         return productViews;
     }
+
+    public List<ProductView> searchAndFilterProducts(String keyword, String brand, String model, String category) {
+        return ProductDAO.getFilteredProducts(keyword, brand, model, category);
+    }
+
 }
