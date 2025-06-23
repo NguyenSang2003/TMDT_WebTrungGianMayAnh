@@ -122,9 +122,10 @@
                         <a href="admin/ordersManagement.jsp" class="dropdown-item">Quản lý đơn hàng</a>
 
                         <% } else if ("nguoi_cho_thue".equals(user.getRole())) { %>
-                        <a href="owner/oProductsManagement.jsp" class="dropdown-item">Sản phẩm đã đăng</a>
-                        <a href="owner/oRevenueReport.jsp" class="dropdown-item">Doanh thu</a>
-                        <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
+                        <a href="owner/oProductsManagement" class="dropdown-item">Sản phẩm đã đăng</a>
+                        <a href="owner/bookings" class="dropdown-item">Danh sách đặt thuê</a>
+                        <a href="owner/oRevenueReport" class="dropdown-item">Doanh thu</a>
+                        <a href="owner/withdrawalManagement" class="dropdown-item">Quản lý rút tiền</a>
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
                         <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>

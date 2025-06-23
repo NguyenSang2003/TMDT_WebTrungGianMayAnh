@@ -335,6 +335,40 @@
         </div>
         <%-- Thông số kỹ thuật - Mô tả end--%>
 
+        <hr/>
+        <h5 class="mt-4">💬 Bình luận</h5>
+<%--        <% for (ProductView cmt : comments) {--%>
+        <%--            String avatar = uv.getUserProfile().getAvatarUrl();--%>
+        <%--        %>--%>
+        <%--        <div class="d-flex align-items-start mb-3">--%>
+        <%--            <img src="<%= avatar %>"--%>
+        <%--                 alt="avatar"--%>
+        <%--                 style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>--%>
+
+        <%--            <div class="bg-light p-2 px-3 ml-3 rounded shadow-sm w-100">--%>
+        <%--                <strong><%= uv.getUserProfile().getFullName() %>--%>
+        <%--                </strong>--%>
+        <%--                <p class="mb-0"><%= cmt.getComment() %>--%>
+        <%--                </p>--%>
+        <%--                <small class="text-muted"><%= sdf.format(cmt.getCreatedAt()) %>--%>
+        <%--                </small>--%>
+        <%--            </div>--%>
+        <%--        </div>--%>
+        <%--        <% } %>--%>
+
+        <%-- Bình luận --%>
+        <% if (session.getAttribute("user") != null) { %>
+        <form method="post" action="" class="mt-4">
+            <div class="form-group">
+                <label for="comment">Viết bình luận:</label>
+                <textarea id="comment" name="comment" class="form-control" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-2">Gửi bình luận</button>
+        </form>
+        <% } else { %>
+        <p class="text-danger mt-4">Vui lòng <a href="login.jsp">đăng nhập</a> để bình luận.</p>
+        <% } %>
+
     </div>
 </section>
 <%-- Chi tiết sản phẩm end --%>

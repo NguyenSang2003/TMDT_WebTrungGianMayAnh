@@ -90,7 +90,7 @@
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
                     <div class="dropdown-menu rounded-0 m-0">
                         <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
-                        <a href="blog.jsp" class="dropdown-item">Blog</a>
+                        <a href="blog" class="dropdown-item">Blog</a>
                     </div>
                 </li>
 
@@ -165,7 +165,72 @@
 
 <%-- Phần sản phẩm --%>
 <div class="container">
-    <input type="text" style="margin-top: 10px" class="search-box" placeholder="Nhập từ khóa sản phẩm...">
+
+    <%-- Form tìm kiếm và lọc sản phẩm --%>
+    <form method="GET" action="shop" class="search-container">
+        <!-- Ô nhập từ khóa -->
+        <div class="keyword-input">
+            <input type="text" name="keyword" style="margin-bottom: 0px;" class="search-box"
+                   placeholder="Nhập từ khóa sản phẩm..."
+                   value="<%= request.getParameter("keyword") != null ? request.getParameter("keyword") : "" %>">
+        </div>
+
+        <!-- Các bộ lọc khác nằm theo hàng -->
+        <div class="filters-row">
+            <!-- Lọc theo brand -->
+            <select name="brand" class="search-select">
+                <option value="">Chọn thương hiệu</option>
+                <option value="Canon" <%= "Canon".equals(request.getParameter("brand")) ? "selected" : "" %>>Canon
+                </option>
+                <option value="Nikon" <%= "Nikon".equals(request.getParameter("brand")) ? "selected" : "" %>>Nikon
+                </option>
+                <option value="Fujifilm" <%= "Fujifilm".equals(request.getParameter("brand")) ? "selected" : "" %>>
+                    Fujifilm
+                </option>
+                <option value="Sony" <%= "Sony".equals(request.getParameter("brand")) ? "selected" : "" %>>Sony</option>
+                <option value="Olympus" <%= "Olympus".equals(request.getParameter("brand")) ? "selected" : "" %>>
+                    Olympus
+                </option>
+                <option value="Blackmagic" <%= "Blackmagic".equals(request.getParameter("brand")) ? "selected" : "" %>>
+                    Blackmagic
+                </option>
+                <option value="Panasonic" <%= "Panasonic".equals(request.getParameter("brand")) ? "selected" : "" %>>
+                    Panasonic
+                </option>
+                <option value="DJI" <%= "DJI".equals(request.getParameter("brand")) ? "selected" : "" %>>DJI</option>
+            </select>
+
+            <!-- Lọc theo model -->
+            <input type="text" name="model" style="margin-top: 30px;" class="search-box" list="modelOptions"
+                   placeholder="Nhập model sản phẩm..."
+                   value="<%= request.getParameter("model") != null ? request.getParameter("model") : "" %>">
+            <datalist id="modelOptions">
+                <option value="FX3 Full-Frame">
+                <option value="Alpha A7 IV">
+                <option value="Alpha A7 III">
+                <option value="OM-D E-M1 Mark III">
+                <option value="Pocket Cinema Camera 6K">
+                <option value="LP-E8">
+            </datalist>
+
+            <!-- Lọc theo category -->
+            <select name="category" class="search-select">
+                <option value="">Chọn loại sản phẩm</option>
+                <option value="Máy ảnh" <%= "Máy ảnh".equals(request.getParameter("category")) ? "selected" : "" %>>Máy
+                    ảnh
+                </option>
+                <option value="Máy quay" <%= "Máy quay".equals(request.getParameter("category")) ? "selected" : "" %>>
+                    Máy quay
+                </option>
+                <option value="Phụ kiện" <%= "Phụ kiện".equals(request.getParameter("category")) ? "selected" : "" %>>
+                    Phụ kiện
+                </option>
+            </select>
+
+            <!-- Nút tìm kiếm -->
+            <button type="submit" class="search-btn">Tìm kiếm</button>
+        </div>
+    </form>
 
     <div class="product-grid">
         <%
