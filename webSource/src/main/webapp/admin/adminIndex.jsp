@@ -39,7 +39,7 @@
             <div class="sidebar-body">
                 <ul class="sidebar-body-menu">
                     <li>
-                        <a class="active" href="/admin/adminIndex"><span class="icon home" aria-hidden="true"></span>Quản lý hệ thống </a>
+                        <a class="active" href = /admin/adminIndex"><span class="icon home" aria-hidden="true"></span>Quản lý hệ thống </a>
                     </li>
                     <li>
                         <a class="active" href="/admin/productsManagement"><span class="icon folder" aria-hidden="true"></span>Quản lý sản phẩm </a>
@@ -70,7 +70,7 @@
                         </li>
 
                         <li>
-                            <a class="active" href="/admin/users"><span class="icon user-3" aria-hidden="true"></span>Quản khách hàng </a>
+                            <a class="active" href="/admin/users"><span class="icon user-3" aria-hidden="true"></span>Quản lý khách hàng </a>
                         </li>
                     </ul>
                 </ul>

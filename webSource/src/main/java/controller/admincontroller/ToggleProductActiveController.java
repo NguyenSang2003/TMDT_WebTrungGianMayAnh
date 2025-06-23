@@ -8,7 +8,7 @@ import services.ProductService;
 import java.io.IOException;
 
 @WebServlet("/admin/toggleActive")
-public class ToggleActiveController extends HttpServlet {
+public class ToggleProductActiveController extends HttpServlet {
     private final ProductService productService = new ProductService();
 
     @Override

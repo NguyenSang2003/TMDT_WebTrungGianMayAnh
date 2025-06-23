@@ -19,6 +19,7 @@ public class ProductView {
     private String formattedPricePerDay;
     private String brand;
     private String category;
+    private int isActive;         // 0 = ẩn, 1 = hiện
 
     // Getters and Setters
     public int getId() {
@@ -132,4 +133,11 @@ public class ProductView {
     public void setCategory(String category) {
         this.category = category;
     }
-}
+
+    public void setRating(double rating) {
+    }
+
+    public int getIsActive() { return isActive; }
+    public void setIsActive(int isActive) { this.isActive = isActive; }
+
+    }

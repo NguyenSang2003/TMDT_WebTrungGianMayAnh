@@ -245,7 +245,7 @@ public class ProductService {
         return relatedProducts;
     }
     // lấy tất cả danh sách sản phẩm
-    public List<ProductView> getAllProducts() {
+    public List<ProductView> getAllProductsforAdmin() {
         List<ProductView> productView = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
@@ -287,7 +287,7 @@ public class ProductService {
      * Chỉ lấy thông tin: id, name, price_per_day, image_url, category,
      * trung bình đánh giá (averageRating) và tổng số đánh giá (totalReviews).
      */
-    public List<ProductView> getAllProductViews() {
+  /*  public List<ProductView> getAllProductViews() {
         List<ProductView> productViews = new ArrayList<>();
         Connection connection = null;
         String sql = "SELECT p.id, p.name, p.price_per_day, pd.image_url, pd.category, " +
@@ -327,6 +327,6 @@ public class ProductService {
             JDBC.closeConnection(connection);
         }
         return productViews;
-    }
+    }*/
 
 }

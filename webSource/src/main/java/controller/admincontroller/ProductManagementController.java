@@ -24,7 +24,7 @@ public class ProductManagementController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        List<ProductView> productList = productService.getAllProducts();
+        List<ProductView> productList = productService.getAllProductsforAdmin();
 
         // Đưa vào request attribute để chuyển sang trang JSP
         req.setAttribute("productList", productList);
