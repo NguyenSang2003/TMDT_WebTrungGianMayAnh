@@ -15,7 +15,15 @@
     <link rel="shortcut icon" href="#" type="image/x-icon">
     <!-- Custom styles -->
     <link rel="stylesheet" href="../adminAssets/css/style.min.css">
+    <link rel="stylesheet" href="../adminAssets/css/useradmin.css">
 </head>
+<style>
+    .faded-row {
+        opacity: 0.4;
+        transition: opacity 0.3s ease;
+    }
+</style>
+
 <style>
     /* Nền mờ phía sau modal */
     .modal-overlay {
@@ -106,7 +114,7 @@
                             </ul>
                         </li>
                         <li>
-                            <a class="active" href="/admin/users"><span class="icon user-3" aria-hidden="true"></span>Quản khách hàng </a>
+                            <a class="active" href="/admin/users"><span class="icon user-3" aria-hidden="true"></span>Quản lý khách hàng </a>
                         </li>
                     </ul>
                 </ul>
@@ -223,180 +231,300 @@
                 </div>
             </div>
         </nav>
-        <!-- ! Main -->
-        <!DOCTYPE html>
-        <html lang="en">
+        <!-- Main content for User Management -->
+        <main class="main users chart-page" id="skip-target">
+            <div class="container">
+                <h2 class="main-title">Quản lý Khách Hàng</h2>
 
-        <head>
-            <meta charset="UTF-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>EagleCam Selection 365 | Admin</title>
-            <link rel="shortcut icon" href="#" type="image/x-icon">
-            <link rel="stylesheet" href="../adminAssets/css/style.min.css">
-            <style>
-                .user-form {
-                    margin-top: 20px;
-                    background-color: #f9f9f9;
-                    padding: 20px;
-                    border-radius: 10px;
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-                }
+                <a href="#" onclick="openAddPopup()" style="display: inline-block; margin-bottom: 15px; background-color: #3f51b5; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500;">➕ Thêm người dùng</a>
+                <form method="get" action="${pageContext.request.contextPath}/admin/users" class="filter-form">
+                    <input type="text" name="keyword" class="filter-input" placeholder="🔍 Tên hoặc email..." value="${searchKeyword}" />
 
-                .user-form input,
-                .user-form select,
-                .user-form button {
-                    margin-right: 10px;
-                    padding: 8px 12px;
-                    border-radius: 6px;
-                    border: 1px solid #ccc;
-                }
+                    <select name="role" class="filter-select">
+                        <option value="">-- Vai trò --</option>
+                        <option value="admin" ${selectedRole == 'admin' ? 'selected' : ''}>Admin</option>
+                        <option value="khach_thue" ${selectedRole == 'khach_thue' ? 'selected' : ''}>Khách thuê</option>
+                        <option value="nguoi_cho_thue" ${selectedRole == 'nguoi_cho_thue' ? 'selected' : ''}>Người cho thuê</option>
+                    </select>
 
-                .user-form button {
-                    background-color: #3f51b5;
-                    color: white;
-                    border: none;
-                    cursor: pointer;
-                }
+                    <select name="active" class="filter-select">
+                        <option value="">-- Trạng thái --</option>
+                        <option value="true" ${selectedActive == 'true' ? 'selected' : ''}>Hoạt động</option>
+                        <option value="false" ${selectedActive == 'false' ? 'selected' : ''}>Vô hiệu</option>
+                    </select>
 
-                .user-form button:hover {
-                    background-color: #303f9f;
-                }
+                    <button type="submit" class="filter-btn">Lọc</button>
+                    <a href="${pageContext.request.contextPath}/admin/users" class="clear-btn">Xóa bộ lọc</a>
+                </form>
 
-                .user-table {
-                    width: 100%;
-                    border-collapse: collapse;
-                    margin-top: 30px;
-                    border-radius: 10px;
-                    overflow: hidden;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-                    background: #fff;
-                }
 
-                .user-table th {
-                    background-color: #3f51b5;
-                    color: white;
-                    padding: 12px;
-                    text-align: center;
-                }
 
-                .user-table td {
-                    padding: 10px;
-                    text-align: center;
-                    border-bottom: 1px solid #ddd;
-                }
+                <table class="user-table" style="border-collapse: collapse; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <thead>
+                    <tr style="background-color: #3f51b5; color: white;">
+                        <th style="padding: 12px;">ID</th>
+                        <th style="padding: 12px;">Username</th>
+                        <th style="padding: 12px;">Email</th>
+                        <th style="padding: 12px;">Role</th>
+                        <th style="padding: 12px;">Xác Thực Email</th>
+                        <th style="padding: 12px;">Active</th>
+                        <th style="padding: 12px;">Created At</th>
+                        <th style="padding: 12px;">Hành động</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="user" items="${userList}">
+                        <tr id="userRow_${user.id}" class="${!user.active ? 'faded-row' : ''}">
+                        <td style="padding: 10px;">${user.id}</td>
+                            <td>
+    <span style="color:blue; cursor:pointer; text-decoration:underline;"
+          onclick="showUserProfile(${user.id})">${user.username}</span>
+                            </td>
 
-                .user-table tr:hover {
-                    background-color: #f1f1f1;
-                }
 
-                .delete-btn {
-                    background-color: #f44336;
-                    color: white;
-                    padding: 5px 10px;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
-                }
+                            <td style="padding: 10px;">${user.email}</td>
+                            <td>
+                                <select onchange="changeRole(${user.id}, this.value)">
+                                    <option value="USER" ${user.role == 'khach_thue' ? 'selected' : ''}>khach_thue</option>
+                                    <option value="ADMIN" ${user.role == 'nguoi_cho_thue' ? 'selected' : ''}>nguoi_cho_thue</option>
+                                    <option value="STAFF" ${user.role == 'admin' ? 'selected' : ''}>admin</option>
+                                </select>
+                            </td>
 
-                .delete-btn:hover {
-                    background-color: #d32f2f;
-                }
-            </style>
-        </head>
+                            <td style="padding: 10px;">${user.verifyEmail}</td>
+                            <td style="padding: 10px;">
+                                <button id="toggleIcon_${user.id}"
+                                        onclick="toggleUserActive(${user.id}, ${user.active ? 1 : 0})"
+                                        style="border:none; background:none; cursor:pointer;"
+                                        title="${user.active ? 'Ẩn tài khoản' : 'Hiện tài khoản'}">
+                                    <c:choose>
+                                        <c:when test="${user.active}">
+                                            👁️
+                                        </c:when>
+                                        <c:otherwise>
+                                            🙈
+                                        </c:otherwise>
+                                    </c:choose>
+                                </button>
+                            </td>
+                            </td>
+                            <td style="padding: 10px;">${user.createdAt}</td>
+                            <td style="padding: 10px;">
+                                <a href="#" onclick="openEditPopup('${user.id}', '${user.username}', '${user.email}', '${user.role}', '${user.verifyEmail}', '${user.active}')" style="color: #1976d2; margin-right: 10px; text-decoration: none; font-weight: 500;">✏️ Sửa</a>
+                                <form action="${pageContext.request.contextPath}/admin/users" method="post" style="display:inline;" onsubmit="return confirmDelete();">
+                                    <input type="hidden" name="id" value="${user.id}" />
+                                    <input type="hidden" name="action" value="delete" />
+                                    <button type="submit" style="background-color: #f44336; color: white; padding: 5px 10px; border-radius: 5px; border: none; font-weight: 500;">❌ Xóa</button>
+                                </form>
 
-        <body>
-        <div class="main-wrapper">
-            <main class="main users chart-page" id="skip-target">
-                <div class="container">
-                    <h2 class="main-title">Quản lý khách hàng</h2>
-
-                    <form action="${pageContext.request.contextPath}/admin/users" method="post" class="user-form">
-                        <input type="hidden" name="action" value="add"/>
-                        <input name="username" placeholder="Username" required>
-                        <input name="email" placeholder="Email" required>
-                        <input name="role" placeholder="Role" required>
-                        <select name="isVerifyEmail">
-                            <option value="true">Đã xác thực</option>
-                            <option value="false">Chưa xác thực</option>
-                        </select>
-                        <select name="isActive">
-                            <option value="true">Active</option>
-                            <option value="false">Blocked</option>
-                        </select>
-                        <button type="submit">Thêm người dùng</button>
-                    </form>
-
-                    <table class="user-table">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Username</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Xác thực Email</th>
-                            <th>Active</th>
-                            <th>Created At</th>
-                            <th>Thao tác</th>
+                            </td>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="u" items="${userList}">
-                            <tr>
-                                <td>${u.id}</td>
-                                <td>${u.username}</td>
-                                <td>${u.email}</td>
-                                <td>${u.role}</td>
-                                <td>${u.verifyEmail}</td>
-                                <td>${u.active}</td>
-                                <td>${u.createdAt}</td>
-                                <td>
-                                    <form action="${pageContext.request.contextPath}/admin/users" method="post" style="display:inline;">
-                                        <input type="hidden" name="action" value="delete"/>
-                                        <input type="hidden" name="id" value="${u.id}"/>
-                                        <button class="delete-btn" type="submit" onclick="return confirm('Xoá user này?')">Xoá</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-            </main>
-        </div>
-        </body>
-        </html>
+                    </c:forEach>
+                    <script>
+                            const contextPath = '<%= request.getContextPath() %>';
 
+                            function changeUserRole(userId, newRole) {
+                            fetch(`${contextPath}/admin/change-role`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                                body: `id=${userId}&role=${encodeURIComponent(newRole)}`
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        alert("✅ Vai trò đã được cập nhật.");
+                                        location.reload(); // Tùy chọn reload lại danh sách
+                                    } else {
+                                        alert("❌ Cập nhật thất bại.");
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error("Lỗi:", error);
+                                    alert("Lỗi kết nối.");
+                                });
+                        }
+                    </script>
+
+<script>
+                    function toggleUserActive(userId, currentStatus) {
+                            const newStatus = currentStatus === 1 ? 0 : 1;
+
+                            fetch('${pageContext.request.contextPath}/admin/toggleUserActive?id=' + userId + '&status=' + newStatus, {
+                                method: 'POST'
+                            }).then(response => {
+                                if (response.ok) {
+                                    // Cập nhật icon và dòng bị mờ ngay trên giao diện
+                                    const iconBtn = document.getElementById("toggleIcon_" + userId);
+                                    const row = document.getElementById("userRow_" + userId);
+
+                                    if (newStatus === 0) {
+                                        iconBtn.innerHTML = "🙈"; // Ẩn
+                                        iconBtn.title = "Hiện tài khoản";
+                                        row.classList.add("faded-row");
+                                    } else {
+                                        iconBtn.innerHTML = "👁️"; // Hiện
+                                        iconBtn.title = "Ẩn tài khoản";
+                                        row.classList.remove("faded-row");
+                                    }
+
+                                    // Cập nhật trạng thái onclick
+                                    iconBtn.setAttribute("onclick", `toggleUserActive(${userId}, ${newStatus})`);
+                                } else {
+                                    alert("Không thể cập nhật trạng thái!");
+                                }
+                            });
+                        }
+                    </script>
+
+
+                    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                    <script>
+                        function confirmDelete(userId) {
+                            Swal.fire({
+                                title: 'Bạn chắc chắn muốn xóa?',
+                                text: "Tài khoản sẽ bị xóa vĩnh viễn!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#d33',
+                                cancelButtonColor: '#3085d6',
+                                confirmButtonText: 'Vâng, xóa!',
+                                cancelButtonText: 'Hủy'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    const form = document.createElement("form");
+                                    form.method = "POST";
+                                    form.action = "${pageContext.request.contextPath}/admin/users";
+
+                                    const idInput = document.createElement("input");
+                                    idInput.type = "hidden";
+                                    idInput.name = "id";
+                                    idInput.value = userId;
+
+                                    const actionInput = document.createElement("input");
+                                    actionInput.type = "hidden";
+                                    actionInput.name = "action";
+                                    actionInput.value = "delete";
+
+                                    form.appendChild(idInput);
+                                    form.appendChild(actionInput);
+                                    document.body.appendChild(form);
+                                    form.submit();
+                                }
+                            });
+                        }
+                    </script>
+
+
+                    </tbody>
+                </table>
+
+            </div>
         </main>
 
-        <!-- ! Footer -->
-        <footer class="footer">
-            <div class="container footer--flex">
-                <div class="footer-start">
-                    <p>2025 © EagleCamSelection 365 - <a href="#" target="_blank"
-                                                         rel="noopener noreferrer">eaglecam-dashboard.com</a></p>
-                </div>
-                <ul class="footer-end">
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Support</a></li>
-                    <li><a href="#">Puchase</a></li>
-                </ul>
+        <!-- Modal thêm/sửa user -->
+        <div id="userModal" class="modal" style="display:none;">
+            <h3 id="modalTitle">Thêm/Sửa người dùng</h3>
+            <form id="userForm" method="post" action="${pageContext.request.contextPath}/admin/users">
+                <input type="hidden" name="id" id="userId">
+                <input type="hidden" name="action" id="userAction">
+                <label>Username: <input type="text" name="username" id="username" required style="width:100%"></label><br><br>
+                <label>Email: <input type="email" name="email" id="email" required style="width:100%"></label><br><br>
+                <label>Role:
+                    <select name="role" id="role" style="width:100%">
+                        <option value="khachthue">khach_thue</option>
+                        <option value="nguoichothue">nguoi_cho_thue</option>
+                        <option value="admin">admin</option>
+                    </select>
+                </label><br><br>
+                <label>Xác Thực Email: <input type="checkbox" name="isVerifyEmail" id="verifyEmail"></label><br><br>
+                <label>Active: <input type="checkbox" name="isActive" id="isActive"></label><br><br>
+                <button type="submit">💾 Lưu</button>
+                <button type="button" onclick="closePopup()">❌ Hủy</button>
+            </form>
+        </div>
+
+        <!-- Modal hiển thị chi tiết User Profile -->
+        <div id="userProfileModal" class="custom-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+     width:500px; background:#fff; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.3); z-index:9999;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2>Chi tiết hồ sơ người dùng</h2>
+                <button onclick="closeModal()" style="font-size:18px; background:none; border:none; cursor:pointer;">×</button>
             </div>
-        </footer>
+            <hr>
+            <div id="profileContent"></div>
+        </div>
+
+        <!-- Overlay (mờ nền) -->
+        <div id="overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background-color:rgba(0,0,0,0.5); z-index:9998;"></div>
+
+
+        <script>
+            function openAddPopup() {
+                document.getElementById("modalTitle").innerText = "➕ Thêm người dùng";
+                document.getElementById("userForm").reset();
+                document.getElementById("userId").value = "";
+                document.getElementById("userAction").value = "add";
+                document.getElementById("userModal").style.display = "block";
+            }
+
+            function openEditPopup(id, username, email, role, verifyEmail, isActive) {
+                document.getElementById("modalTitle").innerText = "✏️ Sửa người dùng";
+                document.getElementById("userId").value = id;
+                document.getElementById("username").value = username;
+                document.getElementById("email").value = email;
+                document.getElementById("role").value = role;
+                document.getElementById("verifyEmail").checked = (verifyEmail === 'true');
+                document.getElementById("isActive").checked = (isActive === 'true');
+                document.getElementById("userAction").value = "update";
+                document.getElementById("userModal").style.display = "block";
+            }
+
+            function closePopup() {
+                document.getElementById("userModal").style.display = "none";
+            }
+            </script>
+            <script>
+                function showUserProfile(userId) {
+                fetch(`/admin/user-profile?id=` + userId)
+                    .then(res => res.json())
+                    .then(data => {
+                        const container = document.getElementById("profileContent");
+
+                        const img1 = data.idCardImageUrl
+                            ? `<img src="${data.idCardImageUrl}" alt="CMND" width="200">`
+                            : 'Chưa có';
+
+                        const img2 = data.idCardWithUserImageUrl
+                            ? `<img src="${data.idCardWithUserImageUrl}" alt="CMND kèm người" width="200">`
+                            : 'Chưa có';
+
+                        container.innerHTML = `
+                <p><strong>Họ tên:</strong> ${data.fullName || 'Không rõ'}</p>
+                <p><strong>Số CMND:</strong> ${data.idCardNumber || 'Không rõ'}</p>
+                <p><strong>Địa chỉ:</strong> ${data.address || 'Không rõ'}</p>
+                <p><strong>Số điện thoại:</strong> ${data.phoneNumber || 'Không rõ'}</p>
+                <p><strong>Ngày sinh:</strong> ${data.dateOfBirth || 'Không rõ'}</p>
+                <p><strong>Xác thực danh tính:</strong> ${data.verifiedIdentity ? 'Đã xác minh' : 'Chưa xác minh'}</p>
+                <p><strong>Ảnh CMND:</strong><br>${img1}</p>
+                <p><strong>Ảnh CMND kèm người:</strong><br>${img2}</p>
+            `;
+
+                        document.getElementById("userProfileModal").style.display = "block";
+                    })
+                    .catch(err => {
+                        console.error("Lỗi khi gọi API:", err);
+                        document.getElementById("profileContent").innerHTML = `<p style="color:red;">Không thể tải dữ liệu.</p>`;
+                        document.getElementById("userProfileModal").style.display = "block";
+                    });
+            }
+
+                function closeModal() {
+                document.getElementById("userProfileModal").style.display = "none";
+            }
+
+        </script>
+
     </div>
 </div>
-<!-- Chart library -->
-<script src="../adminAssets/plugins/chart.min.js"></script>
-<!-- Icons library -->
-<script src="../adminAssets/plugins/feather.min.js"></script>
-<!-- Custom scripts -->
-<script src="../adminAssets/js/script.js"></script>
-</body>
-
-
-
-
-
-
-
 </html>
