@@ -1,6 +1,7 @@
 package services;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,7 +10,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.RoundingMode;
 
 import database.JDBC;
 import model.ProductView;
@@ -250,7 +250,7 @@ public class ProductService {
 
         return relatedProducts;
     }
-
+    
     /**
      * Lấy danh sách ProductView hiển thị trong product grid của shop.
      * Chỉ lấy thông tin: id, name, price_per_day, image_url, category,
@@ -297,5 +297,4 @@ public class ProductService {
         }
         return productViews;
     }
-
 }
