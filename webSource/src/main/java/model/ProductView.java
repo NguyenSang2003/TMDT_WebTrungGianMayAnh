@@ -2,6 +2,7 @@ package model;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.math.RoundingMode;
 import java.util.*;
 
 // lớp join 2 bảng product và product_detail lại để view
@@ -22,9 +23,14 @@ public class ProductView {
     private String formattedPricePerDay;
     private Date rentStart;
     private Date rentEnd;
+    private String description;
     private String brand;
+    private String model;
+    private BigDecimal averageRating; // Trung bình đánh giá
+    private int totalReviews;         // Tổng số lượt đánh giá
+    private List<BookingSchedule> bookingSchedules;
 
-    // Getters and Setters
+    // getter setter
     public int getId() {
         return id;
     }
@@ -143,8 +149,6 @@ public class ProductView {
 
     public void setRentEnd(Date rentEnd) { this.rentEnd = rentEnd; }
 
-    private List<BookingSchedule> bookingSchedules;
-
     public List<BookingSchedule> getBookingSchedules() {
         return bookingSchedules;
     }
@@ -170,6 +174,14 @@ public class ProductView {
         }
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public String getBrand() {
         return brand;
     }
@@ -177,4 +189,29 @@ public class ProductView {
     public void setBrand(String brand) {
         this.brand = brand;
     }
+
+    public String getModel() {
+        return model;
+    }
+
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public BigDecimal getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(BigDecimal averageRating) {
+        this.averageRating = averageRating;
+    }
+
+    public int getTotalReviews() {
+        return totalReviews;
+    }
+
+    public void setTotalReviews(int totalReviews) {
+        this.totalReviews = totalReviews;
+    }
+
 }
