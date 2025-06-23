@@ -1,26 +1,26 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.List" %>
 
-<%@ page import="java.util.List, java.util.ArrayList, model.User" %>
-<%@ page import="model.ProductView" %>
+<%@ page import="model.User" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page import="model.UserView" %>
+<%@ page import="model.UserProfile" %>
 
 <%
-    // Lấy user và cart từ session/request
-    User user = (User) session.getAttribute("user");
+    UserView view = (UserView) request.getAttribute("userView");
 
-    // Lấy thông tin danh sách wishlist từ session/request
-    List<ProductView> wishlist = (List<ProductView>) request.getAttribute("wishlist");
-    if (wishlist == null) {
-        wishlist = new ArrayList<>();
-    }
+    String displayRole = (String) request.getAttribute("displayRole");
+
+    User user = view != null ? view.getUser() : null;
+    UserProfile profile = view != null ? view.getUserProfile() : null;
 %>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Sản phẩm yêu thích</title>
-    <link rel="icon" type="image/PNG" href="assets/images/logo.PNG"/>
+    <title>Thông tin cá nhân</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
           rel="stylesheet">
 
@@ -43,18 +43,9 @@
     <!-- Material Symbols Outlined -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
-
-    <style>
-        .product-img {
-            width: 100px;
-            height: auto;
-            margin-right: 1rem;
-        }
-    </style>
+    <link rel="stylesheet" href="assets/css_handMade/userProfile.css">
 </head>
 <body>
 
@@ -81,10 +72,10 @@
         <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item "><a href="index" class="nav-link">Trang Chủ</a></li>
-                <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
-                <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
-                <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
+                <li class="nav-item active"><a href="index" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
+                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
 
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
@@ -117,7 +108,7 @@
                             <i class="fa fa-envelope"></i> Xác thực Gmail
                         </a>
                         <% } else { %>
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
                         <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
@@ -131,8 +122,8 @@
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
-                        <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>
-                        <a href="wishList" class="dropdown-item active">Sản phẩm yêu thích</a>
+                        <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
+                        <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
                         <% } %>
                         <% } %>
 
@@ -146,88 +137,157 @@
 </nav>
 <!-- END nav -->
 
-<%-- breadCrumbs --%>
+<%-- Bread crumbs --%>
 <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('assets/images/bg_3.jpg');"
          data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
             <div class="col-md-9 ftco-animate pb-5">
-                <p class="breadcrumbs"><span class="mr-2"><a href="index">Trang Chủ <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Sản phẩm yêu thích <i
+                <p class="breadcrumbs"><span class="mr-2"><a href="index">Trang chủ<i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Thông tin người dùng<i
                         class="ion-ios-arrow-forward"></i></span></p>
-                <h1 class="mb-3 bread">Sản phẩm yêu thích</h1>
+                <h1 class="mb-3 bread">Thông tin người dùng</h1>
             </div>
         </div>
     </div>
 </section>
-<%-- breadCrumbs end --%>
+<%-- Bread crumbs end --%>
 
-<%-- WishList container start --%>
-<div class="container py-4">
-    <h2 class="mb-2 fw-bold text-center" style="font-size: 28px;">Các sản phẩm yêu thích của bạn.</h2>
-    <p class="text-center mb-4" style="font-size: 18px; color: #555;">Có <%= wishlist.size() %> sản phẩm trong danh sách
-        yêu thích</p>
-
-    <% if (wishlist.isEmpty()) { %>
-    <div class="text-center" style="min-height: 300px;">
-        <img loading="lazy" src="assets/images/empty_wishList.png" alt="Danh sách yêu thích trống"
-             style="max-width: 500px;">
-        <p class="mt-3 text-muted">Danh sách sản phẩm yêu thích của bạn đang trống</p>
-    </div>
-    <% } else { %>
-    <div class="row">
-        <!-- Danh sách sản phẩm yêu thích -->
-        <div class="col-md-9">
-            <% for (ProductView product : wishlist) { %>
-            <div class="d-flex border p-3 mb-3 align-items-center position-relative">
-                <img class="product-img" src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>">
-                <div class="flex-grow-1">
-                    <h5 class="mb-1"><%= product.getName() %>
-                    </h5>
-                    <p class="mb-0 text-muted">Giá: <%= String.format("%,d", product.getPricePerDay().longValue()) %>
-                        vnd</p>
-                </div>
-                <div class="d-flex flex-column align-items-end">
-
-                    <button class="btn btn-outline-danger btn-sm mb-2 btn-remove-wishlist"
-                            data-product-id="<%= product.getId() %>">Xóa
-                    </button>
-
-                    <button type="button"
-                            class="cart-btn btn btn-outline-primary btn-sm"
-                            data-id="<%= product.getId() %>">
-                        Thêm vào giỏ hàng
-                    </button>
-
-                </div>
-            </div>
-            <% } %>
+<% if (user != null && profile != null) { %>
+<%-- User profile --%>
+<div class="profile-wrapper">
+    <div class="container">
+        <!-- Thông tin tài khoản User -->
+        <h2>Thông Tin Tài Khoản</h2>
+        <div class="info-section">
+            <table>
+                <tr>
+                    <th>Tên đăng nhập</th>
+                    <td><%= user.getUsername() %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td><%= user.getEmail() %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Vai trò</th>
+                    <td><%= displayRole %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Email:</th>
+                    <td><%= user.isVerifyEmail() ? "Đã xác thực" : "Chưa xác thực" %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Xác thực CMND & Họ tên:</th>
+                    <td><%= profile.isVerifiedIdentity() ? "Đã xác thực" : "Chưa xác thực" %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Trạng thái tài khoản:</th>
+                    <td><%= user.isActive() ? "Hoạt động" : "Không hoạt động" %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ngày tạo</th>
+                    <td><%= request.getAttribute("createdAtFormatted") %>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Ngày cập nhật</th>
+                    <td><%= request.getAttribute("updatedAtFormatted") %>
+                    </td>
+                </tr>
+            </table>
         </div>
 
-        <!-- Sidebar điều hướng -->
-        <div class="col-md-3">
-            <div class="border rounded p-3 shadow-sm">
-                <h5 class="fw-bold mb-3">Điều hướng</h5>
-                <a href="shop" class="btn btn-outline-secondary w-100 mb-2">Tiếp tục mua hàng</a>
-                <a href="cart" class="btn btn-outline-primary w-100">Xem giỏ hàng</a>
-            </div>
+        <!-- Thông tin hồ sơ và form cập nhật -->
+        <h2>Thông Tin Hồ Sơ</h2>
+        <div class="form-section">
+            <form method="post" action="profile">
+                <label for="fullName">Họ tên:</label>
+                <input type="text" id="fullName" name="fullName"
+                       value="<%= profile.getFullName() != null ? profile.getFullName() : "" %>"
+                       required>
+
+                <label for="idCardNumber">CMND/CCCD:</label>
+                <input type="text" id="idCardNumber" name="idCardNumber"
+                       value="<%= profile.getIdCardNumber() != null ? profile.getIdCardNumber() : "" %>"
+                       required>
+
+                <label for="address">Địa chỉ:</label>
+                <input type="text" id="address" name="address"
+                       value="<%= profile.getAddress() != null ? profile.getAddress() : "" %>"
+                       required>
+
+                <label for="phone">SĐT:</label>
+                <input type="text" id="phone" name="phone"
+                       value="<%= profile.getPhoneNumber() != null ? profile.getPhoneNumber() : "" %>"
+                       required>
+
+                <label for="dob">Ngày sinh:</label>
+                <input type="date" id="dob" name="dob"
+                       value="<%= profile.getDateOfBirth() != null ? profile.getDateOfBirth() : "" %>"
+                       required>
+
+                <%-- Nút cập nhật profile --%>
+                <input type="submit" value="Cập nhật thông tin">
+            </form>
+        </div>
+
+        <%-- Thông tin ảnh CMND và upload --%>
+        <h2>Ảnh CMND/CCCD</h2>
+        <div class="form-section">
+            <form method="post" action="./upload-idcard" enctype="multipart/form-data">
+
+                <% if (profile.getIdCardImageUrl() != null && !profile.getIdCardImageUrl().isEmpty()) { %>
+                <label>Ảnh CMND/CCCD (2 mặt):</label>
+                <div class="img-preview">
+                    <img src="<%= request.getContextPath() + "/" + profile.getIdCardImageUrl() + "?v=" + System.currentTimeMillis() %>"
+                         alt="Ảnh chụp 2 mặt CMND">
+                </div>
+                <% } %>
+
+                <label for="idCardImage">Chọn ảnh CMND/CCCD:</label>
+                <input type="file" id="idCardImage" name="idCardImage" accept="image/*" required>
+
+                <%-- ảnh cmnd với người --%>
+                <% if (profile.getIdCardWithUserImageUrl() != null && !profile.getIdCardWithUserImageUrl().isEmpty()) { %>
+                <label>Ảnh chụp cùng CMND/CCCD:</label>
+                <div class="img-preview">
+                    <img src="<%= request.getContextPath() + "/" + profile.getIdCardWithUserImageUrl() + "?v=" + System.currentTimeMillis() %>"
+                         alt="Ảnh chụp cùng CMND">
+                </div>
+                <% } %>
+
+                <label for="idCardWithUserImage">Chọn ảnh chụp cùng CMND/CCCD:</label>
+                <input type="file" id="idCardWithUserImage" name="idCardWithUserImage" accept="image/*" required>
+
+                <%-- Nút submit ảnh CMND --%>
+                <input type="submit" value="Tải ảnh lên">
+            </form>
         </div>
 
     </div>
-    <% } %>
 </div>
-<%-- WishList container end --%>
+<%-- User profile end--%>
+<% } else { %>
+<p>Không thể tải thông tin người dùng.</p>
+<% } %>
 
 <%-- start phần Footer --%>
-<footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
+<footer class="ftco-footer ftco-bg-dark ftco-section">
     <div class="container">
         <div class="row mb-5">
             <!-- Cột Logo & Giới thiệu -->
             <div class="col-md">
                 <div class="ftco-footer-widget mb-4">
                     <h2 class="ftco-heading-2">
-                        <a class="logo d-flex align-items-center" href="index.jsp">
+                        <a class="logo d-flex align-items-center" href="index">
                             <img src="assets/images/logo.PNG" alt="Logo"
                                  style="height: 40px; margin-right: 10px; border-radius: 4px">
                             <div style="line-height: 1;">
@@ -251,9 +311,9 @@
                     <h2 class="ftco-heading-2">Đường tắt khác</h2>
                     <ul class="list-unstyled">
                         <li><a href="index" class="py-2 d-block">Trang Chủ</a></li>
-                        <li><a href="shop" class="py-2 d-block">Cửa Hàng</a></li>
+                        <li><a href="shop.jsp" class="py-2 d-block">Cửa Hàng</a></li>
                         <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
-                        <li><a href="cart" class="py-2 d-block">Giỏ Hàng</a></li>
+                        <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>
                         <li><a href="#" class="py-2 d-block">Chính sách bảo mật & Cookie</a></li>
                     </ul>
                 </div>
@@ -308,6 +368,15 @@
 </footer>
 <%-- end phần Footer --%>
 
+<!-- loader -->
+<div id="ftco-loader" class="show fullscreen">
+    <svg class="circular" width="48px" height="48px">
+        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+                stroke="#F96D00"/>
+    </svg>
+</div>
+
 <!-- JS scripts -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery-migrate-3.0.1.min.js"></script>
@@ -326,13 +395,6 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="assets/js/google-map.js"></script>
 <script src="assets/js/main.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-
-<%-- js_handMade --%>
-<script src="assets/js_handMade/removeWishList.js"></script>
-<script src="assets/js_handMade/addcart.js"></script>
 
 </body>
 </html>

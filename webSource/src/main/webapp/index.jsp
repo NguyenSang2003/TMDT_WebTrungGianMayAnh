@@ -86,7 +86,7 @@
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
                     <div class="dropdown-menu rounded-0 m-0">
                         <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
-                        <a href="blog" class="dropdown-item">Blog</a>
+                        <a href="blog.jsp" class="dropdown-item">Blog</a>
                     </div>
                 </li>
 
@@ -113,7 +113,7 @@
                             <i class="fa fa-envelope"></i> Xác thực Gmail
                         </a>
                         <% } else { %>
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
                         <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
@@ -634,8 +634,8 @@
                     <ul class="list-unstyled">
                         <li><a href="index" class="py-2 d-block">Trang Chủ</a></li>
                         <li><a href="shop" class="py-2 d-block">Cửa Hàng</a></li>
-                        <li><a href="blog" class="py-2 d-block">Blog</a></li>
-                        <li><a href="cart" class="py-2 d-block">Giỏ Hàng</a></li>
+                        <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
+                        <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>
                         <li><a href="#" class="py-2 d-block">Chính sách bảo mật & Cookie</a></li>
                     </ul>
                 </div>
