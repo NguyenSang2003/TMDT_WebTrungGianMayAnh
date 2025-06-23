@@ -273,11 +273,9 @@
     <div class="d-flex ">
     	<%
 		    String imageUrl = detail.getBlogAuthor().getUserProfile().getAvatarUrl();
-		    boolean hasImage = imageUrl != null && !imageUrl.trim().isEmpty();
 		%>
-		
-		<img src="<%= hasImage ? imageUrl : "assets/images/person_default.jpg" %>" 
-		     alt="<%= hasImage ? "Ảnh tác giả" : "Ảnh mặc định" %>"
+		<img src="<%=imageUrl %>"
+		     alt="imageUrl"
 		     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />
 
 
@@ -302,14 +300,13 @@
 	<% for (BlogComment cmt : comments) {
 	     model.UserView uv = detail.getCommentUserViews().get(cmt.getUserId());
 	     String avatar = uv.getUserProfile().getAvatarUrl();
-	     if (avatar == null || avatar.isEmpty()) {
-	         avatar = "assets/images/person_default.jpg";
-	     }
 	%>
 	    <div class="d-flex align-items-start mb-3">
-	    	<img src="<%= avatar != null ? avatar : "assets/images/person_default.jpg" %>" alt="avatar"
-	         	style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />
-	        <div class="bg-light p-2 px-3 rounded shadow-sm w-100">
+	    	<img src="<%= avatar %>"
+			     alt="avatar"
+			     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />
+
+	        <div class="bg-light p-2 px-3 ml-3 rounded shadow-sm w-100">
 	            <strong><%= uv.getUserProfile().getFullName() %></strong>
 	            <p class="mb-0"><%= cmt.getComment() %></p>
 	            <small class="text-muted"><%= sdf.format(cmt.getCreatedAt()) %></small>

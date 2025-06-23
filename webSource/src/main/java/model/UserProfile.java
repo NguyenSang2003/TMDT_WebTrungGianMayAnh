@@ -115,11 +115,11 @@ public class UserProfile {
     }
     
     public String getAvatarUrl() {
-        return avatar_url;
+        return avatarUrl;
     }
 
-    public void setAvatarUrl(String avatar_url) {
-        this.avatar_url = avatar_url;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }
 

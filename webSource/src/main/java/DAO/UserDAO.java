@@ -287,7 +287,7 @@ public class UserDAO {
     public UserView getUserViewById(int userId) {
         String sql = "SELECT u.id, u.username, u.email, u.role, u.isVerifyEmail, u.is_active, u.created_at, u.updated_at, " +
                      "up.id AS profile_id, up.full_name, up.id_card_number, up.address, up.phone_number, up.date_of_birth, " +
-                     "up.id_card_image_url, up.id_card_with_user_image_url, up.is_verified_identity, up.created_at AS profile_created, up.updated_at AS profile_updated " +
+                     "up.id_card_image_url, up.id_card_with_user_image_url, up.is_verified_identity, up.avatar_url, up.created_at AS profile_created, up.updated_at AS profile_updated " +
                      "FROM users u JOIN user_profiles up ON u.id = up.user_id WHERE u.id = ?";
 
         try (Connection conn = JDBC.getConnection();
@@ -321,6 +321,7 @@ public class UserDAO {
                 profile.setVerifiedIdentity(rs.getBoolean("is_verified_identity"));
                 profile.setCreatedAt(rs.getTimestamp("profile_created"));
                 profile.setUpdatedAt(rs.getTimestamp("profile_updated"));
+                profile.setAvatarUrl(rs.getString("avatar_url"));
 
                 // Kết hợp thành UserView
                 UserView userView = new UserView();
