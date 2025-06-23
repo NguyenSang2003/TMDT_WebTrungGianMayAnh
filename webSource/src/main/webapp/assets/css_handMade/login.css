@@ -167,3 +167,41 @@ body {
     color: #FF1A1A;
     font-size: 14px;
 }
+
+/* -------------------------------------------
+   Button đăng kí
+-------------------------------------------- */
+.btn-success {
+    margin-top: 15px;
+}
+
+/* -------------------------------------------
+   Đăng nhập google
+-------------------------------------------- */
+/* Định dạng nút đăng nhập Google */
+.google-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Khoảng cách giữa logo và chữ */
+    padding: 10px 20px;
+    margin: 15px auto; /* Căn giữa theo chiều ngang */
+    width: fit-content; /* Chiều rộng tự động theo nội dung */
+    border: 1px solid #dcdde1;
+    border-radius: 4px;
+    background: #f5f6fa;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    transition: background 0.3s ease;
+}
+
+.google-btn:hover {
+    background: #ebedef;
+}
+
+.google-btn img {
+    width: 24px; /* Kích thước lớn hơn cho biểu tượng */
+    height: auto;
+}

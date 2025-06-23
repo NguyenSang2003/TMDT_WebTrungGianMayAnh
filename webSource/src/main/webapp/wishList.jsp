@@ -1,17 +1,28 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="model.*" %>
+
+<%@ page import="java.util.List, java.util.ArrayList, model.User" %>
+<%@ page import="model.ProductView" %>
 
 <%
     // Lấy user và cart từ session/request
     User user = (User) session.getAttribute("user");
+
+    // Lấy thông tin danh sách wishlist từ session/request
+    List<ProductView> wishlist = (List<ProductView>) request.getAttribute("wishlist");
+    if (wishlist == null) {
+        wishlist = new ArrayList<>();
+    }
 %>
 
 <!DOCTYPE html>
-<html lang="vi">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>Thanh toán</title>
+    <title>Sản phẩm yêu thích</title>
+    <link rel="icon" type="image/PNG" href="assets/images/logo.PNG"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
+          rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/open-iconic-bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/animate.css">
@@ -32,14 +43,16 @@
     <!-- Material Symbols Outlined -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
 
     <style>
-        .title-underline {
-            border-bottom: 4px solid black;
-            display: inline-block;
-            padding-bottom: 5px;
+        .product-img {
+            width: 100px;
+            height: auto;
+            margin-right: 1rem;
         }
     </style>
 </head>
@@ -70,14 +83,14 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item "><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
-                <li class="nav-item "><a href="cart" class="nav-link">Giỏ Hàng</a></li>
-                <li class="nav-item active"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+                <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
                     <div class="dropdown-menu rounded-0 m-0">
                         <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
-                        <a href="blog" class="dropdown-item">Blog</a>
+                        <a href="blog.jsp" class="dropdown-item">Blog</a>
                     </div>
                 </li>
 
@@ -104,7 +117,7 @@
                             <i class="fa fa-envelope"></i> Xác thực Gmail
                         </a>
                         <% } else { %>
-                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
                         <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
@@ -118,8 +131,8 @@
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
-                        <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
-                        <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>
+                        <a href="wishList" class="dropdown-item active">Sản phẩm yêu thích</a>
                         <% } %>
                         <% } %>
 
@@ -141,112 +154,70 @@
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
             <div class="col-md-9 ftco-animate pb-5">
                 <p class="breadcrumbs"><span class="mr-2"><a href="index">Trang Chủ <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Thanh toán<i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Sản phẩm yêu thích <i
                         class="ion-ios-arrow-forward"></i></span></p>
-                <h1 class="mb-3 bread">Thanh Toán</h1>
+                <h1 class="mb-3 bread">Sản phẩm yêu thích</h1>
             </div>
         </div>
     </div>
 </section>
 <%-- breadCrumbs end --%>
 
-<%-- Phần thanh tóán --%>
-<div class="container mt-5">
-    <h2 class="text-center mb-4"><span class="title-underline">Thanh toán</span></h2>
+<%-- WishList container start --%>
+<div class="container py-4">
+    <h2 class="mb-2 fw-bold text-center" style="font-size: 28px;">Các sản phẩm yêu thích của bạn.</h2>
+    <p class="text-center mb-4" style="font-size: 18px; color: #555;">Có <%= wishlist.size() %> sản phẩm trong danh sách
+        yêu thích</p>
 
-    <div class="border p-4 rounded">
-        <h5 class="mb-4 fw-bold">Thông tin đơn hàng</h5>
-        <div class="row">
-            <!-- Left: Order Details -->
-            <div class="col-md-8">
-                <%
-                    List<OrderView> recentOrderViews = (List<OrderView>) request.getAttribute("recentOrderViews");
-                    Double shippingFee = (Double) request.getAttribute("shippingFee");
-                    if (shippingFee == null) shippingFee = 0.0;
-                    double totalAmount = 0;
-                %>
-
-                <h4 class="fw-bold mb-4">🛒 Thông tin đơn hàng</h4>
-                <% if (recentOrderViews != null && !recentOrderViews.isEmpty()) { %>
-                <% for (OrderView ov : recentOrderViews) {
-                    Order o = ov.getOrder();
-                    totalAmount += o.getTotalPrice();
-
-                    List<Product> products = ov.getProducts();
-                    List<OrderItems> items = ov.getItems();
-                    List<String> imageUrls = ov.getImageUrls();
-
-                    for (int i = 0; i < products.size(); i++) {
-                        Product p = products.get(i);
-                        OrderItems item = items.get(i);
-                        String image = imageUrls.get(i);
-                %>
-                <div class="card mb-3 shadow-sm">
-                    <div class="row g-0 align-items-center">
-                        <div class="col-md-3">
-                            <img src="<%= image %>" class="img-fluid rounded-start" alt="Ảnh sản phẩm">
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card-body d-flex flex-column gap-2">
-                                <h5 class="card-title fw-semibold mb-1"><%= p.getName() %>
-                                </h5>
-                                <p class="mb-1 text-muted">💸 Giá thuê/ngày:
-                                    <strong><%= String.format("%,.0f ₫/ngày ", p.getPricePerDay().doubleValue()) %>
-                                        VNĐ</strong></p>
-                                <p class="mb-1 text-muted">🔢 Số lượng: <%= item.getQuantity() %>
-                                </p>
-                                <p class="mb-1 text-muted me-3">📅 Ngày thuê: <strong><%= item.getRentStart() %>
-                                </strong></p>
-                                <p class="mb-1 text-muted me-3">📆 Ngày trả: <strong><%= item.getRentEnd() %>
-                                </strong></p>
-                                <p class="fw-bold text-danger mb-0">💰 Thành
-                                    tiền: <%= String.format("%,.0f ₫", item.getTotalPrice()) %> VNĐ</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <% } // end for products %>
-                <% } // end for orders %>
-                <% } else { %>
-                <p>Không có đơn hàng nào gần đây.</p>
-                <% } // end if recentOrderViews %>
-                <!-- Extra Options -->
-                <div class="border-top pt-4 mt-4">
-                    <div class="mb-3">
-                        <strong>🚚 Phí vận chuyển:</strong>
-                        <span class="ms-2">
-                            <%= (shippingFee == null || shippingFee == 0) ? "Free" : String.format("%,.0f ₫", shippingFee) %>
-                        </span>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">🎁 Mã giảm giá</label>
-                        <input type="text" class="form-control w-75" placeholder="Nhập mã giảm giá">
-                    </div>
-                    <div class="mb-3">
-                        <strong>💰 Tổng thanh toán: </strong>
-                        <span class="ms-2"><%= String.format("%,.0f ₫", totalAmount + shippingFee) %></span>
-                        <!-- Cộng phí vận chuyển -->
-                    </div>
-                    <div class="mb-3">
-                        <label for="note" class="form-label fw-semibold">📝 Ghi chú đơn hàng</label>
-                        <textarea id="note" class="form-control" rows="3" placeholder="Ghi chú"></textarea>
-                    </div>
-                    <button class="btn btn-danger px-4 py-2 fw-bold">Thanh toán</button>
-                </div>
-            </div>
-
-            <!-- Right: Image -->
-            <div class="col-md-4 text-center"
-                 style="background-image: url('assets/images/image_page_checkout.jpg');
-                background-size: cover;
-                background-position: center;
-                background-repeat: no-repeat;">
-            </div>
-
-        </div>
+    <% if (wishlist.isEmpty()) { %>
+    <div class="text-center" style="min-height: 300px;">
+        <img loading="lazy" src="assets/images/empty_wishList.png" alt="Danh sách yêu thích trống"
+             style="max-width: 500px;">
+        <p class="mt-3 text-muted">Danh sách sản phẩm yêu thích của bạn đang trống</p>
     </div>
+    <% } else { %>
+    <div class="row">
+        <!-- Danh sách sản phẩm yêu thích -->
+        <div class="col-md-9">
+            <% for (ProductView product : wishlist) { %>
+            <div class="d-flex border p-3 mb-3 align-items-center position-relative">
+                <img class="product-img" src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>">
+                <div class="flex-grow-1">
+                    <h5 class="mb-1"><%= product.getName() %>
+                    </h5>
+                    <p class="mb-0 text-muted">Giá: <%= String.format("%,d", product.getPricePerDay().longValue()) %>
+                        vnd</p>
+                </div>
+                <div class="d-flex flex-column align-items-end">
+
+                    <button class="btn btn-outline-danger btn-sm mb-2 btn-remove-wishlist"
+                            data-product-id="<%= product.getId() %>">Xóa
+                    </button>
+
+                    <button type="button"
+                            class="cart-btn btn btn-outline-primary btn-sm"
+                            data-id="<%= product.getId() %>">
+                        Thêm vào giỏ hàng
+                    </button>
+
+                </div>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Sidebar điều hướng -->
+        <div class="col-md-3">
+            <div class="border rounded p-3 shadow-sm">
+                <h5 class="fw-bold mb-3">Điều hướng</h5>
+                <a href="shop" class="btn btn-outline-secondary w-100 mb-2">Tiếp tục mua hàng</a>
+                <a href="cart" class="btn btn-outline-primary w-100">Xem giỏ hàng</a>
+            </div>
+        </div>
+
+    </div>
+    <% } %>
 </div>
-<%-- Phần thanh tóán end--%>
+<%-- WishList container end --%>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
@@ -355,6 +326,13 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="assets/js/google-map.js"></script>
 <script src="assets/js/main.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+<%-- js_handMade --%>
+<script src="assets/js_handMade/removeWishList.js"></script>
+<script src="assets/js_handMade/addcart.js"></script>
 
 </body>
 </html>

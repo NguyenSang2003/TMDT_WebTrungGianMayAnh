@@ -1,6 +1,8 @@
 package controller;
 
+import DAO.BookingScheduleDAO;
 import DAO.OrderDAO;
+import DAO.OrderItemsDAO;
 import DAO.ProductDAO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,8 +22,10 @@ import java.util.Map;
 
 @WebServlet("/checkout")
 public class CheckoutController extends HttpServlet {
-    private OrderDAO orderDAO = new OrderDAO();
-    private ProductDAO productDAO = new ProductDAO();
+    private final OrderDAO orderDAO = new OrderDAO();
+    private final OrderItemsDAO orderItemsDAO = new OrderItemsDAO();
+    private final ProductDAO productDAO = new ProductDAO();
+    private final BookingScheduleDAO bookingDAO = new BookingScheduleDAO();
 
     // Hiển thị trang checkout
     @Override
@@ -46,7 +50,6 @@ public class CheckoutController extends HttpServlet {
             HttpSession session = request.getSession();
             User user = (User) session.getAttribute("user");
 
-            // ✅ Nếu chưa đăng nhập, chuyển hướng về trang login và hiển thị thông báo
             if (user == null) {
                 session.setAttribute("error", "Bạn chưa đăng nhập. Vui lòng đăng nhập để thanh toán.");
                 response.sendRedirect("login.jsp");
@@ -54,20 +57,15 @@ public class CheckoutController extends HttpServlet {
             }
 
             int renterId = user.getId();
-
             List<ProductView> cart = (List<ProductView>) session.getAttribute("cart");
             List<Integer> createdOrderIds = new ArrayList<>();
 
-            // Kiểm tra giỏ hàng trống
             if (cart == null || cart.isEmpty()) {
-                // Có thể chuyển hướng đến trang giỏ hàng hoặc thông báo lỗi
-                response.sendRedirect("cart.jsp"); // Hoặc một trang lỗi thích hợp
+                response.sendRedirect("cart.jsp");
                 return;
             }
 
-            // Lấy ngày thuê từ từng sản phẩm (do mỗi sản phẩm chọn ngày riêng)
             Map<Integer, Date[]> rentDates = new HashMap<>();
-
             for (ProductView p : cart) {
                 String rentStartStr = request.getParameter("rentStart_" + p.getId());
                 String rentEndStr = request.getParameter("rentEnd_" + p.getId());
@@ -96,32 +94,46 @@ public class CheckoutController extends HttpServlet {
                 }
             }
 
-            boolean allCreated = true;
+            // Gom sản phẩm theo owner
+            Map<Integer, List<ProductView>> productsByOwner = new HashMap<>();
             for (ProductView p : cart) {
-                Date rentStart = rentDates.get(p.getId())[0];
-                Date rentEnd = rentDates.get(p.getId())[1];
-
-                // Tính số ngày thuê
-                // Nếu là cùng ngày, days = 0, nhưng thuê 1 ngày nên set days = 1
-                long days = (rentEnd.getTime() - rentStart.getTime()) / (1000 * 60 * 60 * 24);
-                if (days == 0) days = 1; // nếu cùng ngày => 1 ngày
-                else days++; // nếu nhiều ngày => tính cả ngày cuối
-
-                double totalPrice = p.getPricePerDay().doubleValue() * p.getQuantity() * days;
-
                 int ownerId = productDAO.getOwnerIdByProductId(p.getId());
+                productsByOwner.computeIfAbsent(ownerId, k -> new ArrayList<>()).add(p);
+            }
 
+            boolean allCreated = true;
+
+            for (Map.Entry<Integer, List<ProductView>> entry : productsByOwner.entrySet()) {
+                int ownerId = entry.getKey();
+                List<ProductView> productList = entry.getValue();
+
+                double totalPrice = 0;
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+
+                // Tính tổng tiền của cả đơn hàng
+                for (ProductView p : productList) {
+                    Date rentStart = rentDates.get(p.getId())[0];
+                    Date rentEnd = rentDates.get(p.getId())[1];
+                    long days = (rentEnd.getTime() - rentStart.getTime()) / (1000 * 60 * 60 * 24);
+                    if (days == 0) days = 1;
+                    else days++;
+                    totalPrice += p.getPricePerDay().doubleValue() * p.getQuantity() * days;
+                }
+
+                // Dùng thời gian thuê của sản phẩm đầu tiên làm mốc
+                Date rentStart = rentDates.get(productList.get(0).getId())[0];
+                Date rentEnd = rentDates.get(productList.get(0).getId())[1];
+
+                // Tạo đơn hàng
                 Order order = new Order();
                 order.setRenterId(renterId);
                 order.setOwnerId(ownerId);
-                order.setProductId(p.getId());
-                order.setQuantity(p.getQuantity());
                 order.setTotalPrice(totalPrice);
                 order.setStatus("cho_duyet");
                 order.setRentStart(rentStart);
                 order.setRentEnd(rentEnd);
-                order.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-                order.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+                order.setCreatedAt(now);
+                order.setUpdatedAt(now);
 
                 int orderId = orderDAO.create(order);
                 if (orderId == -1) {
@@ -129,58 +141,91 @@ public class CheckoutController extends HttpServlet {
                     break;
                 }
 
-                createdOrderIds.add(orderId);
+                for (ProductView p : productList) {
+                    Date pStart = rentDates.get(p.getId())[0];
+                    Date pEnd = rentDates.get(p.getId())[1];
 
-                // Tạo booking schedule
-                BookingSchedule booking = new BookingSchedule();
-                booking.setProductId(p.getId());
-                booking.setRenterId(renterId);
-                booking.setOwnerId(ownerId);
-                booking.setOrderId(orderId);
-                booking.setRentStart(rentStart);
-                booking.setRentEnd(rentEnd);
-                booking.setStatus("cho_duyet");
-                booking.setCreatedAt(order.getCreatedAt());
-                booking.setUpdatedAt(order.getUpdatedAt());
+                    long days = (pEnd.getTime() - pStart.getTime()) / (1000 * 60 * 60 * 24);
+                    if (days == 0) days = 1;
+                    else days++;
 
-                boolean booked = orderDAO.createBooking(booking); // Bạn cần implement DAO này
-                if (!booked) {
-                    allCreated = false;
-                    // Lời khuyên: Nếu booking schedule thất bại, bạn nên rollback order đã tạo
-                    // Để làm được điều này, cần sử dụng Transaction Management.
-                    break;
+                    double itemTotal = p.getPricePerDay().doubleValue() * p.getQuantity() * days;
+
+                    // OrderItem
+                    OrderItems item = new OrderItems();
+                    item.setOrderId(orderId);
+                    item.setProductId(p.getId());
+                    item.setOwnerId(ownerId);
+                    item.setQuantity(p.getQuantity());
+                    item.setPricePerDay(p.getPricePerDay().doubleValue());
+                    item.setRentStart(pStart);
+                    item.setRentEnd(pEnd);
+                    item.setTotalPrice(itemTotal);
+
+                    boolean itemCreated = orderItemsDAO.createOrderItem(item);
+                    if (!itemCreated) {
+                        allCreated = false;
+                        break;
+                    }
+
+                    // BookingSchedule
+                    BookingSchedule booking = new BookingSchedule();
+                    booking.setProductId(p.getId());
+                    booking.setRenterId(renterId);
+                    booking.setOwnerId(ownerId);
+                    booking.setOrderId(orderId);
+                    booking.setRentStart(pStart);
+                    booking.setRentEnd(pEnd);
+                    booking.setStatus("cho_duyet");
+                    booking.setCreatedAt(now);
+                    booking.setUpdatedAt(now);
+
+                    boolean booked = bookingDAO.createBooking(booking);
+                    if (!booked) {
+                        allCreated = false;
+                        break;
+                    }
                 }
+
+                createdOrderIds.add(orderId);
             }
 
             if (allCreated) {
                 session.removeAttribute("cart");
-                session.setAttribute("createdOrderIds", createdOrderIds); // ✅ lưu lại orderId
+                session.setAttribute("createdOrderIds", createdOrderIds);
 
+                // Gửi recentOrderViews cho checkout.jsp
                 List<OrderView> recentOrderViews = new ArrayList<>();
-
                 for (int orderId : createdOrderIds) {
-                    Order order = orderDAO.getOrderById(orderId); // cần implement trong OrderDAO
+                    Order order = orderDAO.getOrderById(orderId);
+                    List<OrderItems> items = orderDAO.getOrderItemsByOrderId(orderId);
 
-                    int productId = order.getProductId();
-                    String imageUrl = productDAO.getImageUrlByProductId(productId); // cần implement trong ProductDAO
-                    Product product = productDAO.getProductById(productId);
+                    List<Product> products = new ArrayList<>();
+                    List<String> imageUrls = new ArrayList<>();
+                    for (OrderItems item : items) {
+                        Product product = productDAO.getProductById(item.getProductId());
+                        String img = productDAO.getImageUrlByProductId(item.getProductId());
+                        products.add(product);
+                        imageUrls.add(img);
+                    }
 
-                    recentOrderViews.add(new OrderView(order, imageUrl, product));
+                    recentOrderViews.add(new OrderView(order, items, products, imageUrls));
                 }
 
                 session.setAttribute("recentOrderViews", recentOrderViews);
-
                 response.sendRedirect("checkout");
             } else {
-                response.sendRedirect("checkout.jsp");
+                request.setAttribute("paymentStatus", "fail");
+                request.getRequestDispatcher("checkout.jsp").forward(request, response);
             }
-
 
         } catch (Exception e) {
             e.printStackTrace();
             request.setAttribute("paymentStatus", "fail");
-            request.getRequestDispatcher("checkout").forward(request, response);
+            request.getRequestDispatcher("checkout.jsp").forward(request, response);
         }
     }
+
+
 }
 

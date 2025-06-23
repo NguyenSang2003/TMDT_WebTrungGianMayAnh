@@ -5,9 +5,22 @@ import java.sql.Timestamp;
 public class Invoice {
     private int id;
     private int orderId;
-    private java.sql.Timestamp invoiceDate;
+    private Timestamp invoiceDate;
     private double totalAmount;
     private String paymentMethod;
+    private String paymentStatus; // 'pending', 'paid', 'failed'
+
+    public Invoice() {
+    }
+
+    public Invoice(int id, int orderId, Timestamp invoiceDate, double totalAmount, String paymentMethod, String paymentStatus) {
+        this.id = id;
+        this.orderId = orderId;
+        this.invoiceDate = invoiceDate;
+        this.totalAmount = totalAmount;
+        this.paymentMethod = paymentMethod;
+        this.paymentStatus = paymentStatus;
+    }
 
     public int getId() {
         return id;
@@ -49,5 +62,11 @@ public class Invoice {
         this.paymentMethod = paymentMethod;
     }
 
-}
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
 
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+}
