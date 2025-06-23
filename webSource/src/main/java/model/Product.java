@@ -12,6 +12,7 @@ public class Product {
     private int viewCount;    // Số lượt xem
     private int soldCount;    // Số lượng bán ra
     private String status;    // "con_hang", "het_hang", "dang_cho_thue"
+    private int isActive;
     private java.sql.Timestamp createdAt;
     private java.sql.Timestamp updatedAt;
 
@@ -95,5 +96,12 @@ public class Product {
         this.updatedAt = updatedAt;
     }
 
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
+    }
 }
 

@@ -1,18 +1,16 @@
 package services;
-
 import java.sql.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
 
+import DAO.ProductDAO;
 import database.JDBC;
-import model.Product;
-import model.ProductDetail;
 import model.ProductView;
 
 public class ProductService {
-
+    private final ProductDAO productDAO = new ProductDAO();
     // Lấy danh sách sản phẩm mới nhất (join bảng products và product_details)
     public List<ProductView> getLatestProductsWithDetails() {
         List<ProductView> list = new ArrayList<>();
@@ -157,7 +155,6 @@ public class ProductService {
     public List<ProductView> getRelatedProducts(int productId, String category, int limit) {
         List<ProductView> relatedProducts = new ArrayList<>();
         Connection connection = null;
-
         try {
             connection = JDBC.getConnection();
             String query = "SELECT p.*, pd.image_url, pd.brand, pd.category " +
@@ -166,12 +163,10 @@ public class ProductService {
                     "WHERE p.id != ? AND pd.category = ? " +
                     "ORDER BY p.created_at DESC " +
                     "LIMIT ?";
-
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, productId);
             stmt.setString(2, category);
             stmt.setInt(3, limit);
-
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
                 ProductView pv = new ProductView();
@@ -188,48 +183,40 @@ public class ProductService {
                 pv.setImageUrl(rs.getString("image_url"));
                 pv.setBrand(rs.getString("brand"));
                 pv.setCategory(rs.getString("category"));
-
                 // Format giá thuê/ngày để dùng trong EL
                 pv.setFormattedPricePerDay(
                         NumberFormat.getInstance(new Locale("vi", "VN"))
                                 .format(pv.getPricePerDay())
                 );
-
                 relatedProducts.add(pv);
             }
-
         } catch (SQLException ex) {
             throw new RuntimeException("Error getting related products: " + ex.getMessage(), ex);
         } finally {
             JDBC.closeConnection(connection);
         }
-
         return relatedProducts;
     }
     // lấy tất cả danh sách sản phẩm
     public List<ProductView> getAllProducts() {
-
         List<ProductView> productView = new ArrayList<>();
-
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet rs = null;
         try {
             connection = JDBC.getConnection();
-            statement = connection.prepareStatement("SELECT p.id, p.name, p.price_per_day, pd.brand, p.status, pd.image_url " +
+            statement = connection.prepareStatement("SELECT p.id, p.name, p.price_per_day, pd.brand, p.status, pd.image_url, p.is_active " +
                     "FROM products p JOIN product_details pd ON p.id = pd.product_id");
             rs = statement.executeQuery();
-
             while (rs.next()) {
                 ProductView product = new ProductView();
                 product.setId(rs.getInt("id"));
                 product.setName(rs.getString("name"));
                 product.setPricePerDay(rs.getBigDecimal("price_per_day"));
-
                 product.setBrand(rs.getString("brand"));
                 product.setStatus(rs.getString("status"));
                 product.setImageUrl(rs.getString("image_url"));
-
+                product.setIsActive(rs.getInt("is_active"));
                 productView.add(product);
             }
         } catch (SQLException e) {
@@ -241,8 +228,11 @@ public class ProductService {
         }
         return productView;
     }
-
-
-
+    public void updateActiveStatus(int id, int isActive) {
+        productDAO.updateIsActive(id, isActive);
+    }
+    public ProductView getProductDetail(int productId) {
+        return productDAO.getProductDetail(productId);
+    }
 
 }

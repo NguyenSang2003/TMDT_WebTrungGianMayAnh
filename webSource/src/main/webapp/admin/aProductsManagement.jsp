@@ -2,10 +2,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,10 +13,67 @@
     <link rel="shortcut icon" href="#" type="image/x-icon">
     <!-- Custom styles -->
     <link rel="stylesheet" href="../adminAssets/css/style.min.css">
-    <link rel="stylesheet" href="../adminAssets/css/product-management.css">
-
 </head>
 <style>
+    .inactive-row {
+        opacity: 0.4;
+    }
+    .custom-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 600px;
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        z-index: 9999;
+        padding: 25px;
+        font-family: Arial, sans-serif;
+    }
+
+    .custom-modal h2 {
+        margin-top: 0;
+        color: #3f51b5;
+        text-align: center;
+    }
+
+    .custom-modal .field {
+        margin-bottom: 12px;
+        font-size: 15px;
+    }
+
+    .custom-modal .field span {
+        font-weight: bold;
+    }
+
+    .custom-modal img {
+        display: block;
+        margin: 10px auto;
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .custom-modal .close-btn {
+        display: block;
+        margin: 15px auto 0;
+        padding: 8px 16px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .eye-button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 18px;
+    }
     /* Nền mờ phía sau modal */
     .modal-overlay {
         position: fixed;
@@ -78,10 +133,10 @@
             <div class="sidebar-body">
                 <ul class="sidebar-body-menu">
                     <li>
-                        <a class="active" href="/adminIndex"><span class="icon home" aria-hidden="true"></span>Quản lý hệ thống </a>
+                        <a class="active" href="/admin/adminIndex"><span class="icon home" aria-hidden="true"></span>Quản lý hệ thống </a>
                     </li>
                     <li>
-                        <a class="active" href="/aProductsManagement"><span class="icon folder" aria-hidden="true"></span>Quản lý sản phẩm </a>
+                        <a class="active" href="/admin/productsManagement"><span class="icon folder" aria-hidden="true"></span>Quản lý sản phẩm </a>
                     </li>
                     <li>
                         <a class="active" href="#"><span class="icon document" aria-hidden="true"></span>Quản lý đơn thuê </a>
@@ -230,7 +285,7 @@
             <div class="container">
                 <h2 class="main-title">Quản lý sản phẩm</h2>
 
-                <a href="#" onclick="openAddPopup()" style="display: inline-block; margin-bottom: 15px; background-color: #4caf50; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500;">➕ Thêm sản phẩm</a>
+                <a href="#" onclick="openAddPopup()" style="display: inline-block; margin-bottom: 15px; background-color: #3f51b5; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: 500;">➕ Thêm sản phẩm</a>
 
                 <table class="user-table" style="border-collapse: collapse; width: 100%; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
                     <thead>
@@ -241,18 +296,34 @@
                         <th style="padding: 12px;">Giá thuê/ngày</th>
                         <th style="padding: 12px;">Hình ảnh</th>
                         <th style="padding: 12px;">Trạng thái</th>
+                        <th style="padding: 12px;">Ẩn/Hiện</th>
                         <th style="padding: 12px;">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach var="product" items="${productList}">
-                        <tr style="text-align: center;">
+                        <tr style="text-align: center;" class="${product.isActive == 0 ? 'inactive-row' : ''}">
                             <td style="padding: 10px;">${product.id}</td>
-                            <td style="padding: 10px;">${product.name}</td>
+                            <td>
+                                <a href="javascript:void(0);" onclick="showProductDetail(${product.id})">
+                                        ${product.name}
+                                </a>
+                            </td>
                             <td style="padding: 10px;">${product.brand}</td>
                             <td style="padding: 10px;">${product.pricePerDay}</td>
-                            <td style="padding: 10px;"><img src="${product.imageUrl}" width="100" style="border-radius: 6px; box-shadow: 0 0 4px rgba(0,0,0,0.2);"></td>
+                            <td style="padding: 10px;">
+                                <img src="../${product.imageUrl}" width="100" style="border-radius: 6px; box-shadow: 0 0 4px rgba(0,0,0,0.2);">
+                            </td>
                             <td style="padding: 10px;">${product.status}</td>
+                            <td style="padding: 10px;">
+                                <button class="eye-button" onclick="toggleActiveStatus(${product.id}, ${product.isActive})">
+                                    <c:choose>
+                                        <c:when test="${product.isActive eq 1}">&#128065;</c:when>
+                                        <c:otherwise>&#128584;</c:otherwise>
+                                    </c:choose>
+
+                                </button>
+                            </td>
                             <td style="padding: 10px;">
                                 <a href="#"
                                    onclick="openEditPopup(
@@ -260,9 +331,10 @@
                                            '${product.name}',
                                            '${product.brand}',
                                            '${product.pricePerDay}',
+                                           '${product.quantity}',
                                            '${product.status}',
                                            '${product.imageUrl}',
-                                           '${product.quantity}')"
+                                           '${product.createdAt}')"
                                    style="color: #1976d2; margin-right: 10px; text-decoration: none; font-weight: 500;">✏️ Sửa</a>
                                 <a href="#" onclick="openDeletePopup('${product.id}')" style="background-color: #f44336; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-weight: 500;">❌ Xoá</a>
                             </td>
@@ -306,20 +378,32 @@
 
 <div id="productModal" class="modal" style="display:none;">
     <h3 id="modalTitle">Thêm/Sửa sản phẩm</h3>
-    <form id="productForm" method="post" action="${pageContext.request.contextPath}/aProductsManagement">
+    <form id="productForm" method="post" action="${pageContext.request.contextPath}/admin/productsManagement">
         <input type="hidden" name="id" id="productId">
         <label>Tên sản phẩm: <input type="text" name="name" id="productName" required style="width:100%"></label><br><br>
         <label>Thương hiệu: <input type="text" name="brand" id="productBrand" required style="width:100%"></label><br><br>
-        <label>Giá thuê/ngày: <input type="text" name="pricePerDay" id="productPrice" required style="width:100%"></label><br><br>
+        <label>Giá thuê/ngày:
+            <input type="number" step="0.01" name="pricePerDay" id="productPrice" required style="width:100%">
+        </label>
         <label>Hình ảnh URL: <input type="text" name="imageUrl" id="productImage" required style="width:100%"></label><br><br>
         <label>Số lượng: <input type="number" name="quantity" id="productQuantity" min="1" style="width:100%"></label><br><br>
-        <label>Trạng thái:
-            <select name="status" id="productStatus" style="width:100%">
-                <option value="con_hang">Còn hàng</option>
-                <option value="het_hang">Hết hàng</option>
-                <option value="dang_cho_thue">Đang cho thuê</option>
-            </select>
-        </label><br><br>
+
+        <div id="statusField" style="display: none;">
+            <label>Trạng thái:
+                <select name="status" id="productStatus" style="width:100%">
+                    <option value="con_hang">Còn hàng</option>
+                    <option value="het_hang">Hết hàng</option>
+                    <option value="dang_cho_thue">Đang cho thuê</option>
+                </select>
+            </label><br><br>
+        </div>
+
+        <label>Loại: <input type="text" name="category" id="modalCategory" required style="width:100%"></label><br><br>
+        <label>Phiên bản: <input type="text" name="model" id="modalModel" required style="width:100%"></label><br><br>
+        <label>Màu: <input type="text" name="color" id="modalColor" min="1" style="width:100%"></label><br><br>
+        <label>Cân nặng: <input type="text" name="weight" id="modalWeight" required style="width:100%"></label><br><br>
+        <label>Mô tả: <input type="text" name="description" id="modalDescription" required style="width:100%"></label><br><br>
+
         <label>Ngày tạo:
             <input type="datetime-local" name="created_at" id="productCreatedAt" required style="width:100%">
         </label><br><br>
@@ -337,6 +421,23 @@
         <button type="button" onclick="closePopup()">❌ Hủy</button>
     </form>
 </div>
+<!-- Modal chi tiết sản phẩm -->
+<div id="productDetailModal" class="custom-modal">
+    <h2 id="modalName">Tên sản phẩm</h2>
+    <div class="field"><span>Thương hiệu:</span> <span id="modalBrand"></span></div>
+    <div class="field"><span>Mô tả:</span> <span id="modalDescription"></span></div>
+    <div class="field"><span>Giá thuê/ngày:</span> <span id="modalPrice"></span></div>
+    <div class="field"><span>Trạng thái:</span> <span id="modalStatus"></span></div>
+    <div class="field"><span>Model:</span> <span id="modalModel"></span></div>
+    <div class="field"><span>Phân loại:</span> <span id="modalCategory"></span></div>
+    <div class="field"><span>Màu sắc:</span> <span id="modalColor"></span></div>
+    <div class="field"><span>Phụ kiện kèm theo:</span> <span id="modalAccessories"></span></div>
+    <div class="field"><span>Trọng lượng:</span> <span id="modalWeight"></span> kg</div>
+    <div class="field"><span>Tình trạng:</span> <span id="modalCondition"></span></div>
+    <div class="field"><span>Ngày tạo:</span> <span id="modalCreatedAt"></span></div>
+    <img id="modalImage" src="" alt="Ảnh sản phẩm">
+    <button class="close-btn" onclick="closeModal()">Đóng</button>
+</div>
 
 <script>
     function openAddPopup() {
@@ -344,9 +445,10 @@
         document.getElementById("productForm").reset();
         document.getElementById("productId").value = "";
         document.getElementById("productModal").style.display = "block";
+        document.getElementById("statusField").style.display = "none";
     }
 
-    function openEditPopup(id, name, brand, pricePerDay,quantity, status, imageUrl, createdAt) {
+    function openEditPopup(id, name, brand, pricePerDay,quantity, status, imageUrl,category,model,color,weight,description, createdAt) {
         document.getElementById("modalTitle").innerText = "✏️ Sửa sản phẩm";
         document.getElementById("productId").value = id;
         document.getElementById("productName").value = name;
@@ -354,6 +456,13 @@
         document.getElementById("productPrice").value = pricePerDay;
         document.getElementById("productQuantity").value = quantity; // nhớ thêm biến quantity vào hàm
         document.getElementById("productImage").value = imageUrl;
+        document.getElementById("modalCategory").value = category;
+        document.getElementById("modalModel").value = model;
+        document.getElementById("modalColor").value = color;
+        document.getElementById("modalWeight").value = weight;
+        document.getElementById("modalDescription").value = description;
+
+        document.getElementById("statusField").style.display = "block";
         document.getElementById("productStatus").value = status;
 
         if (createdAt) {
@@ -376,6 +485,49 @@
         document.getElementById("deleteModal").style.display = "none";
     }
 </script>
+<script>
+    function toggleActiveStatus(productId, currentStatus) {
+        const newStatus = currentStatus === 1 ? 0 : 1;
+        fetch('${pageContext.request.contextPath}/admin/toggleActive?id=' + productId + '&status=' + newStatus, {
+            method: 'POST'
+        })
+            .then(response => {
+                if (response.ok) {
+                    location.reload();
+                } else {
+                    alert("Không thể cập nhật trạng thái hiển thị!");
+                }
+            });
+    }
+</script>
+<script>
+    function showProductDetail(productId) {
+        fetch('/admin/product-detail?id=' + productId)
+            .then(res => res.json())
+            .then(data => {
+                const modal = document.getElementById("productDetailModal");
+                document.getElementById("modalName").textContent = data.name;
+                document.getElementById("modalBrand").textContent = data.brand;
+                document.getElementById("modalDescription").textContent = data.description;
+                document.getElementById("modalPrice").textContent = data.pricePerDay;
+                document.getElementById("modalStatus").textContent = data.status;
+                document.getElementById("modalModel").textContent = data.model || "Không rõ";
+                document.getElementById("modalCategory").textContent = data.category;
+                document.getElementById("modalColor").textContent = data.color;
+                document.getElementById("modalAccessories").textContent = data.accessories || "Không có";
+                document.getElementById("modalWeight").textContent = data.weight ? data.weight + " kg" : "N/A";
+                document.getElementById("modalCondition").textContent = data.productCondition;
+                document.getElementById("modalCreatedAt").textContent = new Date(data.createdAt).toLocaleString();
+                document.getElementById("modalImage").src = '../' + data.imageUrl;
 
+                modal.style.display = "block";
+            });
+    }
+
+    function closeModal() {
+        document.getElementById("productDetailModal").style.display = "none";
+    }
+
+</script>
 
 </html>

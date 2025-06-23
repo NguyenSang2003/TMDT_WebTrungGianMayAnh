@@ -39,10 +39,10 @@
             <div class="sidebar-body">
                 <ul class="sidebar-body-menu">
                     <li>
-                        <a class="active" href="/adminIndex"><span class="icon home" aria-hidden="true"></span>Quản lý hệ thống </a>
+                        <a class="active" href="/admin/adminIndex"><span class="icon home" aria-hidden="true"></span>Quản lý hệ thống </a>
                     </li>
                     <li>
-                        <a class="active" href="/aProductsManagement"><span class="icon folder" aria-hidden="true"></span>Quản lý sản phẩm </a>
+                        <a class="active" href="/admin/productsManagement"><span class="icon folder" aria-hidden="true"></span>Quản lý sản phẩm </a>
                     </li>
                     <li>
                         <a class="active" href="#"><span class="icon document" aria-hidden="true"></span>Quản lý đơn thuê </a>
@@ -115,11 +115,6 @@
                             <li><a href="#">Vietnamese</a></li>
                         </ul>
                     </div>
-                    <%--          <button class="theme-switcher gray-circle-btn" type="button" title="Switch theme">--%>
-                    <%--            <span class="sr-only">Switch theme</span>--%>
-                    <%--            <i class="sun-icon" data-feather="sun" aria-hidden="true"></i>--%>
-                    <%--            <i class="moon-icon" data-feather="moon" aria-hidden="true"></i>--%>
-                    <%--          </button>--%>
                     <div class="notification-wrapper">
                         <button class="gray-circle-btn dropdown-btn" title="To messages" type="button">
                             <span class="sr-only">To messages</span>
