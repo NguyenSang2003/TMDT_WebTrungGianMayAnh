@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.BlogComment;
 import model.BlogDetailView;
 import model.UserView;
@@ -49,4 +51,44 @@ public class BlogDetailController extends HttpServlet {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
     }
+    
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        HttpSession session = req.getSession();
+        model.User currentUser = (model.User) session.getAttribute("user");
+
+        if (currentUser == null) {
+            // Chưa đăng nhập -> chuyển hướng về trang đăng nhập
+            resp.sendRedirect("login.jsp?redirect=" + req.getRequestURI() + "?" + req.getQueryString());
+            return;
+        }
+
+        String comment = req.getParameter("comment");
+        String blogIdRaw = req.getParameter("id");
+
+        try {
+            int blogId = Integer.parseInt(blogIdRaw);
+            if (comment != null && !comment.trim().isEmpty()) {
+                BlogComment cmt = new BlogComment();
+                cmt.setBlogId(blogId);
+                cmt.setUserId(currentUser.getId());
+                cmt.setComment(comment);
+                cmt.setCreatedAt(new java.sql.Timestamp(System.currentTimeMillis()));
+
+                try {
+                    dao.addComment(cmt); // Gọi DAO để lưu bình luận
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi khi lưu bình luận");
+                    return;
+                }
+            }
+            // Quay lại trang blog-detail
+            resp.sendRedirect("blog-detail?id=" + blogId);
+        } catch (NumberFormatException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
+        }
+    }
+
 }

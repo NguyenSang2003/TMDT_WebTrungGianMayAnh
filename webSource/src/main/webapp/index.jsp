@@ -81,7 +81,7 @@
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
                     <div class="dropdown-menu rounded-0 m-0">
                         <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
-                        <a href="blog.jsp" class="dropdown-item">Blog</a>
+                        <a href="blog" class="dropdown-item">Blog</a>
                     </div>
                 </li>
 

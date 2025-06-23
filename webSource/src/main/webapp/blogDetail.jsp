@@ -195,12 +195,12 @@
         <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item active"><a href="index" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
-                <li class="nav-item dropdown">
+                <li class="nav-item active dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
                     <div class="dropdown-menu rounded-0 m-0">
                         <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
@@ -271,10 +271,15 @@
   <div class="container py-5">
     <h3 class="fw-bold mb-3"><%= detail.getBlog().getTitle() %></h3>
     <div class="d-flex ">
-    	<img src="<%= detail.getBlogAuthor().getUserProfile().getIdCardWithUserImageUrl() != null 
-	                ? detail.getBlogAuthor().getUserProfile().getIdCardWithUserImageUrl() 
-	                : "assets/images/person_default.jpg" %>" 
-	         style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />
+    	<%
+		    String imageUrl = detail.getBlogAuthor().getUserProfile().getIdCardWithUserImageUrl();
+		    boolean hasImage = imageUrl != null && !imageUrl.trim().isEmpty();
+		%>
+		
+		<img src="<%= hasImage ? imageUrl : "assets/images/person_default.jpg" %>" 
+		     alt="<%= hasImage ? "Ảnh tác giả" : "Ảnh mặc định" %>"
+		     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />
+
 
 		<div class="ml-4">
 			<p class="text-muted">✍️ Tác giả: <%= detail.getBlogAuthor().getUserProfile().getFullName() %></p>
@@ -302,7 +307,8 @@
 	     }
 	%>
 	    <div class="d-flex align-items-start mb-3">
-	        <img src="<%= avatar %>" class="rounded-circle me-3" style="width: 60px; height: 60px; object-fit: cover;">
+	    	<img src="<%= avatar != null ? avatar : "assets/images/person_default.jpg" %>" alt="avatar"
+	         	style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;" />
 	        <div class="bg-light p-2 px-3 rounded shadow-sm w-100">
 	            <strong><%= uv.getUserProfile().getFullName() %></strong>
 	            <p class="mb-0"><%= cmt.getComment() %></p>
@@ -311,6 +317,18 @@
 	    </div>
 	<% } %>
 
+	<% if (session.getAttribute("user") != null) { %>
+	    <form method="post" action="blog-detail?id=<%= detail.getBlog().getId() %>" class="mt-4">
+	        <div class="form-group">
+	            <label for="comment">Viết bình luận:</label>
+	            <textarea name="comment" class="form-control" rows="3" required></textarea>
+	        </div>
+	        <button type="submit" class="btn btn-primary mt-2">Gửi bình luận</button>
+	    </form>
+	<% } else { %>
+	    <p class="text-danger mt-4">Vui lòng <a href="login.jsp">đăng nhập</a> để bình luận.</p>
+	<% } %>
+		
   </div>
 </section>
 

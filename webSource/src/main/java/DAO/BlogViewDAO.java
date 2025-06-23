@@ -123,4 +123,17 @@ public class BlogViewDAO {
         detail.setComments(comments);
         return detail;
     }
+    
+    public void addComment(BlogComment comment) throws SQLException {
+        String sql = "INSERT INTO blog_comments (blog_id, user_id, comment, created_at) VALUES (?, ?, ?, ?)";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, comment.getBlogId());
+            ps.setInt(2, comment.getUserId());
+            ps.setString(3, comment.getComment());
+            ps.setTimestamp(4, comment.getCreatedAt());
+            ps.executeUpdate();
+        }
+    }
+
 }

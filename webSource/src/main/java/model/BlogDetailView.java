@@ -24,4 +24,3 @@ public class BlogDetailView {
         this.commentUserViews = commentUserViews;
     }
 }
-
