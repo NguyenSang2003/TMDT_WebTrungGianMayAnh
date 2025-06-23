@@ -82,7 +82,7 @@
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
-                <li class="nav-item"><a href="shop.jsp" class="nav-link">Cửa Hàng</a></li>
+                <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
 
@@ -96,7 +96,7 @@
 
                 <li class="nav-item"><a href="contact.jsp" class="nav-link">Liên Hệ</a></li>
 
-                <%-- Nếu chưa đăng nhập --%>
+                <%-- Kiểm tra trạng thái đăng nhập --%>
                 <%
                     if (user == null) {
                 %>
@@ -110,22 +110,30 @@
                         Hi, <%= user.getUsername() %>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right m-0">
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+
+                        <%-- Nếu chưa xác thực Gmail --%>
+                        <% if (!user.isVerifyEmail()) { %>
+                        <a href="GmailVerify.jsp" class="dropdown-item text-danger font-weight-bold">
+                            <i class="fa fa-envelope"></i> Xác thực Gmail
+                        </a>
+                        <% } else { %>
+                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
                         <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
                         <a href="admin/userManagement.jsp" class="dropdown-item">Quản lý người dùng</a>
                         <a href="admin/aProductsManagement.jsp" class="dropdown-item">Quản lý sản phẩm</a>
                         <a href="admin/ordersManagement.jsp" class="dropdown-item">Quản lý đơn hàng</a>
+
                         <% } else if ("nguoi_cho_thue".equals(user.getRole())) { %>
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
                         <a href="owner/oProductsManagement.jsp" class="dropdown-item">Sản phẩm đã đăng</a>
                         <a href="owner/oRevenueReport.jsp" class="dropdown-item">Doanh thu</a>
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
+
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
                         <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
                         <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <% } %>
                         <% } %>
 
                         <a href="logout" class="dropdown-item">Đăng xuất</a>
@@ -199,8 +207,10 @@
             <div class="col-md-12">
                 <div class="car-details">
                     <div class="img rounded"
-                         style="background-image: url('assets/images/mayanh_5.jpg');height: 400px;
-                         background-size: contain;background-position: center;margin-bottom: 0px;"></div>
+                         style="background-image: url('${pageContext.request.contextPath}/${product.imageUrl != null ? product.imageUrl : 'assets/images/mayanh_5.jpg'}');
+                                 height: 400px; background-size: contain; background-position: center; margin-bottom: 0px;">
+                    </div>
+
                     <div class="text text-center mt-3">
                         <span class="subheading">${detail.brand}</span>
                         <h2>${product.name}</h2>
@@ -411,7 +421,7 @@
                     <h2 class="ftco-heading-2">Đường tắt khác</h2>
                     <ul class="list-unstyled">
                         <li><a href="index" class="py-2 d-block">Trang Chủ</a></li>
-                        <li><a href="shop.jsp" class="py-2 d-block">Cửa Hàng</a></li>
+                        <li><a href="shop" class="py-2 d-block">Cửa Hàng</a></li>
                         <li><a href="blog.jsp" class="py-2 d-block">Blog</a></li>
                         <li><a href="cart.jsp" class="py-2 d-block">Giỏ Hàng</a></li>
                         <li><a href="#" class="py-2 d-block">Chính sách bảo mật & Cookie</a></li>

@@ -1,27 +1,24 @@
 package DAO;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import database.JDBC;
 import model.Product;
-import model.ProductDetail;
-import model.ProductView;
 
 public class ProductDAO {
 
     // Thêm mới sản phẩm // sửa lại thương thức addProduct để thêm được vào product_details
-    public boolean addProduct(Product product, String brand, String imageUrl, String category, String model, String color, BigDecimal weight,String description) {
+    public boolean addProduct(Product product, String brand, String imageUrl) {
         Connection connection = null;
         try {
             connection = JDBC.getConnection();
             connection.setAutoCommit(false); // bắt đầu transaction
 
             // Insert vào bảng products
-            String query = "INSERT INTO products (user_id, name, price_per_day, quantity, created_at, updated_at) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+            String query = "INSERT INTO products (user_id, name, price_per_day, quantity, status, created_at, updated_at) " +
+                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
@@ -29,8 +26,9 @@ public class ProductDAO {
             stmt.setString(2, product.getName());
             stmt.setBigDecimal(3, product.getPricePerDay());
             stmt.setInt(4, product.getQuantity());
-            stmt.setTimestamp(5, now); // created_at
-            stmt.setTimestamp(6, now); // updated_at
+            stmt.setString(5, product.getStatus());
+            stmt.setTimestamp(6, now); // created_at
+            stmt.setTimestamp(7, now); // updated_at
 
             int rowsAffected = stmt.executeUpdate();
             if (rowsAffected == 0) {
@@ -44,16 +42,11 @@ public class ProductDAO {
                 int productId = generatedKeys.getInt(1);
 
                 // Insert vào product_details
-                String detailQuery = "INSERT INTO product_details (product_id, brand, image_url,category,model,color,weight,description) VALUES (?, ?, ?,?,?,?,?,?)";
+                String detailQuery = "INSERT INTO product_details (product_id, brand, image_url) VALUES (?, ?, ?)";
                 PreparedStatement detailStmt = connection.prepareStatement(detailQuery);
                 detailStmt.setInt(1, productId);
                 detailStmt.setString(2, brand);
                 detailStmt.setString(3, imageUrl);
-                detailStmt.setString(4, category);
-                detailStmt.setString(5, model);
-                detailStmt.setString(6, color);
-                detailStmt.setBigDecimal(7, weight);
-                detailStmt.setString(8, description);
                 detailStmt.executeUpdate();
             } else {
                 connection.rollback();
@@ -128,60 +121,29 @@ public class ProductDAO {
     }
 
     // Cập nhật thông tin sản phẩm
-    public boolean updateProduct(Product product, ProductDetail detail) {
-        Connection conn = null;
-        PreparedStatement stmtProduct = null;
-        PreparedStatement stmtDetail = null;
-        boolean success = false;
-
+    public boolean updateProduct(Product product) {
+        Connection connection = null;
         try {
-            conn = JDBC.getConnection();
-            conn.setAutoCommit(false); // Bắt đầu transaction
+            connection = JDBC.getConnection();
+            String query = "UPDATE products SET name = ?, price_per_day = ?, quantity = ?, status = ?, updated_at = ? " +
+                    "WHERE id = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
 
-            // Update bảng products
-            String updateProductSQL = "UPDATE products SET name = ?, price_per_day = ?, quantity = ?, status = ?, updated_at = ? WHERE id = ?";
-            stmtProduct = conn.prepareStatement(updateProductSQL);
-            stmtProduct.setString(1, product.getName());
-            stmtProduct.setBigDecimal(2, product.getPricePerDay());
-            stmtProduct.setInt(3, product.getQuantity());
-            stmtProduct.setString(4, product.getStatus());
-            stmtProduct.setTimestamp(5, new Timestamp(System.currentTimeMillis()));
-            stmtProduct.setInt(6, product.getId());
-            int rows1 = stmtProduct.executeUpdate();
+            java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
+            stmt.setString(1, product.getName());
+            stmt.setBigDecimal(2, product.getPricePerDay());
+            stmt.setInt(3, product.getQuantity());
+            stmt.setString(4, product.getStatus());
+            stmt.setTimestamp(5, now); // updated_at
+            stmt.setInt(6, product.getId());
 
-            // Update bảng product_details
-            String updateDetailSQL = "UPDATE product_details SET brand=?, category=?, model=?, color=?, weight=?, description=?, image_url=? WHERE product_id=?";
-            stmtDetail = conn.prepareStatement(updateDetailSQL);
-            stmtDetail.setString(1, detail.getBrand());
-            stmtDetail.setString(2, detail.getCategory());
-            stmtDetail.setString(3, detail.getModel());
-            stmtDetail.setString(4, detail.getColor());
-            stmtDetail.setBigDecimal(5, detail.getWeight());
-            stmtDetail.setString(6, detail.getDescription());
-            stmtDetail.setString(7, detail.getImageUrl());
-            stmtDetail.setInt(8, product.getId()); // product_id
-            int rows2 = stmtDetail.executeUpdate();
-
-            // Cả hai update thành công mới commit
-            if (rows1 > 0 && rows2 > 0) {
-                conn.commit();
-                success = true;
-            } else {
-                conn.rollback();
-            }
-
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
         } catch (SQLException e) {
-            try {
-                if (conn != null) conn.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            throw new RuntimeException("Lỗi khi cập nhật sản phẩm và chi tiết: " + e.getMessage(), e);
+            throw new RuntimeException("Lỗi khi cập nhật sản phẩm: " + e.getMessage(), e);
         } finally {
-            JDBC.closeConnection(conn);
+            JDBC.closeConnection(connection);
         }
-
-        return success;
     }
 
     // Xóa sản phẩm // sửa lại phương thức để xóa trong cả product details do khóa ngoại
@@ -236,64 +198,4 @@ public class ProductDAO {
         product.setViewCount(rs.getInt("view_count"));
         product.setSoldCount(rs.getInt("sold_count"));
     }
-    public void updateIsActive(int id, int isActive) {
-        String sql = "UPDATE products SET is_active = ? WHERE id = ?";
-        try (Connection conn = JDBC.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, isActive);
-            stmt.setInt(2, id);
-            stmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public ProductView getProductDetail(int productId) {
-        ProductView product = null;
-        String sql = "SELECT " +
-                "p.id AS product_id, p.user_id, p.name, p.price_per_day, p.quantity, p.view_count, p.sold_count, " +
-                "p.status, p.is_active, p.created_at AS product_created_at, p.updated_at AS product_updated_at, " +
-                "pd.description, pd.brand, pd.model, pd.image_url, pd.category, pd.product_condition, " +
-                "pd.accessories, pd.weight, pd.color " +
-                "FROM products p " +
-                "JOIN product_details pd ON p.id = pd.product_id " +
-                "WHERE p.id = ?";
-
-        try (Connection conn = JDBC.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, productId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    product = new ProductView();
-                    product.setId(rs.getInt("product_id"));
-                    product.setUserId(rs.getInt("user_id"));
-                    product.setName(rs.getString("name"));
-                    product.setPricePerDay(rs.getBigDecimal("price_per_day"));
-                    product.setQuantity(rs.getInt("quantity"));
-                    product.setViewCount(rs.getInt("view_count"));
-                    product.setSoldCount(rs.getInt("sold_count"));
-                    product.setStatus(rs.getString("status"));
-                    product.setIsActive(rs.getInt("is_active"));
-                    product.setCreatedAt(rs.getTimestamp("product_created_at"));
-                    product.setUpdatedAt(rs.getTimestamp("product_updated_at"));
-
-                    product.setBrand(rs.getString("brand"));
-                    product.setCategory(rs.getString("category"));
-                    product.setImageUrl(rs.getString("image_url"));
-
-                    product.setDescription(rs.getString("description"));
-                    product.setModel(rs.getString("model"));
-                    product.setProductCondition(rs.getString("product_condition"));
-                    product.setAccessories(rs.getString("accessories"));
-                    product.setWeight(rs.getBigDecimal("weight"));
-                    product.setColor(rs.getString("color"));
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return product;
-    }
-
 }

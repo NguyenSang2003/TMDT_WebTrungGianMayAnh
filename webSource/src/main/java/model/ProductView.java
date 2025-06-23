@@ -19,13 +19,6 @@ public class ProductView {
     private String formattedPricePerDay;
     private String brand;
     private String category;
-    private int isActive;
-    private String description;
-    private String model;
-    private String productCondition;
-    private String accessories;
-    private BigDecimal weight;
-    private String color;
 
     // Getters and Setters
     public int getId() {
@@ -139,60 +132,4 @@ public class ProductView {
     public void setCategory(String category) {
         this.category = category;
     }
-
-    public int getIsActive() {
-        return isActive;
-    }
-
-    public void setIsActive(int isActive) {
-        this.isActive = isActive;
-    }
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getModel() {
-        return model;
-    }
-
-    public void setModel(String model) {
-        this.model = model;
-    }
-
-    public String getProductCondition() {
-        return productCondition;
-    }
-
-    public void setProductCondition(String productCondition) {
-        this.productCondition = productCondition;
-    }
-
-    public String getAccessories() {
-        return accessories;
-    }
-
-    public void setAccessories(String accessories) {
-        this.accessories = accessories;
-    }
-
-    public BigDecimal getWeight() {
-        return weight;
-    }
-
-    public void setWeight(BigDecimal weight) {
-        this.weight = weight;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
 }
