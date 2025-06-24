@@ -193,7 +193,7 @@ public class UserDAO {
 
         return isVerified;
     }
-
+            // sẽ sưa phương thuc nay
     public List<User> getAllUsersForAdmin() {
         List<User> users = new ArrayList<>();
         Connection connection = null;
@@ -283,6 +283,187 @@ public class UserDAO {
             JDBC.closeConnection(connection);
         }
     }
+    public boolean addUser(User user) {
+        String sql = "INSERT INTO users (username, password, email, role, isVerifyEmail, is_active, created_at, updated_at) " +
+                "VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getPassword()); // nhớ mã hoá nếu có
+            stmt.setString(3, user.getEmail());
+            stmt.setString(4, user.getRole());
+            stmt.setBoolean(5, user.isVerifyEmail());
+            stmt.setBoolean(6, user.isActive());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi thêm user: " + e.getMessage(), e);
+        }
+    }
+
+    public boolean updateUser(User user) {
+        String sql = "UPDATE users SET username=?, email=?, role=?, isVerifyEmail=?, is_active=?, updated_at=NOW() WHERE id=?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, user.getUsername());
+            stmt.setString(2, user.getEmail());
+            stmt.setString(3, user.getRole());
+            stmt.setBoolean(4, user.isVerifyEmail());
+            stmt.setBoolean(5, user.isActive());
+            stmt.setInt(6, user.getId());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi cập nhật user: " + e.getMessage(), e);
+        }
+    }
+
+    public boolean deleteUser(int id) {
+        String sql = "DELETE FROM users WHERE id=?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, id);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi xoá user: " + e.getMessage(), e);
+        }
+    }
+
+
+    public List<User> filterUsers(String role, Boolean isActive) {
+        List<User> users = new ArrayList<>();
+        Connection connection = null;
+
+        try {
+            connection = JDBC.getConnection();
+            StringBuilder query = new StringBuilder("SELECT id, username, email, role, isVerifyEmail, is_active, created_at FROM users WHERE 1=1");
+
+            List<Object> params = new ArrayList<>();
+            if (role != null && !role.isEmpty()) {
+                query.append(" AND role = ?");
+                params.add(role);
+            }
+            if (isActive != null) {
+                query.append(" AND is_active = ?");
+                params.add(isActive);
+            }
+
+            PreparedStatement stmt = connection.prepareStatement(query.toString());
+
+            for (int i = 0; i < params.size(); i++) {
+                stmt.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                user.setVerifyEmail(rs.getBoolean("isVerifyEmail"));
+                user.setActive(rs.getBoolean("is_active"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi lọc người dùng: " + e.getMessage(), e);
+        } finally {
+            JDBC.closeConnection(connection);
+        }
+
+        return users;
+    }
+
+    public List<User> searchUsers(String keyword, String role, Boolean isActive) {
+        List<User> users = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT * FROM users WHERE 1=1");
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            query.append(" AND (username LIKE ? OR email LIKE ?)");
+        }
+        if (role != null && !role.trim().isEmpty()) {
+            query.append(" AND role = ?");
+        }
+        if (isActive != null) {
+            query.append(" AND is_active = ?");
+        }
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query.toString())) {
+
+            int index = 1;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                String searchTerm = "%" + keyword.trim() + "%";
+                stmt.setString(index++, searchTerm);
+                stmt.setString(index++, searchTerm);
+            }
+            if (role != null && !role.trim().isEmpty()) {
+                stmt.setString(index++, role);
+            }
+            if (isActive != null) {
+                stmt.setBoolean(index++, isActive);
+            }
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                user.setVerifyEmail(rs.getBoolean("isVerifyEmail"));
+                user.setActive(rs.getBoolean("is_active"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                users.add(user);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi tìm kiếm người dùng: " + e.getMessage(), e);
+        }
+
+        return users;
+    }
+    public void updateIsActive(int id, int isActive) {
+        String sql = "UPDATE products SET is_active = ? WHERE id = ?";
+        try (
+                Connection connection = JDBC.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql)
+        ) {
+            statement.setInt(1, isActive);
+            statement.setInt(2, id);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean updateUserActiveStatus(int userId, boolean isActive) {
+        String sql = "UPDATE users SET is_active = ?, updated_at = NOW() WHERE id = ?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setBoolean(1, isActive); // true/false sẽ map thành 1/0 trong MySQL
+            stmt.setInt(2, userId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Lỗi khi cập nhật is_active: " + e.getMessage(), e);
+        }
+    }
+    public boolean updateUserRole(int userId, String newRole) {
+        String sql = "UPDATE users SET role = ? WHERE id = ?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newRole);
+            ps.setInt(2, userId);
+            int rowsUpdated = ps.executeUpdate();
+            System.out.println("Rows updated: " + rowsUpdated); // DEBUG
+            return rowsUpdated > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+}
 
     public UserView getUserViewById(int userId) {
         String sql = "SELECT u.id, u.username, u.email, u.role, u.isVerifyEmail, u.is_active, u.created_at, u.updated_at, " +

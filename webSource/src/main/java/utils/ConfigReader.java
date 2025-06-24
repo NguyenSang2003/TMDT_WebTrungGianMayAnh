@@ -10,7 +10,7 @@ public class ConfigReader {
     static {
         try {
             // Dùng class loader để đọc file từ resources(src/main/resources/properties.env)
-            java.io.InputStream inputStream = ConfigReader.class.getClassLoader().getResourceAsStream("properties.env");
+            java.io.InputStream inputStream = ConfigReader.class.getClassLoader().getResourceAsStream("properties.properties");
             if (inputStream != null) {
                 properties.load(inputStream);
             } else {

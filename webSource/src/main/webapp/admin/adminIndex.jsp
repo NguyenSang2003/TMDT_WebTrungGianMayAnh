@@ -39,16 +39,16 @@
             <div class="sidebar-body">
                 <ul class="sidebar-body-menu">
                     <li>
-                        <a class="active" href="adminIndex.jsp"><span class="icon home" aria-hidden="true"></span>Quản lý hệ thống </a>
+                        <a class="active" href = /admin/adminIndex"><span class="icon home" aria-hidden="true"></span>Quản lý hệ thống </a>
                     </li>
                     <li>
-                        <a class="active" href="#"><span class="icon folder" aria-hidden="true"></span>Quản lý sản phẩm </a>
+                        <a class="active" href="/admin/productsManagement"><span class="icon folder" aria-hidden="true"></span>Quản lý sản phẩm </a>
                     </li>
                     <li>
                         <a class="active" href="#"><span class="icon document" aria-hidden="true"></span>Quản lý đơn thuê </a>
                     </li>
                     <li>
-                        <a class="active" href="#"><span class="icon document" aria-hidden="true"></span>Quản lý doanh thu </a>
+                        <a class="active"  href="/RevenueManagement"><span class="icon document" aria-hidden="true"></span>Quản lý doanh thu </a>
                     </li>
 
                     <li>
@@ -70,17 +70,7 @@
                         </li>
 
                         <li>
-                            <a class="show-cat-btn" href="#">
-                                <span class="icon user-3" aria-hidden="true"></span>Quản lý khách hàng
-                                <span class="category__btn transparent-btn" title="Open list">
-                        <span class="sr-only">Open list</span>
-                        <span class="icon arrow-down" aria-hidden="true"></span>
-                    </span>
-                            </a>
-                            <ul class="cat-sub-menu">
-                                <li><a href="#">Quản lý khách thuê</a></li>
-                                <li><a href="#">Quản lý khách cho thuê</a></li>
-                            </ul>
+                            <a class="active" href="/admin/users"><span class="icon user-3" aria-hidden="true"></span>Quản lý khách hàng </a>
                         </li>
                     </ul>
                 </ul>
@@ -125,11 +115,6 @@
                             <li><a href="#">Vietnamese</a></li>
                         </ul>
                     </div>
-                    <%--          <button class="theme-switcher gray-circle-btn" type="button" title="Switch theme">--%>
-                    <%--            <span class="sr-only">Switch theme</span>--%>
-                    <%--            <i class="sun-icon" data-feather="sun" aria-hidden="true"></i>--%>
-                    <%--            <i class="moon-icon" data-feather="moon" aria-hidden="true"></i>--%>
-                    <%--          </button>--%>
                     <div class="notification-wrapper">
                         <button class="gray-circle-btn dropdown-btn" title="To messages" type="button">
                             <span class="sr-only">To messages</span>

@@ -9,7 +9,7 @@ import model.User;
 
 import java.io.IOException;
 
-@WebFilter("/admin/*") // Áp dụng cho tất cả URL bắt đầu bằng /admin/
+@WebFilter("/admins/*") // Áp dụng cho tất cả URL bắt đầu bằng /admin/
 public class AdminFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
