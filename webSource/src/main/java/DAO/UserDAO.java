@@ -9,6 +9,8 @@ import java.util.List;
 
 import database.JDBC;
 import model.User;
+import model.UserProfile;
+import model.UserView;
 
 public class UserDAO {
 
@@ -463,3 +465,55 @@ public class UserDAO {
 
 }
 
+    public UserView getUserViewById(int userId) {
+        String sql = "SELECT u.id, u.username, u.email, u.role, u.isVerifyEmail, u.is_active, u.created_at, u.updated_at, " +
+                     "up.id AS profile_id, up.full_name, up.id_card_number, up.address, up.phone_number, up.date_of_birth, " +
+                     "up.id_card_image_url, up.id_card_with_user_image_url, up.is_verified_identity, up.avatar_url, up.created_at AS profile_created, up.updated_at AS profile_updated " +
+                     "FROM users u JOIN user_profiles up ON u.id = up.user_id WHERE u.id = ?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                // Tạo User
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setEmail(rs.getString("email"));
+                user.setRole(rs.getString("role"));
+                user.setVerifyEmail(rs.getBoolean("isVerifyEmail"));
+                user.setActive(rs.getBoolean("is_active"));
+                user.setCreatedAt(rs.getTimestamp("created_at"));
+                user.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+                // Tạo UserProfile
+                UserProfile profile = new UserProfile();
+                profile.setId(rs.getInt("profile_id"));
+                profile.setUserId(userId);
+                profile.setFullName(rs.getString("full_name"));
+                profile.setIdCardNumber(rs.getString("id_card_number"));
+                profile.setAddress(rs.getString("address"));
+                profile.setPhoneNumber(rs.getString("phone_number"));
+                profile.setDateOfBirth(rs.getDate("date_of_birth"));
+                profile.setIdCardImageUrl(rs.getString("id_card_image_url"));
+                profile.setIdCardWithUserImageUrl(rs.getString("id_card_with_user_image_url"));
+                profile.setVerifiedIdentity(rs.getBoolean("is_verified_identity"));
+                profile.setCreatedAt(rs.getTimestamp("profile_created"));
+                profile.setUpdatedAt(rs.getTimestamp("profile_updated"));
+                profile.setAvatarUrl(rs.getString("avatar_url"));
+
+                // Kết hợp thành UserView
+                UserView userView = new UserView();
+                userView.setUser(user);
+                userView.setUserProfile(profile);
+
+                return userView;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}

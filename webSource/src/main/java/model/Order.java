@@ -2,20 +2,21 @@ package model;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Order {
     private int id;
     private int renterId;
     private int ownerId;
-    private int productId;
-    private int quantity;
     private double totalPrice;
-    private String status; // "cho_duyet", "dang_thue", "hoan_thanh", "huy"
-    private java.sql.Date rentStart;
-    private java.sql.Date rentEnd;
-    private java.sql.Timestamp createdAt;
-    private java.sql.Timestamp updatedAt;
+    private String status; // 'cho_duyet', 'dang_thue', 'hoan_thanh', 'huy'
+    private Date rentStart;
+    private Date rentEnd;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
+    private List<OrderItems> orderItems; // dùng để load danh sách chi tiết từng sản phẩm
 
+    // getter setter
     public int getId() {
         return id;
     }
@@ -38,22 +39,6 @@ public class Order {
 
     public void setOwnerId(int ownerId) {
         this.ownerId = ownerId;
-    }
-
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public double getTotalPrice() {
@@ -104,5 +89,30 @@ public class Order {
         this.updatedAt = updatedAt;
     }
 
-    // Getters and Setters
+    public List<OrderItems> getOrderItems() {
+        return orderItems;
+    }
+
+    public void setOrderItems(List<OrderItems> orderItems) {
+        this.orderItems = orderItems;
+    }
+
+    // Phương thức chuyển đổi trạng thái sang dạng hiển thị bằng tiếng Việt:
+    public String getDisplayStatus() {
+        if (status == null) {
+            return "";
+        }
+        switch (status) {
+            case "cho_duyet":
+                return "Chờ duyệt";
+            case "dang_thue":
+                return "Đang thuê";
+            case "hoan_thanh":
+                return "Hoàn thành";
+            case "huy":
+                return "Hủy";
+            default:
+                return status;
+        }
+    }
 }

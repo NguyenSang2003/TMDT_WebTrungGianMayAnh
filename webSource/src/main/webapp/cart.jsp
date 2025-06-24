@@ -2,7 +2,8 @@
 <%@ page import="java.util.List, java.math.BigDecimal" %>
 
 <%@ page import="java.util.List, java.util.ArrayList, java.math.BigDecimal, model.User" %>
-<%@ page import="model.*" %>
+<%@ page import="model.ProductView" %>
+<%@ page import="model.BookingSchedule" %>
 
 <%
     // Lấy user và cart từ session/request
@@ -19,6 +20,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Giỏ hàng</title>
+    <link rel="icon" type="image/PNG" href="assets/images/logo.PNG"/>
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap"
           rel="stylesheet">
 
@@ -41,18 +43,10 @@
     <!-- Material Symbols Outlined -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
-
-    <style>
-        /* làm mờ ngày đã đặt */
-        .booked-day {
-            color: #999 !important;
-            background-color: #f0f0f0 !important;
-            pointer-events: none;  /* Không cho click */
-            opacity: 0.6;
-        }
-    </style>
 </head>
 <body>
 
@@ -79,7 +73,7 @@
         <%-- nút menu --%>
         <div class="collapse navbar-collapse" id="ftco-nav">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item "><a href="index" class="nav-link">Trang Chủ</a></li>
+                <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item"><a href="shop" class="nav-link">Cửa Hàng</a></li>
                 <li class="nav-item active"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
                 <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
@@ -115,7 +109,7 @@
                             <i class="fa fa-envelope"></i> Xác thực Gmail
                         </a>
                         <% } else { %>
-                        <a href="profile.jsp" class="dropdown-item">Hồ sơ cá nhân</a>
+                        <a href="profile" class="dropdown-item">Hồ sơ cá nhân</a>
 
                         <% if ("admin".equals(user.getRole())) { %>
                         <a href="admin/adminIndex.jsp" class="dropdown-item">Trang Admin</a>
@@ -129,8 +123,8 @@
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
-                        <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
-                        <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>
+                        <a href="wishlist" class="dropdown-item">Sản phẩm yêu thích</a>
                         <% } %>
                         <% } %>
 
@@ -144,6 +138,7 @@
 </nav>
 <!-- END nav -->
 
+<%-- breadCrumbs --%>
 <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('assets/images/bg_3.jpg');"
          data-stellar-background-ratio="0.5">
     <div class="overlay"></div>
@@ -158,7 +153,9 @@
         </div>
     </div>
 </section>
+<%-- breadCrumbs end --%>
 
+<%-- Phần cart start --%>
 <div class="container py-4">
     <h2 class="mb-2 fw-bold text-center" style="font-size: 28px;">Giỏ hàng của bạn</h2>
     <p class="text-center mb-4" style="font-size: 18px; color: #555;">Có <%= cart.size() %> sản phẩm trong giỏ hàng</p>
@@ -167,38 +164,63 @@
     <div class="text-center" style="min-height: 300px;">
         <img loading="lazy" src="assets/images/empty_cart.jpeg" alt="Giỏ hàng trống" style="max-width: 500px;">
         <p class="mt-3 text-muted">Giỏ hàng của bạn đang trống</p>
+
+        <div class="text-center mt-3">
+            <a href="shop" class="text-decoration-none small btn btn-outline-primary px-4 py-2">
+                &larr; Quay lại cửa hàng
+            </a>
+        </div>
     </div>
     <% } else { %>
     <div class="row">
-        <!-- Sản phẩm trong giỏ -->
+
+        <!-- Cột bên trái chứa danh sách sản phẩm -->
         <div class="col-md-8">
             <% BigDecimal total = BigDecimal.ZERO; %>
             <% for (ProductView p : cart) { %>
             <% total = total.add(p.getPricePerDay().multiply(BigDecimal.valueOf(p.getQuantity()))); %>
             <div class="d-flex border p-3 mb-3 align-items-start position-relative">
-                <img src="<%= p.getImageUrl() %>" alt="<%= p.getName() %>" style="width: 100px; height: auto; margin: 0 1rem" class="me-3">
-                <div class="flex-grow-1" >
+                <img src="<%= p.getImageUrl() %>" alt="<%= p.getName() %>"
+                     style="width: 100px; height: auto; margin: 0 1rem" class="me-3">
+                <div class="flex-grow-1">
                     <div class="d-flex justify-content-between align-items-start">
-                        <strong><%= p.getName() %></strong>
-                        <form action="cart" method="post">
-                            <input type="hidden" name="action" value="remove" />
-                            <input type="hidden" name="productId" value="<%= p.getId() %>" />
-                            <button type="submit" class="btn btn-link text-danger p-0"
-                                    style="position: absolute; top: 20px; right: 20px;">X</button>
+                        <strong><%= p.getName() %>
+                        </strong>
+
+                        <%-- Form xóa 1 sản phẩm--%>
+                        <form class="remove-item-form" method="post">
+                            <input type="hidden" name="action" value="remove"/>
+                            <input type="hidden" name="productId" value="<%= p.getId() %>"/>
+                            <button type="button" class="btn btn-link text-danger p-0 remove-item-btn"
+                                    style="position: absolute; top: 20px; right: 20px;">X
+                            </button>
                         </form>
+
                     </div>
                     <p><%= String.format("%,d", p.getPricePerDay().longValue()) %> vnd</p>
 
+                    <%-- Form tăng giản số lượng --%>
                     <form action="cart" method="post" class="d-flex align-items-center">
                         <input type="hidden" name="action" value="updateQuantity"/>
                         <input type="hidden" name="productId" value="<%= p.getId() %>"/>
-                        <button type="submit" name="operation" value="decrease" class="btn btn-sm btn-outline-secondary">-</button>
-                        <input type="text" name="quantity" value="<%= p.getQuantity() %>" readonly class="form-control text-center mx-2" style="width: 50px;"/>
-                        <button type="submit" name="operation" value="increase" class="btn btn-sm btn-outline-secondary">+</button>
+
+                        <button type="submit" name="operation" value="decrease"
+                                class="btn btn-sm btn-outline-secondary"
+                                <%= p.getQuantity() <= 1 ? "disabled" : "" %>>-
+                        </button>
+
+                        <input type="text" name="quantity" value="<%= p.getQuantity() %>" readonly
+                               class="form-control text-center mx-2" style="width: 50px;"/>
+
+                        <button type="submit" name="operation" value="increase"
+                                class="btn btn-sm btn-outline-secondary">+
+                        </button>
+
                     </form>
                 </div>
                 <div class="text-end ms-3" style="min-width: 120px; font-weight: bold; margin-top: auto">
-                    <%= String.format("%,d", p.getPricePerDay().multiply(BigDecimal.valueOf(p.getQuantity())).longValue()) %> vnd
+                    <%= String.format("%,d", p.getPricePerDay().multiply(BigDecimal.valueOf(p.getQuantity())).longValue()) %>
+                    vnd
                 </div>
             </div>
             <!-- Chọn ngày thuê cho sản phẩm -->
@@ -208,7 +230,7 @@
                        name="rentalDate_<%= p.getId() %>" id="rentalDate_<%= p.getId() %>"
                        class="form-control rental-date"
                        placeholder="Chọn khoảng ngày"
-                       autocomplete="off" />
+                       autocomplete="off"/>
 
                 <small class="text-muted">Không thể chọn những ngày đã được đặt trước.</small>
 
@@ -223,8 +245,10 @@
                     <li>Còn trống</li>
                     <% } else {
                         for (BookingSchedule schedule : schedules) { %>
-                    <li><%= sdf.format(schedule.getRentStart()) %> - <%= sdf.format(schedule.getRentEnd()) %></li>
-                    <% } } %>
+                    <li><%= sdf.format(schedule.getRentStart()) %> - <%= sdf.format(schedule.getRentEnd()) %>
+                    </li>
+                    <% }
+                    } %>
                 </ul>
             </div>
             <% } %>
@@ -247,15 +271,25 @@
             </div>
         </div>
 
-        <!-- Thông tin thanh toán -->
+        <!-- Cột bên phải chứa thông tin đơn hàng -->
         <div class="col-md-4">
+
+            <!-- Form Xóa tất cả -->
+            <form id="clear-cart-form" method="post" class="mb-3">
+                <input type="hidden" name="action" value="clearAll"/>
+                <button type="button" class="btn btn-outline-danger w-100" id="clear-cart-btn">Xóa tất cả sản phẩm
+                </button>
+            </form>
+
+            <!-- Thông tin đơn hàng -->
             <div class="border rounded p-3 shadow-sm">
                 <h5 class="fw-bold mb-3">Thông tin đơn hàng</h5>
                 <div class="d-flex justify-content-between mb-2">
                     <span>Tổng tiền:</span>
                     <span class="fw-bold text-danger"><%= String.format("%,d", total.longValue()) %> vnd</span>
                 </div>
-                <p class="text-muted small">Phí vận chuyển sẽ được tính ở trang thanh toán. Bạn cũng có thể nhập mã giảm giá ở trang thanh toán.</p>
+                <p class="text-muted small">Phí vận chuyển sẽ được tính ở trang thanh toán. Bạn cũng có thể nhập mã giảm
+                    giá ở trang thanh toán.</p>
                 <form action="checkout" method="post">
                     <button type="submit" class="btn btn-danger btn-lg w-100">Thanh toán</button>
                 </form>
@@ -268,7 +302,7 @@
     </div>
     <% } %>
 </div>
-
+<%-- Phần cart end --%>
 
 <%-- start phần Footer --%>
 <footer class="ftco-footer ftco-bg-dark ftco-section" style="margin-top: 45px;">
@@ -359,16 +393,6 @@
 </footer>
 <%-- end phần Footer --%>
 
-<!-- loader -->
-<%--<div id="ftco-loader" class="show fullscreen">--%>
-<%--    <svg class="circular" width="48px" height="48px">--%>
-<%--        <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>--%>
-<%--        <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"--%>
-<%--                stroke="#F96D00"/>--%>
-<%--    </svg>--%>
-<%--</div>--%>
-
-
 <!-- JS scripts -->
 <script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery-migrate-3.0.1.min.js"></script>
@@ -393,6 +417,8 @@
 
 <%-- js_handMade --%>
 <script src="assets/js_handMade/cart.js"></script>
+<script src="assets/js_handMade/deleteCart.js"></script>
+
 <script>
     <%
     // Định dạng ngày cho Flatpickr khi hiển thị trên giao diện (ví dụ: 31/05/2025)

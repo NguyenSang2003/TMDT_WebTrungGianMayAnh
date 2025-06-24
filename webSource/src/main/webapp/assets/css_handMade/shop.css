@@ -35,17 +35,6 @@
     object-fit: contain;
 }
 
-/* ==================== CART BUTTON ==================== */
-.cart-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
-    border: none;
-    font-size: 22px;
-    cursor: pointer;
-}
-
 /* ==================== PRODUCT INFO ==================== */
 .product-info h3 {
     font-size: 16px;
@@ -71,6 +60,7 @@
 /* ==================== RATING DETAILS ==================== */
 .rating-detai {
     display: flex;
+    justify-content: space-between;
 }
 
 .rating {
@@ -98,4 +88,74 @@
 .btn_details2 {
     width: auto !important;
     margin-bottom: auto !important;
+}
+
+/* ==================== TỔNG THỂ KHUNG TÌM KIẾM ==================== */
+.search-container {
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 30px 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Ô nhập từ khóa chiếm toàn bộ chiều rộng */
+.keyword-input .search-box {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.keyword-input .search-box:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* ==================== FILTERS (lọc brand, model, category) ==================== */
+.filters-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Các input và select trong hàng lọc */
+.filters-row input[type="text"],
+.filters-row select {
+    flex: 1 1 200px;
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: border-color 0.3s;
+    background-color: #f9f9f9;
+}
+
+.filters-row input[type="text"]:focus,
+.filters-row select:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+}
+
+/* ==================== NÚT TÌM KIẾM ==================== */
+.search-btn {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    flex: 0 0 auto;
+    transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+    background-color: #0056b3;
 }

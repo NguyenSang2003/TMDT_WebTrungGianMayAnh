@@ -1,18 +1,20 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <%@ page import="model.User" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="model.ProductView" %>
+<%@ page import="java.util.Set" %>
 
 <%
     User user = (User) session.getAttribute("user");
+    Set<Integer> wishlistIds = (Set<Integer>) request.getAttribute("wishlistIds");
 %>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>EagleCam Selection 365</title>
+    <link rel="icon" type="image/PNG" href="assets/images/logo.PNG"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -38,18 +40,21 @@
     <!-- Material Symbols Outlined -->
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <%-- css_handMade --%>
     <link rel="stylesheet" href="assets/css_handMade/header_footer.css">
     <link rel="stylesheet" href="assets/css_handMade/shop.css">
+    <link rel="stylesheet" href="assets/css_handMade/wishList.css">
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        });
-    </script>
+    <%--    <script>--%>
+    <%--        document.addEventListener("DOMContentLoaded", function () {--%>
+    <%--            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));--%>
+    <%--            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {--%>
+    <%--                return new bootstrap.Tooltip(tooltipTriggerEl);--%>
+    <%--            });--%>
+    <%--        });--%>
+    <%--    </script>--%>
 </head>
 <body>
 
@@ -78,14 +83,14 @@
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item"><a href="index" class="nav-link">Trang Chủ</a></li>
                 <li class="nav-item active"><a href="shop" class="nav-link">Cửa Hàng</a></li>
-                <li class="nav-item"><a href="cart.jsp" class="nav-link">Giỏ Hàng</a></li>
-                <li class="nav-item"><a href="checkout.jsp" class="nav-link">Thanh Toán</a></li>
+                <li class="nav-item"><a href="cart" class="nav-link">Giỏ Hàng</a></li>
+                <li class="nav-item"><a href="checkout" class="nav-link">Thanh Toán</a></li>
 
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Thông Tin</a>
                     <div class="dropdown-menu rounded-0 m-0">
                         <a href="about.jsp" class="dropdown-item">Về Chúng Tôi</a>
-                        <a href="blog.jsp" class="dropdown-item">Blog</a>
+                        <a href="blog" class="dropdown-item">Blog</a>
                     </div>
                 </li>
 
@@ -126,8 +131,8 @@
                         <a href="owner/withdrawalManagement.jsp" class="dropdown-item">Quản lý rút tiền</a>
 
                         <% } else if ("khach_thue".equals(user.getRole())) { %>
-                        <a href="orders.jsp" class="dropdown-item">Đơn hàng của bạn</a>
-                        <a href="wishlist.jsp" class="dropdown-item">Sản phẩm yêu thích</a>
+                        <a href="orders" class="dropdown-item">Đơn hàng của bạn</a>
+                        <a href="wishlist" class="dropdown-item">Sản phẩm yêu thích</a>
                         <% } %>
                         <% } %>
 
@@ -160,7 +165,72 @@
 
 <%-- Phần sản phẩm --%>
 <div class="container">
-    <input type="text" style="margin-top: 10px" class="search-box" placeholder="Nhập từ khóa sản phẩm...">
+
+    <%-- Form tìm kiếm và lọc sản phẩm --%>
+    <form method="GET" action="shop" class="search-container">
+        <!-- Ô nhập từ khóa -->
+        <div class="keyword-input">
+            <input type="text" name="keyword" style="margin-bottom: 0px;" class="search-box"
+                   placeholder="Nhập từ khóa sản phẩm..."
+                   value="<%= request.getParameter("keyword") != null ? request.getParameter("keyword") : "" %>">
+        </div>
+
+        <!-- Các bộ lọc khác nằm theo hàng -->
+        <div class="filters-row">
+            <!-- Lọc theo brand -->
+            <select name="brand" class="search-select">
+                <option value="">Chọn thương hiệu</option>
+                <option value="Canon" <%= "Canon".equals(request.getParameter("brand")) ? "selected" : "" %>>Canon
+                </option>
+                <option value="Nikon" <%= "Nikon".equals(request.getParameter("brand")) ? "selected" : "" %>>Nikon
+                </option>
+                <option value="Fujifilm" <%= "Fujifilm".equals(request.getParameter("brand")) ? "selected" : "" %>>
+                    Fujifilm
+                </option>
+                <option value="Sony" <%= "Sony".equals(request.getParameter("brand")) ? "selected" : "" %>>Sony</option>
+                <option value="Olympus" <%= "Olympus".equals(request.getParameter("brand")) ? "selected" : "" %>>
+                    Olympus
+                </option>
+                <option value="Blackmagic" <%= "Blackmagic".equals(request.getParameter("brand")) ? "selected" : "" %>>
+                    Blackmagic
+                </option>
+                <option value="Panasonic" <%= "Panasonic".equals(request.getParameter("brand")) ? "selected" : "" %>>
+                    Panasonic
+                </option>
+                <option value="DJI" <%= "DJI".equals(request.getParameter("brand")) ? "selected" : "" %>>DJI</option>
+            </select>
+
+            <!-- Lọc theo model -->
+            <input type="text" name="model" style="margin-top: 30px;" class="search-box" list="modelOptions"
+                   placeholder="Nhập model sản phẩm..."
+                   value="<%= request.getParameter("model") != null ? request.getParameter("model") : "" %>">
+            <datalist id="modelOptions">
+                <option value="FX3 Full-Frame">
+                <option value="Alpha A7 IV">
+                <option value="Alpha A7 III">
+                <option value="OM-D E-M1 Mark III">
+                <option value="Pocket Cinema Camera 6K">
+                <option value="LP-E8">
+            </datalist>
+
+            <!-- Lọc theo category -->
+            <select name="category" class="search-select">
+                <option value="">Chọn loại sản phẩm</option>
+                <option value="Máy ảnh" <%= "Máy ảnh".equals(request.getParameter("category")) ? "selected" : "" %>>Máy
+                    ảnh
+                </option>
+                <option value="Máy quay" <%= "Máy quay".equals(request.getParameter("category")) ? "selected" : "" %>>
+                    Máy quay
+                </option>
+                <option value="Phụ kiện" <%= "Phụ kiện".equals(request.getParameter("category")) ? "selected" : "" %>>
+                    Phụ kiện
+                </option>
+            </select>
+
+            <!-- Nút tìm kiếm -->
+            <button type="submit" class="search-btn">Tìm kiếm</button>
+        </div>
+    </form>
 
     <div class="product-grid">
         <%
@@ -168,34 +238,71 @@
             java.util.Map ratingHtmlMap = (java.util.Map) request.getAttribute("ratingHtmlMap");
             if (products != null && !products.isEmpty()) {
                 for (ProductView product : products) {
+                    boolean isInWishlist = wishlistIds != null && wishlistIds.contains(product.getId());
         %>
-        <div class="product-card">
-            <!-- Nút thêm vào giỏ -->
-            <button class="cart-btn">
-                <img src="assets/images/cart_icon.jpg" style="width: 40px;height: 40px" alt="Cart">
-            </button>
 
+        <div class="product-card" style="position: relative;">
+            <!-- Nút wishlist -->
+            <% if (user != null) { %>
+            <% if (isInWishlist) { %>
+            <form method="post" action="wishlist"
+                  style="position: absolute; top: 10px; right: 10px;">
+                <input type="hidden" name="productId" value="<%= product.getId() %>">
+                <button type="submit" class="wishlist-btn liked" disabled
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Đã yêu thích">
+                    <span class="material-icons">favorite</span>
+                </button>
+            </form>
+            <% } else { %>
+            <form method="post" action="wishlist"
+                  style="position: absolute; top: 10px; right: 10px;">
+                <input type="hidden" name="productId" value="<%= product.getId() %>">
+                <button type="submit" class="wishlist-btn not-liked"
+                        data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào yêu thích">
+                    <span class="material-icons">favorite</span>
+                </button>
+            </form>
+            <% } %>
+            <% } %>
+
+            <!-- Hình ảnh sản phẩm -->
             <img src="<%= product.getImageUrl() %>" alt="<%= product.getName() %>">
+
+            <!-- Thông tin sản phẩm -->
             <div class="product-info">
                 <h3><%= product.getName() %>
                 </h3>
-                <div class="price"><%= product.getFormattedPricePerDay() %> vnđ/ngày</div>
-                <div class="category"><%= product.getCategory() %>
+                <div class="price">
+                    <%= product.getFormattedPricePerDay() %> vnđ/ngày
+                </div>
+                <div class="category">
+                    <%= product.getCategory() %>
                 </div>
                 <div class="rating-detai">
                     <div class="star-rating">
-                        <%= ratingHtmlMap.get(product.getId()) %>
-                        <%= product.getTotalReviews() %> (đánh giá)
+                        <%= ratingHtmlMap.get(product.getId()) %><br>
+                        <span class="review-count">( <%= product.getTotalReviews() %> đánh giá)</span>
                     </div>
 
-                    <%-- Nút chi tiết --%>
-                    <a href="product-detail?id=<%= product.getId() %>"
-                       class="btn btn-secondary py-2 ml-1 btn_details2"
-                       data-bs-toggle="tooltip"
-                       data-bs-placement="top"
-                       title="Xem chi tiết">
-                        <span class="material-symbols-outlined">info</span>
-                    </a>
+                    <!-- Nút chức năng -->
+                    <div class="d-flex justify-content-between mt-2">
+                        <!-- Thêm vào giỏ -->
+                        <button class="btn btn-primary py-2 mr-1 cart-btn"
+                                data-id="<%= product.getId() %>"
+                                data-bs-toggle="tooltip" data-bs-placement="top" title="Thêm vào giỏ hàng"
+                                style="flex: 1;">
+                            <span class="material-symbols-outlined">shopping_cart</span>
+                        </button>
+
+                        <!-- Xem chi tiết -->
+                        <a href="product-detail?id=<%= product.getId() %>"
+                           class="btn btn-success py-2 ml-1"
+                           data-bs-toggle="tooltip" data-bs-placement="top" title="Xem chi tiết"
+                           style="flex: 1;">
+                            <span class="material-symbols-outlined">info</span>
+                        </a>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -323,6 +430,9 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="assets/js/google-map.js"></script>
 <script src="assets/js/main.js"></script>
+
+<%-- js_handMade --%>
+<script src="assets/js_handMade/addcart.js"></script>
 
 </body>
 </html>

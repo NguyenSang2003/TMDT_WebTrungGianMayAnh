@@ -1,6 +1,7 @@
 package services;
 import java.sql.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -9,7 +10,6 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.ArrayList;
 import java.util.List;
-import java.math.RoundingMode;
 
 import DAO.ProductDAO;
 import database.JDBC;
@@ -328,5 +328,9 @@ public class ProductService {
         }
         return productViews;
     }*/
+
+    public List<ProductView> searchAndFilterProducts(String keyword, String brand, String model, String category) {
+        return ProductDAO.getFilteredProducts(keyword, brand, model, category);
+    }
 
 }

@@ -9,8 +9,8 @@ public class BookingSchedule {
     private int renterId;
     private int ownerId;
     private Integer orderId; // có thể null
-    private java.sql.Date rentStart;
-    private java.sql.Date rentEnd;
+    private Date rentStart;
+    private Date rentEnd;
     private String status; // "cho_duyet", "xac_nhan", "huy"
     private java.sql.Timestamp createdAt;
     private java.sql.Timestamp updatedAt;

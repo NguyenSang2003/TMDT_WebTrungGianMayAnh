@@ -7,13 +7,11 @@ public class Blog {
     private int userId;
     private String title;
     private boolean isApproved;
-    private Integer approvedBy; // Có thể NULL
+    private Integer approvedBy;
     private java.sql.Timestamp approvedAt;
     private java.sql.Timestamp createdAt;
     private java.sql.Timestamp updatedAt;
-
-    // Getters and Setters
-
+    
     public int getId() {
         return id;
     }
@@ -30,7 +28,7 @@ public class Blog {
         this.userId = userId;
     }
 
-    public String getTitle() {
+	public String getTitle() {
         return title;
     }
 

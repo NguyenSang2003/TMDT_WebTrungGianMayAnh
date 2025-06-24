@@ -36,12 +36,13 @@ public class LoginController extends HttpServlet {
         HttpSession session = req.getSession();
         session.setAttribute("user", user);
         session.setAttribute("userName", user.getUsername());
+        session.setAttribute("user_id", user.getId());
         session.setMaxInactiveInterval(10 * 60);// Session tồn tại trong 10 phút
 
         System.out.println("Login success");
 
         if ("admin".equalsIgnoreCase(user.getRole())) {
-            resp.sendRedirect("admin/ordersManagement.jsp");
+            resp.sendRedirect("adminIndex");
         } else {
             resp.sendRedirect("index");
         }
