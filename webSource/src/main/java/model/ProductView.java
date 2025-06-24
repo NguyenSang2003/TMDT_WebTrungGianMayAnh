@@ -214,4 +214,29 @@ public class ProductView {
         this.totalReviews = totalReviews;
     }
 
+    // Tiện ích định dạng giá tiền
+    public String getFormattedPrice() {
+        if (pricePerDay == null) return "0 đ";
+        return String.format("%,.0f đ", pricePerDay.setScale(0, BigDecimal.ROUND_HALF_UP).doubleValue());
+    }
+    private int isActive;
+
+    public int getIsActive() {
+        return isActive;
+    }
+
+    public void setIsActive(int isActive) {
+        this.isActive = isActive;
+    }
+    private String statusText;
+
+    public String getStatusText() {
+        return statusText;
+    }
+
+    public void setStatusText(String statusText) {
+        this.statusText = statusText;
+    }
+
 }
+

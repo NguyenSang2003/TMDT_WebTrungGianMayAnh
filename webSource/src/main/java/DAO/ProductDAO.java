@@ -10,18 +10,66 @@ import java.util.List;
 
 import database.JDBC;
 import model.BookingSchedule;
+import model.CommentView;
 import model.Product;
 import model.ProductView;
 
 public class ProductDAO {
 
-    // Thêm mới sản phẩm
+    public List<CommentView> getProductCommentsByOwnerId(int ownerId) {
+        List<CommentView> comments = new ArrayList<>();
+        String sql = "SELECT pr.id, u.username AS commenter, pr.rating, pr.comment, pr.created_at, p.name AS productName, pr.is_show " +
+                "FROM product_reviews pr " +
+                "JOIN products p ON pr.product_id = p.id " +
+                "JOIN users u ON pr.reviewer_id = u.id " +
+                "WHERE p.user_id = ? " +
+                "ORDER BY pr.created_at DESC";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                CommentView comment = new CommentView();
+                comment.setId(rs.getInt("id"));
+                comment.setCommenter(rs.getString("commenter"));
+                comment.setRating(rs.getInt("rating"));
+                comment.setComment(rs.getString("comment"));
+                comment.setCreatedAt(rs.getTimestamp("created_at").toString());
+                comment.setProductName(rs.getString("productName"));
+                comment.setIsShow(rs.getInt("is_show")); // Quan trọng để điều khiển nút Ẩn/Hiện
+                comments.add(comment);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return comments;
+    }
+
+
+    public boolean deleteProductComment(int commentId, int ownerId) {
+        String sql = "DELETE pr FROM product_reviews pr " +
+                "JOIN products p ON pr.product_id = p.id " +
+                "WHERE pr.id = ? AND p.user_id = ?";
+
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, commentId);
+            ps.setInt(2, ownerId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean addProduct(Product product) {
-        Connection connection = null;
-        try {
-            connection = JDBC.getConnection();
-            String query = "INSERT INTO products (user_id, name, price_per_day, quantity, status, created_at, updated_at) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (Connection connection = JDBC.getConnection()) {
+            String query = "INSERT INTO products (user_id, name, price_per_day, quantity, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement stmt = connection.prepareStatement(query);
 
             java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
@@ -30,29 +78,23 @@ public class ProductDAO {
             stmt.setBigDecimal(3, product.getPricePerDay());
             stmt.setInt(4, product.getQuantity());
             stmt.setString(5, product.getStatus());
-            stmt.setTimestamp(6, now); // created_at
-            stmt.setTimestamp(7, now); // updated_at
+            stmt.setTimestamp(6, now);
+            stmt.setTimestamp(7, now);
 
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi thêm sản phẩm: " + e.getMessage(), e);
-        } finally {
-            JDBC.closeConnection(connection);
         }
     }
 
-    // Lấy tất cả sản phẩm của người cho thuê
     public List<Product> getAllProductsByUserId(int userId) {
         List<Product> products = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = JDBC.getConnection();
+        try (Connection connection = JDBC.getConnection()) {
             String query = "SELECT * FROM products WHERE user_id = ?";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, userId);
-
             ResultSet rs = stmt.executeQuery();
+
             while (rs.next()) {
                 Product product = new Product();
                 populateProductFromResultSet(product, rs);
@@ -60,42 +102,31 @@ public class ProductDAO {
             }
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi lấy danh sách sản phẩm: " + e.getMessage(), e);
-        } finally {
-            JDBC.closeConnection(connection);
         }
         return products;
     }
 
-    // Lấy thông tin sản phẩm theo ID
     public Product getProductById(int productId) {
-        Connection connection = null;
         Product product = null;
-        try {
-            connection = JDBC.getConnection();
+        try (Connection connection = JDBC.getConnection()) {
             String query = "SELECT * FROM products WHERE id = ?";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, productId);
-
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
                 product = new Product();
                 populateProductFromResultSet(product, rs);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi lấy sản phẩm theo ID: " + e.getMessage(), e);
-        } finally {
-            JDBC.closeConnection(connection);
         }
         return product;
     }
 
-    // Cập nhật thông tin sản phẩm
     public boolean updateProduct(Product product) {
-        Connection connection = null;
-        try {
-            connection = JDBC.getConnection();
-            String query = "UPDATE products SET name = ?, price_per_day = ?, quantity = ?, status = ?, updated_at = ? " +
-                    "WHERE id = ?";
+        try (Connection connection = JDBC.getConnection()) {
+            String query = "UPDATE products SET name = ?, price_per_day = ?, quantity = ?, status = ?, updated_at = ? WHERE id = ?";
             PreparedStatement stmt = connection.prepareStatement(query);
 
             java.sql.Timestamp now = new java.sql.Timestamp(System.currentTimeMillis());
@@ -103,37 +134,27 @@ public class ProductDAO {
             stmt.setBigDecimal(2, product.getPricePerDay());
             stmt.setInt(3, product.getQuantity());
             stmt.setString(4, product.getStatus());
-            stmt.setTimestamp(5, now); // updated_at
+            stmt.setTimestamp(5, now);
             stmt.setInt(6, product.getId());
 
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi cập nhật sản phẩm: " + e.getMessage(), e);
-        } finally {
-            JDBC.closeConnection(connection);
         }
     }
 
-    // Xóa sản phẩm
     public boolean deleteProduct(int productId) {
-        Connection connection = null;
-        try {
-            connection = JDBC.getConnection();
+        try (Connection connection = JDBC.getConnection()) {
             String query = "DELETE FROM products WHERE id = ?";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setInt(1, productId);
 
-            int rowsAffected = stmt.executeUpdate();
-            return rowsAffected > 0;
+            return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             throw new RuntimeException("Lỗi khi xóa sản phẩm: " + e.getMessage(), e);
-        } finally {
-            JDBC.closeConnection(connection);
         }
     }
 
-    // Phương thức dùng chung để mapping dữ liệu từ ResultSet sang đối tượng Product
     private void populateProductFromResultSet(Product product, ResultSet rs) throws SQLException {
         product.setId(rs.getInt("id"));
         product.setUserId(rs.getInt("user_id"));
@@ -148,12 +169,11 @@ public class ProductDAO {
     }
 
     public List<BookingSchedule> getBookingsByProductId(int productId) {
-        String sql = "SELECT * FROM booking_schedule WHERE product_id = ? AND status IN ('cho_duyet', 'xac_nhan')";
         List<BookingSchedule> bookings = new ArrayList<>();
+        String sql = "SELECT * FROM booking_schedule WHERE product_id = ? AND status IN ('cho_duyet', 'xac_nhan')";
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setInt(1, productId);
             ResultSet rs = stmt.executeQuery();
 
@@ -171,7 +191,6 @@ public class ProductDAO {
                 booking.setUpdatedAt(rs.getTimestamp("updated_at"));
                 bookings.add(booking);
             }
-
         } catch (SQLException ex) {
             throw new RuntimeException("Lỗi khi lấy booking theo sản phẩm: " + ex.getMessage(), ex);
         }
@@ -180,11 +199,7 @@ public class ProductDAO {
     }
 
     public ProductView getProductViewById(int id) {
-        String sql = "SELECT p.*, pd.image_url, pd.category, pr.rating " +
-                "FROM products p " +
-                "JOIN product_details pd ON p.id = pd.product_id " +
-                "LEFT JOIN product_reviews pr ON p.id = pr.product_id " +
-                "WHERE p.id = ?";
+        String sql = "SELECT p.*, pd.image_url, pd.category, pr.rating FROM products p JOIN product_details pd ON p.id = pd.product_id LEFT JOIN product_reviews pr ON p.id = pr.product_id WHERE p.id = ?";
 
         try (Connection connection = JDBC.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -209,7 +224,6 @@ public class ProductDAO {
                     rating = 0;
                 }
                 pv.setRating(rating);
-
                 pv.setImageUrl(rs.getString("image_url"));
                 pv.setCategory(rs.getString("category"));
                 return pv;
@@ -217,7 +231,7 @@ public class ProductDAO {
         } catch (SQLException ex) {
             throw new RuntimeException("Error getting product by id: " + ex.getMessage(), ex);
         }
-        return null; // nếu không tìm thấy
+        return null;
     }
 
     public int getOwnerIdByProductId(int productId) {
@@ -225,8 +239,10 @@ public class ProductDAO {
         try (Connection conn = JDBC.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setInt(1, productId);
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) return rs.getInt("user_id");
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("user_id");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -240,7 +256,6 @@ public class ProductDAO {
 
         try (Connection conn = JDBC.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-
             ps.setInt(1, productId);
             ResultSet rs = ps.executeQuery();
 
@@ -253,4 +268,100 @@ public class ProductDAO {
 
         return imageUrl;
     }
+    // Tiện ích định dạng số lượng còn lại
+    public String getFormattedQuantity(int quantity) {
+        if (quantity <= 0) {
+            return "Hết hàng";
+        }
+        return String.valueOf(quantity);
+    }
+    // Kiểm tra sản phẩm có đang bị đặt hoặc đang thuê
+    public boolean hasActiveBooking(int productId) {
+        String sql = "SELECT COUNT(*) FROM booking_schedule WHERE product_id = ? AND status IN ('cho_duyet', 'xac_nhan')";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    //Xoá sản phẩm có kiểm tra quyền và điều kiện
+    public boolean deleteProduct(int productId, int ownerId) {
+        if (hasActiveBooking(productId)) return false;  // Đang có booking, không cho xoá
+
+        String sql = "DELETE FROM products WHERE id = ? AND user_id = ?";
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, productId);
+            ps.setInt(2, ownerId);
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public List<ProductView> getProductViewsByOwnerId(int ownerId) {
+        List<ProductView> list = new ArrayList<>();
+        String sql = "SELECT p.id, p.user_id, p.name, p.price_per_day, p.quantity, p.status, p.created_at, p.updated_at, " +
+                "p.view_count, p.sold_count, p.is_active, pd.image_url, pd.category " +
+                "FROM products p " +
+                "LEFT JOIN product_details pd ON p.id = pd.product_id " +
+                "WHERE p.user_id = ?";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                ProductView pv = new ProductView();
+                pv.setId(rs.getInt("id"));
+                pv.setUserId(rs.getInt("user_id"));
+                pv.setName(rs.getString("name"));
+                pv.setPricePerDay(rs.getBigDecimal("price_per_day"));
+                pv.setQuantity(rs.getInt("quantity"));
+                pv.setStatus(rs.getString("status"));
+                pv.setCreatedAt(rs.getTimestamp("created_at"));
+                pv.setUpdatedAt(rs.getTimestamp("updated_at"));
+                pv.setViewCount(rs.getInt("view_count"));
+                pv.setSoldCount(rs.getInt("sold_count"));
+                pv.setImageUrl(rs.getString("image_url"));
+                pv.setCategory(rs.getString("category"));
+                pv.setIsActive(rs.getInt("is_active"));  // Lấy trạng thái Ẩn/Hiện
+                list.add(pv);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    public boolean updateProductActive(int id, int isActive) throws SQLException {
+        String sql = "UPDATE products SET is_active = ? WHERE id = ?";
+        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, isActive);  // 1 hiện, 0 ẩn
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+    // Ẩn hoặc Hiện bình luận sản phẩm theo is_show
+    public boolean updateProductReviewShow(int id, int isShow) throws SQLException {
+        String sql = "UPDATE product_reviews SET is_show = ? WHERE id = ?";
+        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, isShow);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
 }
+
+
+

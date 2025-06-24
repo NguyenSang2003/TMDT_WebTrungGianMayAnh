@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import database.JDBC;
+import model.CommentView;
 import model.User;
 
 public class UserDAO {
@@ -279,6 +280,54 @@ public class UserDAO {
             throw new RuntimeException("Lỗi cập nhật mật khẩu: " + e.getMessage(), e);
         } finally {
             JDBC.closeConnection(connection);
+        }
+    }
+
+    // lấy bình luận về owner
+    public List<CommentView> getOwnerComments(int ownerId) {
+        List<CommentView> list = new ArrayList<>();
+        String sql = "SELECT orv.id, u.username AS commenter, orv.rating, orv.comment, orv.created_at, orv.is_show " +
+                "FROM owner_reviews orv " +
+                "JOIN users u ON orv.reviewer_id = u.id " +
+                "WHERE orv.owner_id = ? " +
+                "ORDER BY orv.created_at DESC";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                CommentView c = new CommentView();
+                c.setId(rs.getInt("id"));
+                c.setCommenter(rs.getString("commenter"));
+                c.setRating(rs.getInt("rating"));
+                c.setComment(rs.getString("comment"));
+                c.setCreatedAt(rs.getTimestamp("created_at").toString());
+                c.setIsShow(rs.getInt("is_show")); // Quan trọng để hiện trạng thái nút Ẩn/Hiện trên giao diện
+                list.add(c);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+    public boolean updateOwnerReviewShow(int id, int isShow) throws SQLException {
+        String sql = "UPDATE owner_reviews SET is_show = ? WHERE id = ?";
+        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, isShow);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean updateProductActive(int id, int isActive) throws SQLException {
+        String sql = "UPDATE products SET is_active = ? WHERE id = ?";
+        try (Connection conn = JDBC.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, isActive);
+            ps.setInt(2, id);
+            return ps.executeUpdate() > 0;
         }
     }
 
