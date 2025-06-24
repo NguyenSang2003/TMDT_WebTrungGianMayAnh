@@ -4,6 +4,7 @@ import database.JDBC;
 import model.BookingSchedule;
 import model.Order;
 import model.OrderItems;
+import model.OrderListView;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -138,5 +139,53 @@ public class OrderDAO {
         }
         return false;
     }
+    // Lấy danh sách đơn hàng theo owner_id
+    public List<OrderListView> getOrdersByOwnerId(int ownerId) {
+        List<OrderListView> list = new ArrayList<>();
+        String sql = "SELECT o.id, u.username AS renterName, o.total_price, o.rent_start, o.rent_end, o.status, o.created_at " +
+                "FROM orders o JOIN users u ON o.renter_id = u.id " +
+                "WHERE o.owner_id = ? ORDER BY o.created_at DESC";
 
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, ownerId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                OrderListView order = new OrderListView();
+                order.setId(rs.getInt("id"));
+                order.setRenterName(rs.getString("renterName"));
+                order.setTotalPrice(rs.getBigDecimal("total_price"));
+                order.setRentStart(rs.getDate("rent_start"));  // Bổ sung lấy ngày bắt đầu
+                order.setRentEnd(rs.getDate("rent_end"));      // Bổ sung lấy ngày kết thúc
+                order.setStatus(rs.getString("status"));
+                order.setCreatedAt(rs.getTimestamp("created_at"));
+                list.add(order);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+
+    // Cập nhật trạng thái đơn hàng có điều kiện
+    public boolean updateOrderStatus(int orderId, String newStatus, int ownerId) {
+        String sql = "UPDATE orders SET status = ?, updated_at = ? WHERE id = ? AND owner_id = ? AND status = 'cho_duyet'";
+
+        try (Connection conn = JDBC.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, newStatus);
+            ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+            ps.setInt(3, orderId);
+            ps.setInt(4, ownerId);
+
+            return ps.executeUpdate() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
